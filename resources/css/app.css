@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Palette HESS Royal Plum / Hospital Purple */
+    --color-primary-50: #faf5fc;
+    --color-primary-100: #f4e9f7;
+    --color-primary-200: #e9d4ef;
+    --color-primary-300: #d6b3e1;
+    --color-primary-400: #b581c7;
+    --color-primary-500: #8d5b9b;
+    --color-primary-600: #6f3f7e;
+    --color-primary-700: #5b3267;
+    --color-primary-800: #492853;
+    --color-primary-900: #3c1e45;
+
+    --color-surface: #f7f4f8;
+    --color-card: #ffffff;
+    --color-text-main: #263238;
+    --color-text-muted: #6b7280;
+}

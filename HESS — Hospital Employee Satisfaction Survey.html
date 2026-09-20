@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HESS — Hospital Employee Satisfaction Survey</title>
+<style>
+:root{--p:#6f3f7e;--p2:#8d5b9b;--bg:#f6f3f7;--card:#fff;--text:#263238;--muted:#6b7280;--line:#e5e7eb;--good:#2e7d32}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:25px 18px 32px}.wrap{max-width:900px;margin:auto}
+.brand{font-size:13px;font-weight:800;letter-spacing:.08em}.brand span{opacity:.8}
+h1{font-size:27px;margin:8px 0 5px}.sub{margin:0;opacity:.9;font-size:14px}
+.progressbox{background:#fff;margin:-16px auto 18px;padding:14px 17px;border-radius:15px;box-shadow:0 5px 20px #0001;position:relative}
+.prow{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}.track{height:8px;background:#eee;border-radius:20px}.bar{height:100%;width:0;background:var(--p);border-radius:20px;transition:.3s}
+main{padding:0 15px 30px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 2px 8px #00000008}
+h2{margin:0 0 5px;font-size:21px}.desc{color:var(--muted);line-height:1.5;font-size:14px;margin:0 0 20px}
+.notice{background:#faf6fc;border:1px solid #eadcf0;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;margin-bottom:18px}
+label.field{display:block;font-weight:700;font-size:14px;margin:16px 0 7px}select,textarea{width:100%;padding:13px;border:1px solid #d5d8dd;border-radius:11px;background:#fff;font:inherit}
+.qmeta{font-size:12px;color:var(--p);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:9px}.qtext{font-size:21px;font-weight:700;line-height:1.4;margin:10px 0 23px}
+.choices{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.choice{position:relative}.choice input{position:absolute;opacity:0}.choice span{min-height:78px;border:1px solid #d9dce1;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;padding:6px;font-weight:800;color:#555;background:#fff}.choice em{font-style:normal;font-weight:500;font-size:10px;line-height:1.2;margin-top:4px}.choice input:checked+span{border:2px solid var(--p);background:#f0e5f3;color:var(--p)}
+.onequestion{min-height:310px;display:flex;flex-direction:column;justify-content:center}
+.nav{display:flex;gap:10px;margin-top:14px}.btn{border:0;border-radius:12px;padding:13px 18px;font-weight:800;font-size:14px;cursor:pointer}.back{background:#eee;color:#444}.next{background:var(--p);color:#fff;flex:1}.next:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}.result{text-align:center}.score{font-size:54px;font-weight:900;color:var(--p);margin:8px}.pill{display:inline-block;padding:7px 12px;border-radius:30px;background:#f0e5f3;color:var(--p);font-weight:800}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:22px;text-align:left}.kpi{border:1px solid var(--line);border-radius:13px;padding:15px}.kpi b{font-size:27px;color:var(--p)}.kpi small{display:block;color:var(--muted);margin-top:3px}.barline{height:9px;background:#eee;border-radius:10px;margin-top:9px;overflow:hidden}.fill{height:100%;background:var(--p);border-radius:10px}
+.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:15px}.save{font-size:11px;color:var(--muted);text-align:right;margin-top:8px}
+@media(max-width:600px){h1{font-size:23px}.card{padding:18px}.qtext{font-size:19px}.choices{gap:5px}.choice span{min-height:72px;font-size:16px}.choice em{font-size:8px}.grid{grid-template-columns:1fr}}
+</style>
+
+<style>
+/* MOBILE-FIRST HESS */
+html,body{width:100%;min-height:100%;overflow-x:hidden}
+body{background:#f7f4f8;-webkit-tap-highlight-color:transparent}
+header{padding:18px 16px 24px;position:relative}
+.wrap{width:100%;max-width:520px;margin:0 auto}
+.brand{font-size:11px;letter-spacing:.06em}
+h1{font-size:22px;line-height:1.2;margin:7px 0 6px}
+.sub{font-size:12px;line-height:1.45}
+.progressbox{margin:-12px 10px 12px;padding:11px 13px;border-radius:13px}
+main{padding:0 10px 92px}
+.card{border-radius:15px;padding:18px 15px;box-shadow:0 2px 10px #0000000b}
+h2{font-size:19px}
+.desc{font-size:13px}
+.notice{font-size:12px;padding:10px 11px}
+label.field{font-size:13px;margin-top:14px}
+select,textarea{font-size:16px;min-height:48px;border-radius:10px}
+.onequestion{min-height:0;justify-content:flex-start;padding:24px 14px 20px}
+.qmeta{font-size:11px}
+.qtext{font-size:20px;line-height:1.42;margin:12px 0 25px}
+.choices{display:grid;grid-template-columns:1fr;gap:9px}
+.choice span{min-height:54px;flex-direction:row;justify-content:flex-start;text-align:left;padding:8px 14px;font-size:17px;border-radius:11px}
+.choice span em{font-size:12px;margin:0 0 0 12px;line-height:1.25}
+.choice input:checked+span{border-width:2px}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:#ffffffef;backdrop-filter:blur(12px);box-shadow:0 -4px 16px #00000012}
+.nav .btn{min-height:48px;font-size:15px}
+#prev{width:54px;padding:0}
+#next,#start,#submit{min-width:0}
+.footer{display:none}
+.result .score{font-size:48px}
+.grid{grid-template-columns:1fr;gap:9px}
+.kpi{padding:13px}
+.kpi b{font-size:24px}
+@media(min-width:700px){
+ .wrap{max-width:900px}
+ main{padding:0 15px 30px}
+ .card{padding:24px}
+ .choices{grid-template-columns:repeat(5,1fr);gap:9px}
+ .choice span{min-height:78px;flex-direction:column;justify-content:center;text-align:center;padding:6px;font-size:16px}
+ .choice span em{font-size:10px;margin:4px 0 0;line-height:1.2}
+ .nav{position:static;background:transparent;box-shadow:none;padding:0;margin-top:14px}
+ #prev{width:auto;padding:13px 18px}
+ .grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
+</head>
+<body>
+<header><div class="wrap">
+<div class="brand">HESS <span>• HOSPITAL EMPLOYEE SATISFACTION SURVEY</span></div>
+<h1>Survei Kepuasan Kerja Pegawai</h1>
+<p class="sub">Pengisian anonim • ± 8–10 menit • dapat diakses melalui HP</p>
+</div></header>
+
+<div class="wrap">
+<div class="progressbox">
+<div class="prow"><span id="section">Profil Pegawai</span><span id="counter">Profil</span></div>
+<div class="track"><div class="bar" id="bar"></div></div>
+</div>
+</div>
+
+<main class="wrap">
+<form id="form">
+
+<!-- PROFILE -->
+<section class="screen" id="profile">
+<div class="card">
+<h2>Profil Pegawai</h2><p class="desc">Tidak perlu memasukkan nama. Data digunakan untuk analisis kelompok secara agregat.</p>
+<div class="notice" style="margin-top:10px">ℹ️ <b>Catatan instrumen:</b> Bahasa pada prototype ini dibuat lebih komunikatif untuk uji coba pengguna. Untuk penelitian utama, gunakan versi MSQ yang telah ditetapkan/diadaptasi secara metodologis.</div>
+<div class="notice">🔒 <b>Kerahasiaan:</b> jawaban individual tidak ditampilkan kepada atasan/unit. Hasil ditampilkan secara agregat.</div>
+<label class="field">Kelompok tenaga</label>
+<select name="profesi" required><option value="">Pilih...</option><option>Dokter/Dokter Gigi</option><option>Perawat</option><option>Bidan</option><option>Tenaga Kesehatan Lainnya</option><option>Administrasi</option><option>Penunjang</option><option>Manajemen</option><option>Lainnya</option></select>
+<label class="field">Unit kerja</label>
+<select name="unit" required><option value="">Pilih...</option><option>IGD</option><option>Rawat Inap</option><option>Rawat Jalan</option><option>ICU</option><option>Kamar Operasi</option><option>Farmasi</option><option>Laboratorium</option><option>Radiologi</option><option>Rekam Medis</option><option>Administrasi</option><option>Keuangan</option><option>SDM</option><option>Penunjang</option><option>Lainnya</option></select>
+<label class="field">Status kepegawaian</label>
+<select name="status" required><option value="">Pilih...</option><option>Pegawai Tetap</option><option>Pegawai Kontrak</option><option>Outsourcing</option><option>Paruh Waktu</option><option>Lainnya</option></select>
+<label class="field">Lama bekerja</label>
+<select name="lama" required><option value="">Pilih...</option><option>&lt; 1 tahun</option><option>1–3 tahun</option><option>4–5 tahun</option><option>6–10 tahun</option><option>&gt; 10 tahun</option></select>
+<div class="nav"><button class="btn next" type="button" id="start">Mulai Survei →</button></div>
+</div>
+</section>
+
+<!-- QUESTION -->
+<section class="screen hidden" id="question">
+
+<div class="notice" id="msqIntro" style="margin-top:10px">
+  <b>MSQ-20 • 20 pertanyaan</b><br>
+  Bagian ini mengukur kepuasan Anda terhadap berbagai aspek pekerjaan. 
+  Pilih satu jawaban berdasarkan kondisi pekerjaan Anda saat ini.
+</div>
+
+<div class="card onequestion">
+<div class="qmeta" id="qmeta"></div>
+<div class="qtext" id="qtext"></div>
+<div class="choices" id="choices"></div>
+<div class="save" id="save"></div>
+</div>
+<div class="nav"><button class="btn back" type="button" id="prev">←</button><button class="btn next" type="button" id="next">Lanjut →</button></div>
+</section>
+
+<!-- OVERALL -->
+<section class="screen hidden" id="overall">
+<div class="card">
+<h2>Penilaian Keseluruhan</h2><p class="desc">Dua pertanyaan terakhir membantu membandingkan skor instrumen dengan penilaian global pegawai.</p>
+<div class="qtext" style="font-size:18px">Secara keseluruhan, seberapa puas Anda dengan pekerjaan Anda di rumah sakit ini?</div>
+<div class="choices" id="overallChoices"></div>
+<label class="field">Seberapa besar kemungkinan Anda merekomendasikan rumah sakit ini sebagai tempat kerja? (0–10)</label>
+<select name="recommend" required><option value="">Pilih...</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>
+<label class="field">Apa satu hal yang paling perlu diperbaiki untuk meningkatkan kepuasan kerja pegawai?</label>
+<textarea name="improve" placeholder="Tulis singkat (opsional)..."></textarea>
+<label class="field">Apa hal yang paling Anda sukai dari bekerja di rumah sakit ini?</label>
+<textarea name="like" placeholder="Tulis singkat (opsional)..."></textarea>
+<div class="nav"><button class="btn back" type="button" id="overallBack">← Kembali</button><button class="btn next" type="button" id="submit">Kirim Survei ✓</button></div>
+</div>
+</section>
+
+<!-- RESULT -->
+<section class="screen hidden" id="result">
+<div class="card result">
+<h2>Terima kasih atas partisipasi Anda</h2><p class="desc">Ringkasan skor dan data kualitatif responden. Pada implementasi penelitian, hasil individual dapat disembunyikan.</p>
+<div class="score" id="score">—</div><div class="pill" id="category">—</div>
+<div class="grid">
+<div class="kpi"><b id="intrinsic">—</b><small>MSQ Intrinsic Satisfaction</small><div class="barline"><div class="fill" id="ib"></div></div></div>
+<div class="kpi"><b id="extrinsic">—</b><small>MSQ Extrinsic Satisfaction</small><div class="barline"><div class="fill" id="eb"></div></div></div>
+<div class="kpi"><b id="general">—</b><small>MSQ General Satisfaction</small><div class="barline"><div class="fill" id="gb"></div></div></div>
+<div class="kpi"><b id="hospital">—</b><small>Hospital Work Factors</small><div class="barline"><div class="fill" id="hb"></div></div></div>
+</div>
+
+<div class="qualitative" style="margin-top:24px;text-align:left">
+  <h3 style="margin-bottom:6px">💬 Data Kualitatif</h3>
+  <p class="desc" style="margin-bottom:14px">
+    Masukan terbuka responden ditampilkan sebagai data kualitatif untuk dianalisis lebih lanjut.
+  </p>
+
+  <div class="kpi" style="margin-bottom:12px">
+    <small style="font-weight:800;color:var(--p)">HAL YANG PALING DISUKAI</small>
+    <p id="qualLike" style="margin:8px 0 0;line-height:1.6">Belum ada jawaban.</p>
+  </div>
+
+  <div class="kpi" style="margin-bottom:12px">
+    <small style="font-weight:800;color:var(--p)">HAL YANG PERLU DIPERBAIKI</small>
+    <p id="qualImprove" style="margin:8px 0 0;line-height:1.6">Belum ada jawaban.</p>
+  </div>
+
+  <div class="kpi">
+    <small style="font-weight:800;color:var(--p)">RINGKASAN DATA KUALITATIF</small>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <span class="pill" id="likeWords">0 kata — disukai</span>
+      <span class="pill" id="improveWords">0 kata — perlu diperbaiki</span>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+</form>
+<div class="footer">HESS Prototype • MSQ-20 + Hospital-Specific Module 24 • Prototype UX. MSQ-20 harus menggunakan versi yang ditetapkan untuk penelitian; Hospital Module 24 adalah modul khusus rumah sakit yang perlu diuji validitas dan reliabilitas.</div>
+</main>
+
+<script>
+const questions=[
+// MSQ 20 — wording below is adapted Indonesian wording for prototype UX.
+// Final research deployment must use the approved/licensed MSQ version.
+...[
+"Kesempatan untuk tetap aktif selama jam kerja",
+"Kesempatan untuk bekerja secara mandiri",
+"Kesempatan melakukan berbagai jenis tugas dalam pekerjaan",
+"Kesempatan memperoleh kemajuan atau status melalui pekerjaan",
+"Cara atasan memperlakukan dan membimbing saya",
+"Kompetensi atasan dalam mengambil keputusan",
+"Kesempatan melakukan pekerjaan yang sesuai dengan nilai dan prinsip saya",
+"Jaminan dan keamanan pekerjaan saya",
+"Kesempatan membantu dan melayani orang lain melalui pekerjaan",
+"Kesempatan memimpin atau mengarahkan orang lain",
+"Kesempatan menggunakan kemampuan terbaik yang saya miliki",
+"Pelaksanaan kebijakan dan aturan rumah sakit",
+"Gaji atau kompensasi yang saya terima dibandingkan dengan pekerjaan saya",
+"Kesempatan untuk memperoleh promosi atau kemajuan",
+"Kebebasan menggunakan pertimbangan sendiri dalam bekerja",
+"Kesempatan menggunakan kreativitas dalam bekerja",
+"Kondisi lingkungan tempat saya bekerja",
+"Hubungan saya dengan rekan kerja",
+"Pengakuan atau penghargaan atas pekerjaan yang saya lakukan",
+"Rasa pencapaian yang saya peroleh dari pekerjaan"
+].map((x,i)=>({group:"MSQ-20",id:"MSQ"+(i+1),text:x,labels:["Sangat Tidak Puas","Tidak Puas","Netral","Puas","Sangat Puas"]})),
+...[
+["Leadership & Supervision","Atasan memberikan arahan kerja yang jelas."],
+["Leadership & Supervision","Atasan memberikan dukungan ketika saya menghadapi masalah pekerjaan."],
+["Leadership & Supervision","Atasan memperlakukan pegawai secara adil dan terbuka terhadap masukan."],
+["Workload & Staffing","Beban kerja saya sesuai dengan kapasitas dan waktu kerja yang tersedia."],
+["Workload & Staffing","Jumlah tenaga di unit saya memadai untuk memberikan pelayanan yang optimal."],
+["Workload & Staffing","Pembagian tugas dan jadwal kerja di unit saya dilakukan secara wajar."],
+["Compensation & Reward","Sistem remunerasi atau insentif di rumah sakit diterapkan secara adil."],
+["Compensation & Reward","Saya memahami dasar pemberian remunerasi atau insentif yang saya terima."],
+["Compensation & Reward","Kontribusi dan kinerja pegawai mendapatkan penghargaan yang memadai."],
+["Career & Professional Development","Rumah sakit memberikan kesempatan yang cukup untuk meningkatkan kompetensi saya."],
+["Career & Professional Development","Saya memiliki kesempatan untuk mengembangkan karier di rumah sakit."],
+["Career & Professional Development","Kesempatan mengikuti pelatihan atau pengembangan diberikan secara adil."],
+["Work Environment & Facilities","Lingkungan kerja saya nyaman dan mendukung pelaksanaan pekerjaan."],
+["Work Environment & Facilities","Fasilitas dan peralatan kerja yang saya perlukan tersedia secara memadai."],
+["Work Environment & Facilities","Rumah sakit menyediakan lingkungan kerja yang aman bagi pegawai."],
+["Teamwork & Interprofessional Collaboration","Rekan kerja saling membantu dalam melaksanakan pekerjaan."],
+["Teamwork & Interprofessional Collaboration","Komunikasi antarprofesi berjalan dengan baik."],
+["Teamwork & Interprofessional Collaboration","Kolaborasi antarunit dalam memberikan pelayanan berjalan efektif."],
+["Psychological & Patient Safety","Saya merasa aman menyampaikan masalah yang dapat memengaruhi keselamatan pasien."],
+["Psychological & Patient Safety","Saya merasa aman melaporkan kesalahan atau risiko keselamatan tanpa takut mendapatkan perlakuan yang tidak adil."],
+["Psychological & Patient Safety","Rumah sakit mendorong perbaikan ketika terjadi masalah, bukan hanya menyalahkan individu."],
+["Work-Life Balance","Jadwal kerja memungkinkan saya menjaga keseimbangan kehidupan kerja dan kehidupan pribadi."],
+["Work-Life Balance","Saya mendapatkan waktu istirahat yang memadai selama bekerja."],
+["Work-Life Balance","Saya dapat menggunakan hak cuti atau waktu istirahat sesuai ketentuan."]
+].map((x,i)=>({group:x[0],id:"H"+(i+1),text:x[1],labels:["Sangat Tidak Setuju","Tidak Setuju","Netral","Setuju","Sangat Setuju"]}))
+];
+
+let idx=-1, answers={};
+const $=id=>document.getElementById(id);
+function setProgress(){
+ let pct=idx<0?0:Math.round(((idx+1)/questions.length)*100);
+ if(idx===questions.length) pct=100;
+ $("bar").style.width=pct+"%";
+ $("counter").textContent=idx<0?"Profil":idx<questions.length?`${idx+1}/${questions.length}`:"Selesai";
+}
+function renderQ(){
+ const q=questions[idx];
+ $("section").textContent=q.group;
+ $("qmeta").textContent=`${q.id} • ${idx+1} dari ${questions.length}`;
+ $("qtext").textContent=q.text;
+ $("choices").innerHTML=q.labels.map((l,i)=>`<label class="choice"><input type="radio" name="current" value="${i+1}" ${answers[q.id]==i+1?"checked":""}><span>${i+1}<em>${l}</em></span></label>`).join("");
+ $("save").textContent=answers[q.id]?"✓ Jawaban tersimpan di perangkat ini":"Pilih satu jawaban untuk melanjutkan";
+ $("next").disabled=!answers[q.id];
+ document.querySelectorAll('input[name="current"]').forEach(r=>r.onchange=()=>{answers[q.id]=Number(r.value);$("next").disabled=false;$("save").textContent="✓ Jawaban tersimpan di perangkat ini";localStorage.setItem("hess_answers",JSON.stringify(answers));});
+ setProgress();window.scrollTo({top:0,behavior:"smooth"});
+}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));$(id).classList.remove("hidden");}
+$("start").onclick=()=>{if(!$("form").reportValidity())return;idx=0;show("question");renderQ()};
+$("prev").onclick=()=>{if(idx>0){idx--;renderQ()}else{show("profile");idx=-1;setProgress()}};
+$("next").onclick=()=>{if(!answers[questions[idx].id])return;if(idx<questions.length-1){idx++;renderQ()}else{show("overall");setProgress();window.scrollTo({top:0,behavior:"smooth"})}};
+$("overallBack").onclick=()=>{idx=questions.length-1;show("question");renderQ()};
+function overallChoices(){
+ const labels=["Sangat Tidak Puas","Tidak Puas","Netral","Puas","Sangat Puas"];
+ $("overallChoices").innerHTML=labels.map((l,i)=>`<label class="choice"><input required type="radio" name="overall" value="${i+1}"><span>${i+1}<em>${l}</em></span></label>`).join("");
+}
+overallChoices();
+$("submit").onclick=()=>{
+ if(!$("form").reportValidity())return;
+ const vals=questions.map(q=>answers[q.id]).filter(Boolean);
+ const msq=questions.slice(0,20).map(q=>answers[q.id]);
+ const h=questions.slice(20).map(q=>answers[q.id]);
+ // Prototype grouping; final MSQ scoring must follow the exact selected MSQ manual/version.
+ const intrinsic=[0,1,2,3,6,7,8,9,10,14,15,19].map(i=>msq[i]);
+ const extrinsic=[4,5,11,12,13,18].map(i=>msq[i]);
+ const pct=a=>Math.round(a.reduce((x,y)=>x+y,0)/(a.length*5)*100);
+ const g=pct(msq), ins=pct(intrinsic), ex=pct(extrinsic), hs=pct(h);
+ $("score").textContent=g+"%"; $("category").textContent=g>=81?"Sangat Puas":g>=61?"Puas":g>=41?"Cukup Puas":g>=21?"Tidak Puas":"Sangat Tidak Puas";
+ [["intrinsic",ins],["extrinsic",ex],["general",g],["hospital",hs]].forEach(([id,v])=>{$(id).textContent=v+"%";$(id[0]+"b").style.width=v+"%"});
+
+ // Data kualitatif: tampilkan jawaban terbuka responden pada halaman hasil.
+ const likeText=document.querySelector('textarea[name="like"]')?.value.trim() || "";
+ const improveText=document.querySelector('textarea[name="improve"]')?.value.trim() || "";
+ const wordCount=t=>t?t.split(/\s+/).filter(Boolean).length:0;
+ const safe=t=>t.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+ $("qualLike").innerHTML=likeText?safe(likeText):"Belum ada jawaban.";
+ $("qualImprove").innerHTML=improveText?safe(improveText):"Belum ada jawaban.";
+ $("likeWords").textContent=wordCount(likeText)+" kata — disukai";
+ $("improveWords").textContent=wordCount(improveText)+" kata — perlu diperbaiki";
+
+ localStorage.removeItem("hess_answers"); show("result"); setProgress(); window.scrollTo({top:0,behavior:"smooth"});
+};
+try{const old=localStorage.getItem("hess_answers");if(old)answers=JSON.parse(old)}catch(e){}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const startBtn = document.getElementById("start");
+  const profile = document.getElementById("profile");
+  const question = document.getElementById("question");
+  const form = document.getElementById("form");
+
+  if (!startBtn || !profile || !question || !form) return;
+
+  startBtn.onclick = function (e) {
+    e.preventDefault();
+
+    const required = profile.querySelectorAll("select[required]");
+    let valid = true;
+
+    required.forEach(function (el) {
+      if (!el.value) {
+        valid = false;
+        el.reportValidity();
+      }
+    });
+
+    if (!valid) return;
+
+    // Start from the first survey item.
+    if (typeof idx !== "undefined") idx = 0;
+
+    profile.classList.add("hidden");
+    question.classList.remove("hidden");
+
+    if (typeof renderQ === "function") {
+      renderQ();
+    } else {
+      // Fallback: render first question if the original function is unavailable.
+      const q = questions[0];
+      document.getElementById("section").textContent = q.group;
+      document.getElementById("qmeta").textContent =
+        q.id + " • 1 dari " + questions.length;
+      document.getElementById("qtext").textContent = q.text;
+
+      document.getElementById("choices").innerHTML = q.labels.map(function(label, i) {
+        return '<label class="choice">' +
+          '<input type="radio" name="current" value="' + (i + 1) + '">' +
+          '<span>' + (i + 1) + '<em>' + label + '</em></span>' +
+          '</label>';
+      }).join("");
+
+      document.getElementById("next").disabled = true;
+      document.querySelectorAll('input[name="current"]').forEach(function(radio) {
+        radio.onchange = function() {
+          answers[q.id] = Number(this.value);
+          document.getElementById("next").disabled = false;
+        };
+      });
+    }
+
+    window.scrollTo({top: 0, behavior: "smooth"});
+  };
+});
+</script>
+
+</body>
+</html>
