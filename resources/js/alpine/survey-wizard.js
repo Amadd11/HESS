@@ -6,6 +6,11 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
     isSubmitting: false,
     errorMessage: '',
 
+    // Fitur UX Cerdas (Auto-Advance & Navigator Modal)
+    autoAdvance: true,
+    autoAdvanceTimer: null,
+    questionListModalOpen: false,
+
     // Data Responden
     profile: {
         profession: '',
@@ -14,7 +19,7 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
         tenure: ''
     },
 
-    // Jawaban Butir Kuesioner (44 butir, key: question.id, value: 1-5)
+    // Jawaban Butir Kuesioner (key: question.id, value: 1-5)
     answers: {},
 
     // Penilaian Keseluruhan & Kualitatif
@@ -26,34 +31,54 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
     },
 
     init() {
-        // Pulihkan draft jika ada di localStorage
-        const saved = localStorage.getItem('hess_survey_draft');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                if (parsed.profile) this.profile = { ...this.profile, ...parsed.profile };
-                if (parsed.answers) this.answers = { ...parsed.answers };
-                if (parsed.overall) this.overall = { ...this.overall, ...parsed.overall };
-            } catch (e) {
-                console.warn('Gagal membaca draft survei:', e);
-            }
+        // Bersihkan data draft lama jika ada
+        try {
+            localStorage.removeItem('hess_survey_draft');
+        } catch (e) {}
+
+        // Baca preferensi auto-advance
+        const savedAuto = localStorage.getItem('hess_survey_autoadvance');
+        if (savedAuto !== null) {
+            this.autoAdvance = savedAuto === '1';
         }
 
-        // Pantau perubahan dan simpan otomatis
-        this.$watch('answers', () => this.saveDraft());
-        this.$watch('profile', () => this.saveDraft());
-        this.$watch('overall', () => this.saveDraft());
+        // Daftarkan listener shortcut keyboard untuk desktop
+        window.addEventListener('keydown', (e) => this.handleKeyDown(e));
     },
 
-    saveDraft() {
+    toggleAutoAdvance() {
+        this.autoAdvance = !this.autoAdvance;
         try {
-            localStorage.setItem('hess_survey_draft', JSON.stringify({
-                profile: this.profile,
-                answers: this.answers,
-                overall: this.overall
-            }));
-        } catch (e) {
-            console.warn('Gagal menyimpan draft:', e);
+            localStorage.setItem('hess_survey_autoadvance', this.autoAdvance ? '1' : '0');
+        } catch (e) {}
+    },
+
+    handleKeyDown(e) {
+        // Abaikan shortcut jika user sedang mengetik di input / textarea atau modal sedang terbuka
+        const target = e.target;
+        const isInputField = target && (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable);
+        if (isInputField || this.questionListModalOpen) {
+            return;
+        }
+
+        if (this.step === 'questionnaire') {
+            // Tombol 1 - 5 untuk memilih nilai skala Likert
+            if (['1', '2', '3', '4', '5'].includes(e.key)) {
+                e.preventDefault();
+                this.setAnswer(Number(e.key));
+            }
+            // Tombol Panah Kanan / Enter untuk lanjut ke soal berikutnya
+            else if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                if (this.isCurrentAnswered) {
+                    e.preventDefault();
+                    this.nextQuestion();
+                }
+            }
+            // Tombol Panah Kiri untuk kembali ke soal sebelumnya
+            else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                this.prevQuestion();
+            }
         }
     },
 
@@ -84,6 +109,15 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
         return Boolean(this.answers[this.currentQuestion.id]);
     },
 
+    get answeredCount() {
+        return Object.keys(this.answers).length;
+    },
+
+    isQuestionAnswered(index) {
+        const q = this.questions[index];
+        return q ? Boolean(this.answers[q.id]) : false;
+    },
+
     get progressPercentage() {
         if (this.questions.length === 0) return 0;
         if (this.step === 'profile') return 5;
@@ -97,7 +131,7 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
     get progressText() {
         if (this.step === 'profile') return 'Profil Pegawai';
         if (this.step === 'overall') return 'Penilaian Akhir';
-        return `${this.currentIndex + 1} dari ${this.questions.length}`;
+        return `Soal ${this.currentIndex + 1} dari ${this.questions.length}`;
     },
 
     startSurvey() {
@@ -115,10 +149,28 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
     setAnswer(score) {
         if (!this.currentQuestion) return;
         this.answers[this.currentQuestion.id] = Number(score);
-        this.saveDraft();
+
+        // Auto-advance dengan jeda halus ~320ms agar efek visual pilihan terpilih sempat terlihat
+        if (this.autoAdvance) {
+            clearTimeout(this.autoAdvanceTimer);
+            this.autoAdvanceTimer = setTimeout(() => {
+                this.nextQuestion();
+            }, 320);
+        }
+    },
+
+    jumpToQuestion(index) {
+        if (index >= 0 && index < this.questions.length) {
+            clearTimeout(this.autoAdvanceTimer);
+            this.currentIndex = index;
+            this.step = 'questionnaire';
+            this.questionListModalOpen = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     },
 
     nextQuestion() {
+        clearTimeout(this.autoAdvanceTimer);
         if (!this.isCurrentAnswered) return;
 
         if (this.currentIndex < this.questions.length - 1) {
@@ -131,6 +183,7 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
     },
 
     prevQuestion() {
+        clearTimeout(this.autoAdvanceTimer);
         if (this.currentIndex > 0) {
             this.currentIndex--;
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -161,7 +214,7 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
         // Cek apakah ada soal yang terlewat
         const answeredCount = Object.keys(this.answers).length;
         if (answeredCount < this.questions.length) {
-            this.errorMessage = `Masih ada pertanyaan yang terlewat (${answeredCount}/${this.questions.length} terjawab). Silakan periksa kembali.`;
+            this.errorMessage = `Masih ada pertanyaan yang terlewat (${answeredCount}/${this.questions.length} terjawab). Silakan periksa kembali melalui menu Navigator Soal.`;
             return;
         }
 
@@ -194,7 +247,6 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
             const data = await response.json();
 
             if (response.ok && data.success) {
-                localStorage.removeItem('hess_survey_draft');
                 window.location.href = data.redirect || '/survey/finish';
             } else {
                 this.isSubmitting = false;

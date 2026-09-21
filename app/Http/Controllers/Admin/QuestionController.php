@@ -60,6 +60,7 @@ class QuestionController extends Controller
             'questions' => $query->paginate(15)->withQueryString(),
             'categories' => Category::orderBy('order')->get(),
             'stats' => $stats,
+            'nextOrder' => (int) (Question::max('order') ?? 0) + 1,
         ]);
     }
 

@@ -6,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Admin Dashboard — HESS' }}</title>
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpeg') }}">
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 
 <body class="h-full font-sans antialiased text-gray-800 flex" x-data="{ sidebarOpen: false }">
@@ -30,6 +34,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
+                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo" class="w-9 h-9 rounded-xl object-contain bg-white border border-gray-200/90 p-1 lg:hidden shrink-0 shadow-xs">
                 <h1 class="text-base md:text-lg font-bold text-gray-900 truncate">
                     @yield('header-title', 'Dashboard')
                 </h1>

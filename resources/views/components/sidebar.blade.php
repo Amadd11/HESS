@@ -7,17 +7,20 @@
        :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
     
     <!-- Logo & Brand -->
-    <div class="h-16 px-6 border-b border-gray-100 flex items-center justify-between">
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-primary-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shadow-primary-600/30">
-                H
+    <div class="py-4 px-5 border-b border-gray-100 flex items-center justify-between">
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 min-w-0">
+            <div class="w-12 h-12 rounded-xl bg-white border border-gray-200/90 p-1 flex items-center justify-center shadow-xs shrink-0">
+                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo PT. MRSTC Indonesia" class="w-full h-full object-contain">
             </div>
-            <div>
-                <span class="font-extrabold text-base tracking-tight text-gray-900">HESS</span>
-                <span class="block text-[10px] uppercase font-bold tracking-wider text-primary-600">Admin Hospital</span>
+            <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                    <span class="font-black text-lg tracking-tight text-gray-900 leading-tight">HESS</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-primary-50 text-primary-700 border border-primary-100">RS</span>
+                </div>
+                <span class="block text-xs font-bold text-gray-700 truncate mt-0.5">PT. MRSTC Indonesia</span>
             </div>
         </a>
-        <button @click="sidebarOpen = false" class="lg:hidden text-gray-400 hover:text-gray-600 p-1">
+        <button @click="sidebarOpen = false" class="lg:hidden text-gray-400 hover:text-gray-600 p-1 shrink-0">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>

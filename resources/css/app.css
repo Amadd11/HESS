@@ -24,3 +24,8 @@
     --color-text-main: #263238;
     --color-text-muted: #6b7280;
 }
+
+[x-cloak] {
+    display: none !important;
+}
+

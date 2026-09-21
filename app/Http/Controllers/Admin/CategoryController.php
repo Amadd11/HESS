@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\StoreCategoryRequest;
 use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Models\Question;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -14,10 +16,33 @@ class CategoryController extends Controller
     /**
      * Tampilkan daftar master kategori kuesioner.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = Category::withCount('questions')->orderBy('order');
+
+        if ($request->filled('type')) {
+            $type = $request->string('type')->value();
+            if (in_array($type, ['msq', 'hospital'], true)) {
+                $query->where('type', $type);
+            }
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->string('search'));
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('code', 'like', "%{$search}%"));
+        }
+
+        $stats = [
+            'total' => Category::count(),
+            'msq' => Category::where('type', 'msq')->count(),
+            'hospital' => Category::where('type', 'hospital')->count(),
+            'total_questions' => Question::count(),
+        ];
+
         return view('admin.categories.index', [
-            'categories' => Category::withCount('questions')->orderBy('order')->get(),
+            'categories' => $query->get(),
+            'stats' => $stats,
+            'nextOrder' => (int) (Category::max('order') ?? 0) + 1,
         ]);
     }
 

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Period\StorePeriodRequest;
 use App\Http\Requests\Admin\Period\UpdatePeriodRequest;
 use App\Models\Period;
+use App\Models\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -15,11 +17,42 @@ class PeriodController extends Controller
     /**
      * Tampilkan daftar periode survei kepuasan pegawai.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $periods = Period::withCount('responses')->orderByDesc('start_date')->get();
+        $query = Period::withCount('responses')->orderByDesc('start_date');
 
-        return view('admin.periods.index', compact('periods'));
+        if ($request->filled('search')) {
+            $search = trim($request->string('search'));
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->string('status')->value();
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        }
+
+        $activePeriod = Period::withCount('responses')->where('is_active', true)->first();
+        $totalResponses = Response::count();
+        $activeRate = ($activePeriod && $activePeriod->target > 0)
+            ? round(($activePeriod->responses_count / $activePeriod->target) * 100, 1)
+            : 0;
+
+        $stats = [
+            'total' => Period::count(),
+            'active_period' => $activePeriod,
+            'total_responses' => $totalResponses,
+            'active_rate' => $activeRate,
+            'archived' => Period::where('is_active', false)->count(),
+        ];
+
+        return view('admin.periods.index', [
+            'periods' => $query->get(),
+            'stats' => $stats,
+        ]);
     }
 
     /**
@@ -28,7 +61,7 @@ class PeriodController extends Controller
     public function store(StorePeriodRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['name']) . '-' . time();
+        $data['slug'] = Str::slug($data['name']).'-'.time();
         $data['is_active'] = $request->boolean('is_active');
 
         // Jika periode baru diset aktif, nonaktifkan periode aktif sebelumnya
