@@ -66,7 +66,7 @@ class PeriodController extends Controller
 
         // Jika periode baru diset aktif, nonaktifkan periode aktif sebelumnya
         if ($data['is_active']) {
-            Period::where('is_active', true)->update(['is_active' => false]);
+            Period::deactivateAll();
         }
 
         Period::create($data);
@@ -83,11 +83,11 @@ class PeriodController extends Controller
         $data['slug'] = Str::slug($data['name']);
         $data['is_active'] = $request->boolean('is_active');
 
-        if ($data['is_active'] && ! $period->is_active) {
-            Period::where('id', '!=', $period->id)->update(['is_active' => false]);
-        }
-
         $period->update($data);
+
+        if ($data['is_active']) {
+            $period->markAsActive();
+        }
 
         return redirect()->route('admin.periods.index')->with('success', 'Data periode survei berhasil diperbarui!');
     }
@@ -97,8 +97,7 @@ class PeriodController extends Controller
      */
     public function activate(Period $period): RedirectResponse
     {
-        Period::where('id', '!=', $period->id)->update(['is_active' => false]);
-        $period->update(['is_active' => true]);
+        $period->markAsActive();
 
         return back()->with('success', "Periode '{$period->name}' sekarang berstatus aktif!");
     }

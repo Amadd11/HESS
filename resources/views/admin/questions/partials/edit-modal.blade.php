@@ -47,7 +47,7 @@
             </x-select>
 
             <x-select label="Subskala (Khusus MSQ)" name="subscale" x-model="editQuestion.subscale">
-                <option value="">-- Tidak Ada / Faktor RS --</option>
+                <option value="">Tidak Ada / Faktor RS</option>
                 <option value="intrinsic">Kepuasan Intrinsik</option>
                 <option value="extrinsic">Kepuasan Ekstrinsik</option>
                 <option value="general">Kepuasan Umum</option>

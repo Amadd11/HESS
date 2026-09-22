@@ -11,7 +11,7 @@
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-xs">
+     class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-gray-900/60">
     <div @click.away="{{ $show }} = false"
          x-show="{{ $show }}"
          x-transition:enter="transition ease-out duration-200"

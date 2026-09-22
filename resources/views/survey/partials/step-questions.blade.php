@@ -41,9 +41,6 @@
                                     x-text="idx + 1"></span>
                             </div>
                             <span class="text-xs md:text-[11px] font-medium leading-tight" x-text="label"></span>
-                            <!-- Keyboard shortcut badge (desktop only) -->
-                            <span class="hidden md:inline-block absolute top-1.5 right-1.5 text-[9px] font-mono px-1 py-0.5 rounded bg-gray-100 text-gray-400 group-hover:bg-gray-200"
-                                x-text="idx + 1"></span>
                         </div>
                     </label>
                 </template>

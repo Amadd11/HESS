@@ -14,13 +14,10 @@
     {{-- 3. 4 Executive KPI Cards --}}
     @include('admin.dashboard.partials.kpi-cards')
 
-    {{-- 4. Interactive ApexCharts: Radar 8 Dimensi RS & Bar Komparasi --}}
-    @include('admin.dashboard.partials.charts-section')
-
     {{-- 5. Actionable Intelligence: Top 5 Strengths vs Priority Areas --}}
     @include('admin.dashboard.partials.actionable-insights')
 
-    {{-- 6. Detail 8 Dimensi Lingkungan & Budaya Kerja RS --}}
+    {{-- 6. Detail 8 Faktor Kondisi & Lingkungan Kerja RS --}}
     @include('admin.dashboard.partials.hospital-dimensions')
 
     {{-- 7. Feedback Kualitatif Pegawai & Pencarian Aspirasi --}}

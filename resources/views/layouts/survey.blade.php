@@ -21,26 +21,38 @@
     </style>
 </head>
 
-<body class="min-h-full bg-[#f7f4f8] text-[#263238] font-sans antialiased flex flex-col selection:bg-primary-500 selection:text-white pb-28 md:pb-12">
+<body class="min-h-full bg-[#f8f6f9] text-[#263238] font-sans antialiased flex flex-col selection:bg-primary-500 selection:text-white pb-28 md:pb-12">
     <!-- Header Brand HESS -->
-    <header class="bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 text-white pt-6 pb-9 px-4 md:px-8 shadow-sm">
-        <div class="max-w-2xl mx-auto">
-            <div class="flex items-center justify-between text-xs tracking-wider uppercase font-extrabold text-primary-100/90 mb-3">
-                <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo-icon.png') }}" alt="Logo PT. MRSTC Indonesia" class="w-10 h-10 rounded-xl bg-white p-1 object-contain shadow-xs shrink-0 border border-white/40">
-                    <div>
-                        <span class="block font-black text-sm text-white tracking-wide leading-tight">HESS - HOSPITAL EMPLOYEE SATISFACTION SURVEY</span>
-                        <span class="block text-[10px] text-primary-100 tracking-wider font-semibold">PT. MRSTC Indonesia</span>
+    <header class="bg-gradient-to-r from-primary-900 via-primary-800 to-primary-700 text-white pt-6 pb-10 md:pt-7 md:pb-12 px-4 md:px-8 shadow-sm">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo PT. MRSTC Indonesia" class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white p-1.5 object-contain shadow-md shrink-0 border border-white/30">
+                <div>
+                    <div class="flex items-center gap-2 text-xs text-primary-200 font-bold uppercase tracking-wider">
+                        <span>HESS</span>
+                        <span>•</span>
+                        <span>PT. MRSTC INDONESIA</span>
+                    </div>
+                    <h1 class="font-extrabold text-base md:text-xl text-white tracking-tight leading-tight mt-0.5">
+                        Survei Kepuasan Kerja Pegawai
+                    </h1>
+                    <div class="text-xs text-primary-100/90 font-medium mt-0.5">
+                        RSUP Dr. Sardjito Yogyakarta
                     </div>
                 </div>
             </div>
-            <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">Survei Kepuasan Kerja Pegawai</h1>
-            <p class="text-xs md:text-sm text-primary-100/85 mt-1">RSUP Dr. Sardjito</p>
+
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/15 backdrop-blur-xs text-white border border-white/20 shadow-xs">
+                    <svg class="w-3.5 h-3.5 text-emerald-300 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                    <span>100% Anonim & Rahasia</span>
+                </span>
+            </div>
         </div>
     </header>
 
     <!-- Content Container -->
-    <main class="max-w-2xl w-full mx-auto px-4 -mt-4 flex-1">
+    <main class="max-w-4xl w-full mx-auto px-4 md:px-6 -mt-6 md:-mt-7 flex-1">
         @yield('content')
     </main>
 

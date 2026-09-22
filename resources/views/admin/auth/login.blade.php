@@ -26,7 +26,7 @@
 
         <!-- Login Card -->
         <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-200/80">
-            <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-4">
+            <form action="{{ route('login.submit') }}" method="POST" class="space-y-4">
                 @csrf
 
                 <!-- Email Input -->

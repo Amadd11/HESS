@@ -179,7 +179,7 @@
             <div class="lg:col-span-3">
                 <select name="category_id"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">-- Semua Kategori / Dimensi --</option>
+                    <option value="">Semua Kategori</option>
                     <optgroup label="Instrumen Baku MSQ-20">
                         @foreach($categories->where('type', 'msq') as $cat)
                             <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
@@ -201,7 +201,7 @@
             <div class="lg:col-span-2">
                 <select name="scale"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">-- Tipe Skala --</option>
+                    <option value="">Semua Tipe Skala</option>
                     <option value="satisfaction" {{ request('scale') === 'satisfaction' ? 'selected' : '' }}>Puas (1-5)</option>
                     <option value="agreement" {{ request('scale') === 'agreement' ? 'selected' : '' }}>Setuju (1-5)</option>
                 </select>
@@ -211,7 +211,7 @@
             <div class="lg:col-span-2">
                 <select name="status"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">-- Semua Status --</option>
+                    <option value="">Semua Status</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Hanya Aktif</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Hanya Nonaktif</option>
                 </select>

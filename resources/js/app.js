@@ -7,6 +7,8 @@ import dashboardFeedback from './alpine/dashboard-feedback';
 import categoriesManager from './alpine/categories-manager';
 import periodsManager from './alpine/periods-manager';
 import questionsManager from './alpine/questions-manager';
+import responsesManager from './alpine/responses-manager';
+import demographicsManager from './alpine/demographics-manager';
 
 window.ApexCharts = ApexCharts;
 
@@ -19,6 +21,8 @@ Alpine.data('dashboardFeedback', dashboardFeedback);
 Alpine.data('categoriesManager', categoriesManager);
 Alpine.data('periodsManager', periodsManager);
 Alpine.data('questionsManager', questionsManager);
+Alpine.data('responsesManager', responsesManager);
+Alpine.data('demographicsManager', demographicsManager);
 
 window.Alpine = Alpine;
 Alpine.start();

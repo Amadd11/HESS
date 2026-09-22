@@ -36,70 +36,98 @@
             </div>
 
             <!-- Search Input -->
-            <div class="relative min-w-[220px]">
+            <div class="relative min-w-[200px]">
                 <input type="text" x-model="search" placeholder="Cari kata kunci (cth: shift, insentif)..."
                        class="w-full h-8 pl-8 pr-3 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500">
                 <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
+
+            <!-- Link ke Data Respon -->
+            <a href="{{ route('admin.responses.index', request()->query()) }}"
+               class="h-8 px-3 rounded-xl border border-gray-200 hover:border-primary-300 hover:bg-primary-50 text-gray-700 hover:text-primary-700 text-xs font-bold transition flex items-center gap-1 shrink-0"
+               title="Buka tabel seluruh respon survei">
+                <span>Data Respon</span>
+                <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
         </div>
     </div>
 
-    <!-- Feedbacks List -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @forelse($recentFeedbacks as $fb)
-            @php
-                $hasLike = !empty(trim($fb->like_text ?? ''));
-                $hasImprove = !empty(trim($fb->improve_text ?? ''));
-                $jsLike = addslashes($fb->like_text ?? '');
-                $jsImprove = addslashes($fb->improve_text ?? '');
-                $jsProf = addslashes($fb->profession ?? '');
-                $jsUnit = addslashes($fb->unit ?? '');
-            @endphp
-            <div x-show="matches({{ $hasLike ? 'true' : 'false' }}, {{ $hasImprove ? 'true' : 'false' }}, '{{ $jsLike }}', '{{ $jsImprove }}', '{{ $jsProf }}', '{{ $jsUnit }}')"
-                 class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-primary-200 hover:shadow-xs transition space-y-3 text-xs flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between text-[11px] text-gray-500 mb-2">
-                        <x-badge color="primary" size="xs">
-                            {{ $fb->profession }} &bull; Unit {{ $fb->unit }}
-                        </x-badge>
-                        <span class="text-[10px] text-gray-400">{{ $fb->completed_at ? $fb->completed_at->diffForHumans() : '-' }}</span>
+    <!-- Feedbacks Scrollable Container (Mencegah dashboard melar ke bawah) -->
+    <div class="max-h-[500px] overflow-y-auto pr-1.5 space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            @forelse($recentFeedbacks as $fb)
+                @php
+                    $hasLike = !empty(trim($fb->like_text ?? ''));
+                    $hasImprove = !empty(trim($fb->improve_text ?? ''));
+                    $jsLike = addslashes($fb->like_text ?? '');
+                    $jsImprove = addslashes($fb->improve_text ?? '');
+                    $jsProf = addslashes($fb->profession ?? '');
+                    $jsUnit = addslashes($fb->unit ?? '');
+                @endphp
+                <div x-show="matches({{ $hasLike ? 'true' : 'false' }}, {{ $hasImprove ? 'true' : 'false' }}, '{{ $jsLike }}', '{{ $jsImprove }}', '{{ $jsProf }}', '{{ $jsUnit }}')"
+                     class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-primary-200 hover:shadow-xs transition space-y-3 text-xs flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between text-[11px] text-gray-500 mb-2">
+                            <x-badge color="primary" size="xs">
+                                {{ $fb->profession }} &bull; Unit {{ $fb->unit }}
+                            </x-badge>
+                            <span class="text-[10px] text-gray-400">{{ $fb->completed_at ? $fb->completed_at->diffForHumans() : '-' }}</span>
+                        </div>
+
+                        @if($hasLike)
+                            <div class="space-y-0.5 mt-2" x-show="tab === 'all' || tab === 'like'">
+                                <span class="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
+                                    <span>Hal yang Disukai:</span>
+                                </span>
+                                <p class="text-gray-700 leading-relaxed font-medium pl-3.5 border-l-2 border-emerald-400 italic">
+                                    "{{ $fb->like_text }}"
+                                </p>
+                            </div>
+                        @endif
+
+                        @if($hasImprove)
+                            <div class="space-y-0.5 mt-2.5" x-show="tab === 'all' || tab === 'improve'">
+                                <span class="text-[10px] font-extrabold text-rose-600 uppercase tracking-wider flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                    <span>Perlu Diperbaiki:</span>
+                                </span>
+                                <p class="text-gray-700 leading-relaxed font-medium pl-3.5 border-l-2 border-rose-400 italic">
+                                    "{{ $fb->improve_text }}"
+                                </p>
+                            </div>
+                        @endif
                     </div>
 
-                    @if($hasLike)
-                        <div class="space-y-0.5 mt-2" x-show="tab === 'all' || tab === 'like'">
-                            <span class="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
-                                <span>Hal yang Disukai:</span>
-                            </span>
-                            <p class="text-gray-700 leading-relaxed font-medium pl-4 border-l-2 border-emerald-400 italic">
-                                "{{ $fb->like_text }}"
-                            </p>
-                        </div>
-                    @endif
-
-                    @if($hasImprove)
-                        <div class="space-y-0.5 mt-2.5" x-show="tab === 'all' || tab === 'improve'">
-                            <span class="text-[10px] font-extrabold text-rose-600 uppercase tracking-wider flex items-center gap-1">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                <span>Perlu Diperbaiki:</span>
-                            </span>
-                            <p class="text-gray-700 leading-relaxed font-medium pl-4 border-l-2 border-rose-400 italic">
-                                "{{ $fb->improve_text }}"
-                            </p>
-                        </div>
-                    @endif
+                    <div class="pt-2 border-t border-gray-100/70 text-[10px] text-gray-400 flex items-center justify-between">
+                        <span>Status: {{ $fb->status ?? 'Pegawai' }}</span>
+                        <span>Masa Kerja: {{ $fb->tenure ?? '-' }}</span>
+                    </div>
                 </div>
-
-                <div class="pt-2 border-t border-gray-100/70 text-[10px] text-gray-400 flex items-center justify-between">
-                    <span>Status: {{ $fb->status ?? 'Pegawai' }}</span>
-                    <span>Masa Kerja: {{ $fb->tenure ?? '-' }}</span>
+            @empty
+                <div class="col-span-2 py-10 text-center text-gray-400 text-xs">
+                    Belum ada masukan kualitatif yang terekam pada periode ini.
                 </div>
-            </div>
-        @empty
-            <div class="col-span-2 py-10 text-center text-gray-400 text-xs">
-                Belum ada masukan kualitatif yang terekam pada periode ini.
-            </div>
-        @endforelse
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Section Footer -->
+    <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-gray-500">
+        <div class="flex items-center gap-1.5 text-[11px] text-gray-500">
+            <svg class="w-4 h-4 text-primary-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Menampilkan {{ min($recentFeedbacks->count(), 12) }} aspirasi terbaru dari total <strong>{{ $totalFeedbacksCount }}</strong> masukan pegawai.</span>
+        </div>
+
+        <a href="{{ route('admin.responses.index', request()->query()) }}"
+           class="inline-flex items-center gap-1.5 font-bold text-xs text-primary-700 hover:text-primary-800 hover:underline">
+            <span>Buka Seluruh Masukan di Data Respon</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
     </div>
 
 </div>

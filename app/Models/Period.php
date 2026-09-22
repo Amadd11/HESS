@@ -52,4 +52,21 @@ class Period extends Model
     {
         return $query->where('is_active', true);
     }
+
+    /**
+     * Jadikan periode ini sebagai satu-satunya periode aktif.
+     */
+    public function markAsActive(): void
+    {
+        static::where('id', '!=', $this->id)->update(['is_active' => false]);
+        $this->update(['is_active' => true]);
+    }
+
+    /**
+     * Nonaktifkan semua periode aktif.
+     */
+    public static function deactivateAll(): void
+    {
+        static::where('is_active', true)->update(['is_active' => false]);
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Survey;
 
-use App\Models\Question;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSurveyRequest extends FormRequest
@@ -51,10 +50,8 @@ class StoreSurveyRequest extends FormRequest
      */
     protected function answerRules(): array
     {
-        $activeQuestionCount = Question::active()->count();
-
         return [
-            'answers' => ['required', 'array', 'size:' . $activeQuestionCount],
+            'answers' => ['required', 'array', 'min:1'],
             'answers.*' => 'required|integer|between:1,5',
         ];
     }

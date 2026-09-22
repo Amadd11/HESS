@@ -4,7 +4,7 @@
         @csrf
 
         <x-select label="Kategori Instrumen" name="category_id" :required="true">
-            <option value="">-- Pilih Kategori --</option>
+            <option value="">Pilih Kategori</option>
             <optgroup label="Instrumen Baku MSQ-20">
                 @foreach($categories->where('type', 'msq') as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
@@ -47,7 +47,7 @@
             </x-select>
 
             <x-select label="Subskala (Khusus MSQ)" name="subscale">
-                <option value="">-- Tidak Ada / Faktor RS --</option>
+                <option value="">Tidak Ada / Faktor RS</option>
                 <option value="intrinsic">Kepuasan Intrinsik</option>
                 <option value="extrinsic">Kepuasan Ekstrinsik</option>
                 <option value="general">Kepuasan Umum</option>

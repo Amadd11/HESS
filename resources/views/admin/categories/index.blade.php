@@ -163,7 +163,7 @@
             <div class="sm:col-span-2">
                 <select name="type"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">-- Semua Kelompok --</option>
+                    <option value="">Semua Kelompok</option>
                     <option value="msq" {{ request('type') === 'msq' ? 'selected' : '' }}>MSQ-20</option>
                     <option value="hospital" {{ request('type') === 'hospital' ? 'selected' : '' }}>Faktor RS</option>
                 </select>

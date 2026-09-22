@@ -49,7 +49,7 @@
             <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Unit Kerja / Instalasi</label>
             <select name="unit" onchange="this.form.submit()"
                     class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('unit') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
-                <option value="">-- Seluruh Unit Kerja --</option>
+                <option value="">Seluruh Unit Kerja</option>
                 @foreach($demographics['units'] ?? [] as $u)
                     <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
                 @endforeach
@@ -61,7 +61,7 @@
             <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Kelompok Profesi</label>
             <select name="profession" onchange="this.form.submit()"
                     class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('profession') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
-                <option value="">-- Seluruh Profesi --</option>
+                <option value="">Seluruh Profesi</option>
                 @foreach($demographics['professions'] ?? [] as $prof)
                     <option value="{{ $prof }}" {{ request('profession') === $prof ? 'selected' : '' }}>{{ $prof }}</option>
                 @endforeach
@@ -73,7 +73,7 @@
             <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Status Kepegawaian</label>
             <select name="status" onchange="this.form.submit()"
                     class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('status') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
-                <option value="">-- Seluruh Status --</option>
+                <option value="">Seluruh Status</option>
                 @foreach($demographics['statuses'] ?? [] as $st)
                     <option value="{{ $st }}" {{ request('status') === $st ? 'selected' : '' }}>{{ $st }}</option>
                 @endforeach
@@ -85,7 +85,7 @@
             <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Masa Kerja di RS</label>
             <select name="tenure" onchange="this.form.submit()"
                     class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('tenure') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
-                <option value="">-- Seluruh Masa Kerja --</option>
+                <option value="">Seluruh Masa Kerja</option>
                 @foreach($demographics['tenures'] ?? [] as $tn)
                     <option value="{{ $tn }}" {{ request('tenure') === $tn ? 'selected' : '' }}>{{ $tn }}</option>
                 @endforeach

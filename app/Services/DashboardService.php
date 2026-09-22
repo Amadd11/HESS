@@ -4,32 +4,33 @@ namespace App\Services;
 
 use App\Models\Demographic;
 use App\Models\Period;
+use App\Models\Question;
 use App\Models\Response;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DashboardService
 {
     /**
      * Ambil seluruh dataset analitik yang diperlukan oleh dashboard admin.
      *
+     * @param  array<string, mixed>  $filters
      * @return array<string, mixed>
      */
-    public function getDashboardData(Request $request): array
+    public function getDashboardData(array $filters = []): array
     {
         $periods = Period::orderByDesc('start_date')->get();
 
-        $selectedPeriod = $request->filled('period_id')
-            ? Period::find($request->integer('period_id'))
+        $selectedPeriodId = ! empty($filters['period_id']) ? (int) $filters['period_id'] : null;
+        $selectedPeriod = $selectedPeriodId
+            ? Period::find($selectedPeriodId)
             : Period::active()->first();
 
         $selectedPeriod ??= $periods->first();
         $periodId = $selectedPeriod?->id;
 
-        $baseQuery = $this->buildFilteredQuery($request, $periodId);
+        $baseQuery = $this->buildFilteredQuery($filters, $periodId);
 
         // 1. Agregasi KPI Utama
         $metrics = $periodId ? (clone $baseQuery)->selectRaw('
@@ -99,7 +100,7 @@ class DashboardService
 
         // 7. Opsi demografi & status filter aktif
         $demographics = Demographic::getGroupedOptions();
-        $hasFilters = $request->anyFilled(['profession', 'unit', 'status', 'tenure']);
+        $hasFilters = ! empty($filters['profession']) || ! empty($filters['unit']) || ! empty($filters['status']) || ! empty($filters['tenure']);
 
         return [
             'periods' => $periods,
@@ -130,30 +131,39 @@ class DashboardService
     }
 
     /**
-     * Bangun query Response dengan filter multi-dimensi demografi.
+     * Bangun query Response dengan filter multi-dimensi demografi, periode, NPS, dan pencarian.
+     *
+     * @param  array<string, mixed>  $filters
      */
-    public function buildFilteredQuery(Request $request, ?int $periodId = null): Builder
+    public function buildFilteredQuery(array $filters = [], ?int $periodId = null): Builder
     {
-        $query = Response::query();
+        $query = Response::query()->with('period');
 
         if ($periodId) {
             $query->where('period_id', $periodId);
+        } elseif (! empty($filters['period_id']) && $filters['period_id'] !== 'all') {
+            $query->where('period_id', (int) $filters['period_id']);
         }
 
-        if ($request->filled('profession')) {
-            $query->where('profession', $request->string('profession'));
+        foreach (['profession', 'unit', 'status', 'tenure'] as $field) {
+            if (! empty($filters[$field])) {
+                $query->where($field, trim((string) $filters[$field]));
+            }
         }
 
-        if ($request->filled('unit')) {
-            $query->where('unit', $request->string('unit'));
+        if (! empty($filters['nps_category'])) {
+            $query->where('nps_category', trim((string) $filters['nps_category']));
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->string('status'));
-        }
-
-        if ($request->filled('tenure')) {
-            $query->where('tenure', $request->string('tenure'));
+        if (! empty($filters['search'])) {
+            $search = trim((string) $filters['search']);
+            $query->where(function ($q) use ($search) {
+                $q->where('id', $search)
+                    ->orWhere('like_text', 'like', "%{$search}%")
+                    ->orWhere('improve_text', 'like', "%{$search}%")
+                    ->orWhere('unit', 'like', "%{$search}%")
+                    ->orWhere('profession', 'like', "%{$search}%");
+            });
         }
 
         return $query;
@@ -224,66 +234,5 @@ class DashboardService
         $topImprovements = $questionScores->sortBy('avg_score')->take(5)->values();
 
         return [$topStrengths, $topImprovements];
-    }
-
-    /**
-     * Ekspor data respon survei terfilter ke file CSV streaming.
-     */
-    public function exportCsv(Request $request): StreamedResponse
-    {
-        $periodId = $request->integer('period_id') ?: Period::active()->value('id');
-        $period = Period::find($periodId);
-
-        $filename = 'hess_survey_responses_' . ($period?->slug ?? 'all') . '.csv';
-        $query = $this->buildFilteredQuery($request, $periodId);
-
-        return response()->streamDownload(function () use ($query) {
-            $handle = fopen('php://output', 'w');
-
-            // Header kolom CSV
-            fputcsv($handle, [
-                'ID Respon',
-                'Waktu Pengisian',
-                'Profesi',
-                'Unit Kerja',
-                'Status Kepegawaian',
-                'Lama Bekerja',
-                'Kepuasan Umum MSQ (%)',
-                'Kepuasan Intrinsik (%)',
-                'Kepuasan Ekstrinsik (%)',
-                'Faktor Rumah Sakit (%)',
-                'Skor Keseluruhan (1-5)',
-                'eNPS (0-10)',
-                'Kategori eNPS',
-                'Hal yang Disukai',
-                'Hal yang Perlu Diperbaiki',
-            ]);
-
-            $query->chunk(200, function ($responses) use ($handle) {
-                foreach ($responses as $r) {
-                    fputcsv($handle, [
-                        $r->id,
-                        $r->completed_at?->format('Y-m-d H:i:s') ?? $r->created_at->format('Y-m-d H:i:s'),
-                        $r->profession,
-                        $r->unit,
-                        $r->status,
-                        $r->tenure,
-                        $r->general_score,
-                        $r->intrinsic_score,
-                        $r->extrinsic_score,
-                        $r->hospital_score,
-                        $r->overall_score,
-                        $r->nps_score,
-                        $r->nps_category,
-                        $r->like_text ?? '',
-                        $r->improve_text ?? '',
-                    ]);
-                }
-            });
-
-            fclose($handle);
-        }, $filename, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
-        ]);
     }
 }

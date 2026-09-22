@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             PeriodSeeder::class,
             AdminSeeder::class,
             DemographicSeeder::class,
-            // ResponseSeeder::class,
+            ResponseSeeder::class,
         ]);
     }
 }

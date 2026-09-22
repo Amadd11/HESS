@@ -5,12 +5,12 @@
                 <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                 </div>
-                <h3 class="text-xs font-bold text-gray-900">Dimensi Lingkungan & Budaya Kerja Rumah Sakit</h3>
+                <h3 class="text-xs font-bold text-gray-900">Kondisi & Lingkungan Kerja RS</h3>
                 <x-badge color="blue" size="xs">
-                    {{ $hospitalCategoryScores->count() }} Dimensi Operasional RS
+                    {{ $hospitalCategoryScores->count() }} Faktor Kerja RS
                 </x-badge>
             </div>
-            <p class="text-[11px] text-gray-400 mt-1">Analisis skor rata-rata kepuasan pegawai per dimensi kerja operasional rumah sakit.</p>
+            <p class="text-[11px] text-gray-400 mt-1">Analisis skor rata-rata kepuasan pegawai per faktor kondisi kerja operasional rumah sakit.</p>
         </div>
         <a href="{{ route('admin.categories.index') }}"
            class="inline-flex items-center gap-1.5 text-xs font-bold text-primary-700 hover:text-primary-800 transition">

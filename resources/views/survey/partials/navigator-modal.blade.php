@@ -10,7 +10,7 @@
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-gray-900/60 backdrop-blur-xs transition-opacity"
+        class="fixed inset-0 bg-gray-900/60 transition-opacity"
         @click="questionListModalOpen = false"></div>
 
     <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
