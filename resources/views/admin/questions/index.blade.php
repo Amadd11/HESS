@@ -28,7 +28,7 @@
             </div>
             <div>
                 <h2 class="text-base md:text-lg font-bold text-gray-900 tracking-tight">Manajemen Butir Instrumen Kuesioner</h2>
-                <p class="text-xs text-gray-500 mt-0.5">Kelola penuh 44 butir instrumen evaluasi kepuasan kerja (20 butir MSQ-20 & 24 butir faktor lingkungan rumah sakit).</p>
+                <p class="text-xs text-gray-500 mt-0.5">Kelola instrumen evaluasi kepuasan kerja (fleksibel ditambah, dikurangi, atau disesuaikan dengan kebutuhan rumah sakit).</p>
             </div>
         </div>
 

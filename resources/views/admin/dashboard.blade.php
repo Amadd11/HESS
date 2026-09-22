@@ -14,6 +14,9 @@
     {{-- 3. 4 Executive KPI Cards --}}
     @include('admin.dashboard.partials.kpi-cards')
 
+    {{-- 4. Interactive Visual Charts --}}
+    @include('admin.dashboard.partials.charts-section')
+
     {{-- 5. Actionable Intelligence: Top 5 Strengths vs Priority Areas --}}
     @include('admin.dashboard.partials.actionable-insights')
 

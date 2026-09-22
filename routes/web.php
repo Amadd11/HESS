@@ -4,10 +4,12 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DemographicController;
+use App\Http\Controllers\Admin\MethodologyController;
 use App\Http\Controllers\Admin\PeriodController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ResponseController;
+use App\Http\Controllers\Admin\SentimentDashboardController;
 use App\Http\Controllers\Survey\SurveyController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard Analitik & Export Excel
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
+
+        // Dashboard Analisis Sentimen (Clean Architecture)
+        Route::get('/sentiment', [SentimentDashboardController::class, 'index'])->name('sentiment.index');
+        Route::get('/sentiment/export', [SentimentDashboardController::class, 'export'])->name('sentiment.export');
+
+        // Panduan Metodologi & Rumus Perhitungan
+        Route::get('/methodology', [MethodologyController::class, 'index'])->name('methodology.index');
 
         // CRUD Periode Survei
         Route::resource('periods', PeriodController::class)->except(['create', 'edit', 'show']);

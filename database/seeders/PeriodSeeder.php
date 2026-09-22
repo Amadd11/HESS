@@ -18,7 +18,7 @@ class PeriodSeeder extends Seeder
             [
                 'name' => 'Survei Kepuasan Pegawai 2026 — Semester 1',
                 'slug' => 'survei-kepuasan-2026-s1',
-                'target' => 250,
+                'target' => 500,
                 'start_date' => Carbon::now()->startOfMonth(),
                 'end_date' => Carbon::now()->addMonths(2)->endOfMonth(),
                 'is_active' => true,

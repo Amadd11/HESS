@@ -2,80 +2,201 @@ export default (config = {}) => ({
     chartTab: 'unit',
     radarChart: null,
     barChart: null,
-    radarSeries: config.radarSeries || [],
-    radarCategories: config.radarCategories || [],
+    npsChart: null,
+
+    rawRadarSeries: config.radarSeries || [],
+    rawRadarCategories: config.radarCategories || [],
     unitLabels: config.unitLabels || [],
-    unitData: config.unitData || [],
+    unitData: (config.unitData || []).map(v => Number(v) || 0),
     profLabels: config.profLabels || [],
-    profData: config.profData || [],
+    profData: (config.profData || []).map(v => Number(v) || 0),
+    promoters: Number(config.promoters) || 0,
+    passives: Number(config.passives) || 0,
+    detractors: Number(config.detractors) || 0,
+    npsScore: Number(config.npsScore) || 0,
+    totalResponses: Number(config.totalResponses) || 0,
 
     initCharts() {
         if (!window.ApexCharts) {
             return;
         }
 
-        this.renderRadarChart();
-        this.renderBarChart();
+        this.$nextTick(() => {
+            this.renderRadarChart();
+            this.renderNpsChart();
+            this.renderBarChart();
+        });
     },
 
     renderRadarChart() {
-        const radarEl = document.getElementById('hospitalRadarChart');
-        if (!radarEl || this.radarCategories.length === 0) {
+        const el = document.getElementById('hospitalRadarChart');
+        if (!el || this.rawRadarCategories.length === 0) {
             return;
         }
 
-        const radarOptions = {
+        if (this.radarChart) {
+            this.radarChart.destroy();
+        }
+
+        // Label ringkas & jelas untuk sumbu horizontal bawah
+        const labelMap = {
+            'Leadership & Supervision': 'Kepemimpinan',
+            'Workload & Staffing': 'Beban Kerja',
+            'Compensation & Reward': 'Kompensasi',
+            'Career & Professional Development': 'Karir',
+            'Work Environment & Facilities': 'Fasilitas',
+            'Teamwork & Interprofessional Collaboration': 'Kerjasama',
+            'Psychological & Patient Safety': 'Keselamatan',
+            'Work-Life Balance': 'Work-Life'
+        };
+
+        const categories = this.rawRadarCategories.map(name => labelMap[name] || name);
+        const seriesData = (this.rawRadarSeries || []).map(v => Number(v) || 0);
+
+        const barOptions = {
             chart: {
-                type: 'radar',
-                height: 340,
+                type: 'bar',
+                height: 350,
                 toolbar: { show: false },
                 fontFamily: 'Inter, sans-serif'
             },
+            plotOptions: {
+                bar: {
+                    borderRadius: 6,
+                    horizontal: false, // Vertikal ke atas
+                    columnWidth: '48%',
+                    dataLabels: { position: 'top' }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: (val) => `${val}%`,
+                offsetY: -18,
+                style: {
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    colors: ['#374151']
+                }
+            },
             series: [{
                 name: 'Skor Dimensi (%)',
-                data: this.radarSeries.length ? this.radarSeries : [0, 0, 0, 0, 0, 0, 0, 0]
+                data: seriesData
             }],
-            labels: this.radarCategories,
-            colors: ['#6f3f7e'],
-            fill: {
-                opacity: 0.25,
-                colors: ['#6f3f7e']
-            },
-            stroke: {
-                width: 2.5,
-                colors: ['#6f3f7e']
-            },
-            markers: {
-                size: 4,
-                colors: ['#ffffff'],
-                strokeColors: '#6f3f7e',
-                strokeWidth: 2,
-                hover: { size: 6 }
+            xaxis: {
+                categories: categories,
+                labels: {
+                    rotate: -35,
+                    rotateAlways: false,
+                    style: { fontSize: '11px', fontWeight: 600, colors: '#4b5563' }
+                },
+                axisBorder: { show: false },
+                axisTicks: { show: false }
             },
             yaxis: {
-                show: false,
                 min: 0,
                 max: 100,
-                tickAmount: 5
-            },
-            xaxis: {
+                tickAmount: 5,
                 labels: {
-                    style: {
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        colors: Array(this.radarCategories.length).fill('#4b5563')
-                    }
+                    style: { fontSize: '10px', fontWeight: 600, colors: '#9ca3af' },
+                    formatter: (val) => `${val}%`
                 }
+            },
+            colors: ['#0284c7'],
+            grid: {
+                borderColor: '#f3f4f6',
+                strokeDashArray: 3
             },
             tooltip: {
                 y: {
-                    formatter: (val) => `${val}% Indeks Kepuasan`
+                    formatter: (val, opts) => {
+                        const originalName = this.rawRadarCategories[opts.dataPointIndex] || '';
+                        return `${val}% (${originalName})`;
+                    }
                 }
             }
         };
 
-        this.radarChart = new window.ApexCharts(radarEl, radarOptions);
+        this.radarChart = new window.ApexCharts(el, barOptions);
         this.radarChart.render();
+    },
+
+    renderNpsChart() {
+        const npsEl = document.getElementById('npsDonutChart');
+        if (!npsEl) {
+            return;
+        }
+
+        if (this.npsChart) {
+            this.npsChart.destroy();
+        }
+
+        const hasData = (this.promoters + this.passives + this.detractors) > 0;
+        const seriesData = hasData ? [this.promoters, this.passives, this.detractors] : [1, 0, 0];
+        const colorsData = hasData ? ['#10b981', '#f59e0b', '#f43f5e'] : ['#e5e7eb', '#e5e7eb', '#e5e7eb'];
+
+        const npsOptions = {
+            chart: {
+                type: 'donut',
+                height: 250,
+                fontFamily: 'Inter, sans-serif',
+                toolbar: { show: false }
+            },
+            series: seriesData,
+            labels: ['Promoter (9–10)', 'Pasif (7–8)', 'Detractor (0–6)'],
+            colors: colorsData,
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '72%',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '11px',
+                                fontWeight: 600,
+                                color: '#6b7280',
+                                offsetY: -4
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '26px',
+                                fontWeight: 900,
+                                color: '#111827',
+                                offsetY: 4,
+                                formatter: (val) => `${val}`
+                            },
+                            total: {
+                                show: true,
+                                label: this.getNpsGradeLabel(),
+                                fontSize: '11px',
+                                fontWeight: 800,
+                                color: this.npsScore >= 20 ? '#059669' : (this.npsScore >= 0 ? '#7c3aed' : '#e11d48'),
+                                formatter: () => (this.totalResponses > 0 ? (this.npsScore > 0 ? `+${this.npsScore}` : `${this.npsScore}`) : '0')
+                            }
+                        }
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            stroke: {
+                width: 2.5,
+                colors: ['#ffffff']
+            },
+            tooltip: {
+                enabled: hasData,
+                y: {
+                    formatter: (val) => `${val} Pegawai (${this.totalResponses > 0 ? Math.round((val / this.totalResponses) * 100) : 0}%)`
+                }
+            }
+        };
+
+        this.npsChart = new window.ApexCharts(npsEl, npsOptions);
+        this.npsChart.render();
     },
 
     renderBarChart() {
@@ -85,13 +206,18 @@ export default (config = {}) => ({
         }
 
         const isUnit = this.chartTab === 'unit';
-        const labels = isUnit ? this.unitLabels : this.profLabels;
-        const data = isUnit ? this.unitData : this.profData;
+        const rawLabels = isUnit ? this.unitLabels : this.profLabels;
+        const rawData = isUnit ? this.unitData : this.profData;
+
+        const labels = rawLabels.length ? rawLabels : ['Belum Ada Data'];
+        const data = rawData.length ? rawData : [0];
+        const chartHeight = Math.max(340, labels.length * 28);
 
         if (this.barChart) {
             this.barChart.updateOptions({
-                xaxis: { categories: labels.length ? labels : ['Belum Ada Data'] },
-                series: [{ name: 'Rata-rata Kepuasan (%)', data: data.length ? data : [0] }]
+                chart: { height: chartHeight },
+                xaxis: { categories: labels },
+                series: [{ name: 'Rata-rata Kepuasan (%)', data: data }]
             });
             return;
         }
@@ -99,7 +225,7 @@ export default (config = {}) => ({
         const barOptions = {
             chart: {
                 type: 'bar',
-                height: 340,
+                height: chartHeight,
                 toolbar: { show: false },
                 fontFamily: 'Inter, sans-serif'
             },
@@ -115,30 +241,31 @@ export default (config = {}) => ({
             dataLabels: {
                 enabled: true,
                 formatter: (val) => `${val}%`,
-                offsetX: 28,
+                offsetX: 30,
                 style: {
-                    fontSize: '10px',
+                    fontSize: '11px',
                     fontWeight: 700,
-                    colors: ['#4b5563']
+                    colors: ['#374151']
                 }
             },
             series: [{
                 name: 'Rata-rata Kepuasan (%)',
-                data: data.length ? data : [0]
+                data: data
             }],
             xaxis: {
-                categories: labels.length ? labels : ['Belum Ada Data'],
+                categories: labels,
                 min: 0,
                 max: 100,
+                tickAmount: 5,
                 labels: {
-                    style: { fontSize: '10px', fontWeight: 600, colors: '#6b7280' },
+                    style: { fontSize: '11px', fontWeight: 600, colors: '#6b7280' },
                     formatter: (val) => `${val}%`
                 }
             },
             yaxis: {
                 labels: {
-                    style: { fontSize: '11px', fontWeight: 600, colors: '#374151' },
-                    maxWidth: 160
+                    style: { fontSize: '11.5px', fontWeight: 600, colors: '#1f2937' },
+                    maxWidth: 180
                 }
             },
             colors: ['#7c3aed'],
@@ -160,5 +287,21 @@ export default (config = {}) => ({
     setChartTab(tab) {
         this.chartTab = tab;
         this.renderBarChart();
+    },
+
+    getNpsGradeLabel() {
+        if (this.npsScore >= 50) {
+            return 'Predikat A+';
+        }
+        if (this.npsScore >= 20) {
+            return 'Predikat A';
+        }
+        if (this.npsScore >= 0) {
+            return 'Predikat B';
+        }
+        if (this.npsScore >= -20) {
+            return 'Predikat C';
+        }
+        return 'Predikat D';
     }
 });

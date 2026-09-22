@@ -9,6 +9,7 @@ import periodsManager from './alpine/periods-manager';
 import questionsManager from './alpine/questions-manager';
 import responsesManager from './alpine/responses-manager';
 import demographicsManager from './alpine/demographics-manager';
+import sentimentDashboard from './alpine/sentiment-dashboard';
 
 window.ApexCharts = ApexCharts;
 
@@ -18,6 +19,7 @@ Alpine.plugin(persist);
 Alpine.data('surveyWizard', surveyWizard);
 Alpine.data('dashboardCharts', dashboardCharts);
 Alpine.data('dashboardFeedback', dashboardFeedback);
+Alpine.data('sentimentDashboard', sentimentDashboard);
 Alpine.data('categoriesManager', categoriesManager);
 Alpine.data('periodsManager', periodsManager);
 Alpine.data('questionsManager', questionsManager);

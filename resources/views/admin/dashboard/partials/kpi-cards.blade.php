@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <!-- 1. Total Responden & Rate -->
     <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs group">
         <div class="flex items-center justify-between mb-2">
@@ -65,37 +65,7 @@
         </div>
         <div class="mt-2 text-[11px] text-gray-500 flex items-center justify-between">
             <span>Skor Budaya & Fasilitas Kerja</span>
-            <a href="#radar-section" class="text-blue-600 hover:underline font-bold">Lihat Radar &darr;</a>
-        </div>
-    </div>
-
-    <!-- 4. Employee Net Promoter Score (eNPS) -->
-    <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs group">
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Employee NPS (eNPS)</span>
-            <x-badge :color="$npsScore >= 20 ? 'emerald' : ($npsScore >= 0 ? 'primary' : 'rose')" size="xs">
-                {{ $npsScore >= 20 ? 'Sangat Baik' : ($npsScore >= 0 ? 'Baik' : 'Perlu Evaluasi') }}
-            </x-badge>
-        </div>
-        <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-black {{ $npsScore >= 0 ? 'text-emerald-700' : 'text-rose-600' }}">
-                {{ ($npsScore > 0 ? '+' : '') . $npsScore }}
-            </span>
-            <span class="text-[11px] font-semibold text-gray-400">Skala -100 s/d +100</span>
-        </div>
-        <div class="mt-3">
-            <div class="h-2 w-full bg-gray-100 rounded-full flex overflow-hidden">
-                @if($totalResponses > 0)
-                    <div class="bg-emerald-500 h-full" style="width: {{ ($promoters / $totalResponses) * 100 }}%" title="Promoter: {{ $promoters }}"></div>
-                    <div class="bg-amber-400 h-full" style="width: {{ ($passives / $totalResponses) * 100 }}%" title="Pasif: {{ $passives }}"></div>
-                    <div class="bg-rose-500 h-full" style="width: {{ ($detractors / $totalResponses) * 100 }}%" title="Detractor: {{ $detractors }}"></div>
-                @endif
-            </div>
-        </div>
-        <div class="mt-2 text-[10px] text-gray-400 flex items-center justify-between">
-            <span class="text-emerald-700 font-bold">{{ $promoters }} Promoter</span>
-            <span class="text-amber-700 font-bold">{{ $passives }} Pasif</span>
-            <span class="text-rose-700 font-bold">{{ $detractors }} Detractor</span>
+            <a href="#radar-section" class="text-blue-600 hover:underline font-bold">Lihat 8 Dimensi &darr;</a>
         </div>
     </div>
 </div>

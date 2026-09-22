@@ -61,34 +61,34 @@ class DashboardService
         // 2. Skor per Unit Kerja
         $unitScores = $periodId
             ? (clone $baseQuery)
-                ->select('unit', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
-                ->groupBy('unit')
-                ->orderByDesc('avg_score')
-                ->get()
+            ->select('unit', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
+            ->groupBy('unit')
+            ->orderByDesc('avg_score')
+            ->get()
             : collect();
 
         // 3. Skor per Kelompok Profesi
         $professionScores = $periodId
             ? (clone $baseQuery)
-                ->select('profession', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
-                ->groupBy('profession')
-                ->orderByDesc('avg_score')
-                ->get()
+            ->select('profession', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
+            ->groupBy('profession')
+            ->orderByDesc('avg_score')
+            ->get()
             : collect();
 
         // 4. Masukan Kualitatif Terbaru & Total Aspirasi
         $recentFeedbacks = $periodId
             ? (clone $baseQuery)
-                ->where(fn ($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
-                ->latest('completed_at')
-                ->take(12)
-                ->get()
+            ->where(fn($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
+            ->latest('completed_at')
+            ->take(12)
+            ->get()
             : collect();
 
         $totalFeedbacksCount = $periodId
             ? (clone $baseQuery)
-                ->where(fn ($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
-                ->count()
+            ->where(fn($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
+            ->count()
             : 0;
 
         // 5. Agregasi Kategori & 8 Dimensi Rumah Sakit
@@ -181,8 +181,8 @@ class DashboardService
         }
 
         return DB::table('categories')
-            ->leftJoin('questions', fn ($j) => $j->on('questions.category_id', '=', 'categories.id')->whereNull('questions.deleted_at')->where('questions.is_active', true))
-            ->leftJoin('answers', fn ($j) => $j->on('answers.question_id', '=', 'questions.id')->whereIn('answers.response_id', (clone $baseQuery)->select('id')))
+            ->leftJoin('questions', fn($j) => $j->on('questions.category_id', '=', 'categories.id')->whereNull('questions.deleted_at')->where('questions.is_active', true))
+            ->leftJoin('answers', fn($j) => $j->on('answers.question_id', '=', 'questions.id')->whereIn('answers.response_id', (clone $baseQuery)->select('id')))
             ->whereNull('categories.deleted_at')
             ->select(
                 'categories.id',

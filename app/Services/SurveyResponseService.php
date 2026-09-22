@@ -48,6 +48,8 @@ class SurveyResponseService
             $calcPct = fn (array $items) => count($items) ? round((array_sum($items) / (count($items) * 5)) * 100, 2) : 0;
             $npsScore = (int) ($overall['nps_score'] ?? 0);
 
+            $completedAt = ! empty($data['completed_at']) ? Carbon::parse($data['completed_at']) : Carbon::now();
+
             $response = Response::create([
                 'period_id' => $period->id,
                 'profession' => $profile['profession'] ?? '',
@@ -63,10 +65,11 @@ class SurveyResponseService
                 'general_score' => $calcPct($scores['general']),
                 'hospital_score' => $calcPct($scores['hospital']),
                 'nps_category' => $npsScore >= 9 ? 'promoter' : ($npsScore >= 7 ? 'passive' : 'detractor'),
-                'completed_at' => Carbon::now(),
+                'completed_at' => $completedAt,
+                'created_at' => $completedAt,
+                'updated_at' => $completedAt,
             ]);
 
-            $now = Carbon::now();
             $records = [];
             foreach ($answers as $key => $val) {
                 $q = $questions[$key] ?? $questions->firstWhere('code', $key);
@@ -75,8 +78,8 @@ class SurveyResponseService
                         'response_id' => $response->id,
                         'question_id' => $q->id,
                         'score' => (int) $val,
-                        'created_at' => $now,
-                        'updated_at' => $now,
+                        'created_at' => $completedAt,
+                        'updated_at' => $completedAt,
                     ];
                 }
             }
@@ -90,12 +93,13 @@ class SurveyResponseService
     /**
      * Alias method untuk kemudahan pemanggilan terpisah.
      */
-    public function saveResponse(Period $period, array $profile, array $overall, array $answers): Response
+    public function saveResponse(Period $period, array $profile, array $overall, array $answers, ?Carbon $completedAt = null): Response
     {
         return $this->save($period, [
             'profile' => $profile,
             'overall' => $overall,
             'answers' => $answers,
+            'completed_at' => $completedAt,
         ]);
     }
 }
