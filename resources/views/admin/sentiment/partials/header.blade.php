@@ -18,7 +18,15 @@
             </p>
         </div>
 
-        <div class="relative z-10 flex items-center gap-3 shrink-0 self-start md:self-auto">
+        <div class="relative z-10 flex flex-wrap items-center gap-2.5 shrink-0 self-start md:self-auto">
+            <a href="{{ route('admin.sentiment.report', request()->query()) }}" target="_blank"
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold shadow-xs hover:shadow-md transition active:scale-95 border border-white/20 backdrop-blur-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                <span>Cetak Laporan Eksekutif</span>
+            </a>
+
             <a href="{{ route('admin.sentiment.export', request()->query()) }}"
                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs hover:shadow-md transition active:scale-95 border border-emerald-500/50">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,18 +76,18 @@
                         class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer">
                     @foreach($periods as $p)
                         <option value="{{ $p->id }}" {{ ($selectedPeriod?->id === $p->id) ? 'selected' : '' }}>
-                            {{ $p->name }} {{ $p->is_active ? '★ (Aktif)' : '' }}
+                            {{ $p->name }} {{ $p->is_active ? '(Aktif)' : '' }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- 2. Unit Kerja -->
+            <!-- 2. Satuan Kerja -->
             <div>
-                <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Unit Kerja</label>
+                <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Satuan Kerja</label>
                 <select name="unit" onchange="this.form.submit()"
                         class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('unit') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
-                    <option value="">Semua Unit</option>
+                    <option value="">Semua Satuan Kerja</option>
                     @foreach($demographics['units'] ?? [] as $u)
                         <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
                     @endforeach

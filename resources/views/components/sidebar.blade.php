@@ -97,6 +97,14 @@
             <span>Master Demografi</span>
         </a>
 
+        <a href="{{ route('admin.sentiment-words.index') }}"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition {{ request()->routeIs('admin.sentiment-words.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+            <svg class="w-5 h-5 {{ request()->routeIs('admin.sentiment-words.*') ? 'text-primary-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+            </svg>
+            <span>Kosakata Sentimen</span>
+        </a>
+
         <div class="pt-3 pb-1">
             <span class="px-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Akses Cepat</span>
         </div>

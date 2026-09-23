@@ -57,8 +57,14 @@ class ResponseController extends Controller
             'detractors' => Response::where('nps_category', 'detractor')->count(),
         ];
 
+        $perPage = $request->integer('per_page', 50);
+        if (! in_array($perPage, [15, 25, 50, 100])) {
+            $perPage = 50;
+        }
+
         return view('admin.responses.index', [
-            'responses' => $query->paginate(15)->withQueryString(),
+            'responses' => $query->paginate($perPage)->withQueryString(),
+            'perPage' => $perPage,
             'periods' => $periods,
             'demographics' => $demographics,
             'stats' => $stats,

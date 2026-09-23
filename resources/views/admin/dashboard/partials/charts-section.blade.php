@@ -51,7 +51,7 @@ $npsBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
                 <span class="w-2.5 h-2.5 rounded-full bg-primary-600 inline-block"></span>
                 <span>Visualisasi & Peta Analitik Kepuasan Pegawai</span>
             </h2>
-            <p class="text-xs text-gray-500 mt-0.5">Pemetaan grafis faktor rumah sakit, loyalitas responden, dan komparasi skor antar unit kerja.</p>
+            <p class="text-xs text-gray-500 mt-0.5">Pemetaan grafis faktor rumah sakit, loyalitas responden, dan komparasi skor antar satuan kerja.</p>
         </div>
         <div class="inline-flex items-center gap-2 text-xs font-semibold text-gray-600 bg-gray-50/80 px-3 py-1.5 rounded-xl border border-gray-200/70 shrink-0">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -243,7 +243,7 @@ $npsBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
                     </div>
                     <div>
                         <h3 class="text-xs font-bold text-gray-900">Komparasi Peringkat Kepuasan Pegawai</h3>
-                        <p class="text-[11px] text-gray-400">Peringkat rata-rata kepuasan per unit operasional & rumpun profesi RS</p>
+                        <p class="text-[11px] text-gray-400">Peringkat rata-rata kepuasan per satuan kerja & rumpun profesi RS</p>
                     </div>
                 </div>
 
@@ -255,7 +255,7 @@ $npsBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
                         <svg class="w-3.5 h-3.5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
-                        <span>Unit Kerja ({{ $unitScores->count() }})</span>
+                        <span>Satuan Kerja ({{ $unitScores->count() }})</span>
                     </button>
                     <button type="button" @click="setChartTab('profession')"
                         :class="chartTab === 'profession' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-900'"

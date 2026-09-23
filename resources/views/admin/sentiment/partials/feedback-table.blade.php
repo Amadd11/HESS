@@ -42,7 +42,7 @@
                 <tr>
                     <th scope="col" class="py-3 px-4">Sentimen</th>
                     <th scope="col" class="py-3 px-4 min-w-[320px]">Umpan Balik / Aspirasi Responden</th>
-                    <th scope="col" class="py-3 px-4">Unit Kerja</th>
+                    <th scope="col" class="py-3 px-4">Satuan Kerja</th>
                     <th scope="col" class="py-3 px-4">Profesi</th>
                     <th scope="col" class="py-3 px-4">Masa Kerja</th>
                     <th scope="col" class="py-3 px-4">Tanggal Survei</th>
@@ -52,7 +52,6 @@
                 @forelse($feedbackPaginator as $row)
                     @php
                         $sent = $row['sentiment'] ?? 'neutral';
-                        $score = $row['sentiment_score'] ?? 0;
                         $likeText = $row['like_text'] ?? null;
                         $improveText = $row['improve_text'] ?? null;
                     @endphp
@@ -63,19 +62,16 @@
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                     <span>Positif</span>
-                                    <span class="text-[9px] text-emerald-600 font-mono">({{ $score > 0 ? '+'.$score : $score }})</span>
                                 </span>
                             @elseif($sent === 'negative')
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200/80">
                                     <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                                     <span>Negatif</span>
-                                    <span class="text-[9px] text-rose-600 font-mono">({{ $score }})</span>
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200/80">
                                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                     <span>Netral</span>
-                                    <span class="text-[9px] text-amber-600 font-mono">(0.0)</span>
                                 </span>
                             @endif
                         </td>

@@ -22,6 +22,9 @@ class WordCloudService
         'pegawai' => true, 'staf' => true, 'rumah' => true, 'sakit' => true, 'rs' => true,
         'hal' => true, 'saja' => true, 'masih' => true, 'bagi' => true, 'antara' => true,
         'mohon' => true, 'tolong' => true, 'harap' => true, 'semoga' => true, 'tetap' => true,
+        'yg' => true, 'nya' => true, 'dgn' => true, 'utk' => true, 'dg' => true,
+        'saling' => true, 'sebaiknya' => true, 'terima' => true, 'kasih' => true, 'terimakasih' => true,
+        'maupun' => true, 'namun' => true, 'tetapi' => true, 'tapi' => true, 'serta' => true, 'lain' => true, 'lainnya' => true,
     ];
 
     /**
@@ -30,7 +33,7 @@ class WordCloudService
      * @param  array<string, int>  $freqList
      * @return array<int, array{word: string, count: int, scale: int, sentiment: string}>
      */
-    public function buildCloud(array $freqList, string $sentimentType, int $maxItems = 20): array
+    public function buildCloud(array $freqList, string $sentimentType, int $maxItems = 35): array
     {
         // Filter stopwords jika masih lolos
         $filtered = [];

@@ -74,7 +74,6 @@ class SentimentExportService
                         'negative' => 'Negatif',
                         default => 'Netral',
                     },
-                    'Skor Sentimen' => $analysis['score'],
                     'Hal yang Disukai' => $response->like_text ?? '-',
                     'Saran Perbaikan' => $response->improve_text ?? '-',
                     'Unit Kerja' => $response->unit ?? '-',

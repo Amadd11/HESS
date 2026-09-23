@@ -19,7 +19,7 @@
             </div>
             <div>
                 <h2 class="text-base md:text-lg font-bold text-gray-900 tracking-tight">Opsi Demografi & Profil Responden</h2>
-                <p class="text-xs text-gray-500 mt-0.5">Kelola daftar unit kerja rumah sakit, profesi pegawai, dan kriteria klasifikasi data kuesioner.</p>
+                <p class="text-xs text-gray-500 mt-0.5">Kelola daftar satuan kerja rumah sakit, profesi pegawai, dan kriteria klasifikasi data kuesioner.</p>
             </div>
         </div>
 
@@ -39,20 +39,20 @@
 
     <!-- 4 KPI Summary Cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Unit Kerja -->
+        <!-- Satuan Kerja -->
         <a href="{{ route('admin.demographics.index', ['type' => 'unit']) }}"
            class="bg-white p-4 md:p-5 rounded-2xl border {{ $currentType === 'unit' ? 'border-primary-400 ring-2 ring-primary-100 bg-primary-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-primary-300 transition group">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold text-primary-700 uppercase tracking-wider">Unit Kerja RS</span>
-                <x-badge color="primary" size="xs">Ruangan</x-badge>
+                <span class="text-[11px] font-bold text-primary-700 uppercase tracking-wider">Satuan Kerja RS</span>
+                <x-badge color="primary" size="xs">Direktorat</x-badge>
             </div>
             <div class="flex items-baseline justify-between">
                 <span class="text-2xl md:text-3xl font-black text-primary-900">{{ $stats['unit'] }}</span>
-                <span class="text-[11px] font-semibold text-primary-600">Unit / Poli</span>
+                <span class="text-[11px] font-semibold text-primary-600">Kelompok Satker</span>
             </div>
             <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
-                <span>Instalasi & unit operasional</span>
+                <span>Direktorat & non-direktorat</span>
             </div>
         </a>
 
@@ -116,7 +116,7 @@
 
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'unit'])) }}"
                class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'unit' ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                Unit Kerja ({{ $stats['unit'] }})
+                Satuan Kerja ({{ $stats['unit'] }})
             </a>
 
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'profession'])) }}"

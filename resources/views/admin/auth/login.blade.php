@@ -34,7 +34,7 @@
                     <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
                         Email Administrator
                     </label>
-                    <input type="email" name="email" value="{{ old('email', 'admin@hess.id') }}" required autofocus
+                    <input type="email" name="email" required autofocus
                         placeholder="nama@rumah-sakit.com"
                         class="w-full h-12 px-4 rounded-xl border border-gray-300 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
                     @error('email')

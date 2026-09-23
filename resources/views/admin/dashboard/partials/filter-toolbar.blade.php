@@ -10,7 +10,7 @@
             </div>
             <div>
                 <h3 class="text-xs font-bold text-gray-900">Segmentasi Analitik & Filter Data</h3>
-                <p class="text-[11px] text-gray-400">Saring metrik berdasarkan unit kerja, profesi medis, atau masa kerja pegawai.</p>
+                <p class="text-[11px] text-gray-400">Saring metrik berdasarkan satuan kerja, profesi medis, atau masa kerja pegawai.</p>
             </div>
         </div>
 
@@ -44,12 +44,12 @@
             </select>
         </div>
 
-        <!-- 2. Unit Kerja -->
+        <!-- 2. Satuan Kerja -->
         <div>
-            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Unit Kerja / Instalasi</label>
+            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Satuan Kerja</label>
             <select name="unit" onchange="this.form.submit()"
                     class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('unit') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
-                <option value="">Seluruh Unit Kerja</option>
+                <option value="">Semua Satuan Kerja</option>
                 @foreach($demographics['units'] ?? [] as $u)
                     <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
                 @endforeach

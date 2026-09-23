@@ -271,7 +271,7 @@ $publicSurveyUrl = route('survey.index');
                                     @if($period->is_active)
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-100 text-emerald-800">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                                        LIVE AKTIF
+                                        LIVE
                                     </span>
                                     @endif
                                 </div>

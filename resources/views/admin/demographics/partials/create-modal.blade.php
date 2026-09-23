@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-gray-900">Tambah Opsi Demografi Baru</h3>
-                    <p class="text-[11px] text-gray-500">Tambahkan pilihan unit kerja, profesi, atau kriteria lainnya.</p>
+                    <p class="text-[11px] text-gray-500">Tambahkan pilihan satuan kerja, profesi, atau kriteria lainnya.</p>
                 </div>
             </div>
 
@@ -53,7 +53,7 @@
                 </label>
                 <select name="type" id="create_type" x-model="createData.type" required
                         class="w-full h-10 px-3.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="unit">Unit Kerja / Ruangan RS</option>
+                    <option value="unit">Satuan Kerja / Direktorat RS</option>
                     <option value="profession">Profesi Pegawai</option>
                     <option value="status">Status Kepegawaian</option>
                     <option value="tenure">Masa Kerja</option>

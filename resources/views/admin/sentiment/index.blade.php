@@ -4,6 +4,11 @@
 
 @section('content')
 <div class="space-y-6" x-data="sentimentDashboard({
+    positiveWords: @js(array_map(fn($item) => [$item['word'], (int)$item['count']], $wordClouds['positive'] ?? [])),
+    neutralWords: @js(array_map(fn($item) => [$item['word'], (int)$item['count']], $wordClouds['neutral'] ?? [])),
+    negativeWords: @js(array_map(fn($item) => [$item['word'], (int)$item['count']], $wordClouds['negative'] ?? [])),
+    sentimentSeries: @js($sentimentProportion['series'] ?? [0, 0, 0]),
+    sentimentUnit: @js($sentimentProportion['unit'] ?? 'kata'),
     trendCategories: @js($trend['categories'] ?? []),
     trendSeries: @js($trend['series'] ?? []),
     unitCategories: @js($breakdown['unit']['categories'] ?? []),
@@ -26,8 +31,23 @@
         {{-- 3. Interactive Word Cloud with Tabs --}}
         @include('admin.sentiment.partials.word-cloud')
 
-        {{-- 4. Top 10 Keywords Analytics --}}
-        @include('admin.sentiment.partials.keyword-chart')
+        {{-- 4. Baris Proporsi Sentimen, Top 10 Kata Kunci, & Contoh Kutipan (Sesuai Mockup) --}}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- 4a. Donut Proporsi Sentimen -->
+            <div class="lg:col-span-12 xl:col-span-4 flex flex-col">
+                @include('admin.sentiment.partials.proportion-chart')
+            </div>
+
+            <!-- 4b. Top 10 Kata Positif & Negatif -->
+            <div class="lg:col-span-12 xl:col-span-5 flex flex-col">
+                @include('admin.sentiment.partials.keyword-chart')
+            </div>
+
+            <!-- 4c. Contoh Kutipan Responden -->
+            <div class="lg:col-span-12 xl:col-span-3 flex flex-col">
+                @include('admin.sentiment.partials.quotes-card')
+            </div>
+        </div>
 
         {{-- 5. Sentiment Trend Line Chart --}}
         @include('admin.sentiment.partials.trend-chart')

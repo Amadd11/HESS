@@ -24,20 +24,12 @@ class DemographicSeeder extends Seeder
         ];
 
         $units = [
-            'IGD',
-            'Rawat Inap',
-            'Rawat Jalan',
-            'ICU',
-            'Kamar Operasi',
-            'Farmasi',
-            'Laboratorium',
-            'Radiologi',
-            'Rekam Medis',
-            'Administrasi',
-            'Keuangan',
-            'SDM',
-            'Penunjang',
-            'Lainnya',
+            'Direktorat Medik dan Keperawatan',
+            'Direktorat SDM, Pendidikan, dan Penelitian',
+            'Direktorat Perencanaan dan Pengembangan Strategi Layanan',
+            'Direktorat Keuangan dan BMN',
+            'Direktorat Layanan Operasional',
+            'Non Direktorat / Fungsional',
         ];
 
         $statuses = [

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             DemographicSeeder::class,
             ResponseSeeder::class,
+            SentimentWordSeeder::class,
         ]);
     }
 }

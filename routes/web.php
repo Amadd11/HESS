@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ResponseController;
 use App\Http\Controllers\Admin\SentimentDashboardController;
+use App\Http\Controllers\Admin\SentimentWordController;
 use App\Http\Controllers\Survey\SurveyController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Dashboard Analisis Sentimen (Clean Architecture)
         Route::get('/sentiment', [SentimentDashboardController::class, 'index'])->name('sentiment.index');
         Route::get('/sentiment/export', [SentimentDashboardController::class, 'export'])->name('sentiment.export');
+        Route::get('/sentiment/report', [SentimentDashboardController::class, 'report'])->name('sentiment.report');
 
         // Panduan Metodologi & Rumus Perhitungan
         Route::get('/methodology', [MethodologyController::class, 'index'])->name('methodology.index');
@@ -69,6 +71,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // CRUD Master Demografi (Unit Kerja & Profesi)
         Route::resource('demographics', DemographicController::class)->except(['create', 'edit', 'show']);
         Route::patch('/demographics/{demographic}/toggle', [DemographicController::class, 'toggle'])->name('demographics.toggle');
+
+        // CRUD Master Kosakata Sentimen
+        Route::resource('sentiment-words', SentimentWordController::class)->except(['create', 'edit', 'show']);
+        Route::patch('/sentiment-words/{sentimentWord}/toggle', [SentimentWordController::class, 'toggle'])->name('sentiment-words.toggle');
 
         // Pengaturan Akun & Kata Sandi Admin
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

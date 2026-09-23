@@ -86,7 +86,7 @@
                 <!-- Demographic & Overall Cards -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
-                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Unit Kerja</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Satuan Kerja</span>
                         <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse ? selectedResponse.unit : '-'"></span>
                     </div>
                     <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
@@ -130,18 +130,22 @@
                     <div class="p-3.5 rounded-xl bg-purple-50/50 border border-purple-100">
                         <span class="text-[10px] uppercase font-bold text-purple-600 tracking-wider block">Indeks MSQ-20</span>
                         <div class="flex items-baseline gap-1 mt-1">
-                            <span class="text-2xl font-black text-purple-900" x-text="selectedResponse ? selectedResponse.general_score : 0"></span>
-                            <span class="text-xs text-purple-600 font-bold">/ 5.0</span>
+                            <span class="text-2xl font-black text-purple-900" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '0%'"></span>
                         </div>
-                        <span class="text-[10px] text-purple-500 font-medium">Skor Rata-rata</span>
+                        <div class="text-[11px] text-purple-600 font-semibold mt-0.5 flex items-center justify-between">
+                            <span>Rata-rata:</span>
+                            <span class="font-bold font-mono" x-text="selectedResponse ? (((selectedResponse.general_score / 100) * 5).toFixed(2) + ' / 5.0') : '-'"></span>
+                        </div>
                     </div>
                     <div class="p-3.5 rounded-xl bg-sky-50/50 border border-sky-100">
                         <span class="text-[10px] uppercase font-bold text-sky-600 tracking-wider block">Indeks Faktor RS</span>
                         <div class="flex items-baseline gap-1 mt-1">
-                            <span class="text-2xl font-black text-sky-900" x-text="selectedResponse ? selectedResponse.hospital_score : 0"></span>
-                            <span class="text-xs text-sky-600 font-bold">/ 5.0</span>
+                            <span class="text-2xl font-black text-sky-900" x-text="selectedResponse ? Number(selectedResponse.hospital_score).toFixed(1) + '%' : '0%'"></span>
                         </div>
-                        <span class="text-[10px] text-sky-500 font-medium">Skor Rata-rata</span>
+                        <div class="text-[11px] text-sky-600 font-semibold mt-0.5 flex items-center justify-between">
+                            <span>Rata-rata:</span>
+                            <span class="font-bold font-mono" x-text="selectedResponse ? (((selectedResponse.hospital_score / 100) * 5).toFixed(2) + ' / 5.0') : '-'"></span>
+                        </div>
                     </div>
                 </div>
 

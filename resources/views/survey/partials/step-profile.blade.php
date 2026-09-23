@@ -32,14 +32,14 @@
                 </select>
             </div>
 
-            <!-- Unit Kerja -->
+            <!-- Satuan Kerja -->
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
-                    Unit Kerja / Instalasi <span class="text-red-500">*</span>
+                    Satuan Kerja <span class="text-red-500">*</span>
                 </label>
                 <select x-model="profile.unit"
                     class="w-full h-12 px-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
-                    <option value="">Pilih Unit Kerja</option>
+                    <option value="">Pilih Satuan Kerja</option>
                     @foreach($units as $u)
                     <option value="{{ $u }}">{{ $u }}</option>
                     @endforeach

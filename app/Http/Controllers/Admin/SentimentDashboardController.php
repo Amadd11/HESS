@@ -113,7 +113,49 @@ class SentimentDashboardController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        // 8. Opsi Filter Demografi
+        // 8. Proporsi Sentimen (Word Stats & Donut Data)
+        $posWords = (int) array_sum($analysisResult['positive_frequencies']);
+        $neuWords = (int) array_sum($analysisResult['neutral_frequencies']);
+        $negWords = (int) array_sum($analysisResult['negative_frequencies']);
+        $totalSentimentWords = $posWords + $neuWords + $negWords;
+
+        $useWords = $totalSentimentWords > 0;
+        $propTotal = $useWords ? $totalSentimentWords : $classifiedResponses->count();
+        $propPos = $useWords ? $posWords : ($kpis['positive']['count'] ?? 0);
+        $propNeu = $useWords ? $neuWords : ($kpis['neutral']['count'] ?? 0);
+        $propNeg = $useWords ? $negWords : ($kpis['negative']['count'] ?? 0);
+        $propUnit = $useWords ? 'kata' : 'respon';
+
+        $propPosPct = $propTotal > 0 ? (int) round(($propPos / $propTotal) * 100) : 0;
+        $propNeuPct = $propTotal > 0 ? (int) round(($propNeu / $propTotal) * 100) : 0;
+        $propNegPct = $propTotal > 0 ? max(0, 100 - $propPosPct - $propNeuPct) : 0;
+
+        $sentimentProportion = [
+            'total' => $propTotal,
+            'unit' => $propUnit,
+            'positive' => [
+                'count' => $propPos,
+                'percent' => $propPosPct,
+            ],
+            'neutral' => [
+                'count' => $propNeu,
+                'percent' => $propNeuPct,
+            ],
+            'negative' => [
+                'count' => $propNeg,
+                'percent' => $propNegPct,
+            ],
+            'series' => [$propPos, $propNeu, $propNeg],
+        ];
+
+        // 9. Contoh Kutipan Responden Per Kategori Sentimen
+        $sampleQuotes = [
+            'positive' => $classifiedResponses->first(fn ($r) => $r['sentiment'] === 'positive' && (! empty($r['like_text']) || ! empty($r['improve_text']))),
+            'neutral' => $classifiedResponses->first(fn ($r) => $r['sentiment'] === 'neutral' && (! empty($r['like_text']) || ! empty($r['improve_text']))),
+            'negative' => $classifiedResponses->first(fn ($r) => $r['sentiment'] === 'negative' && (! empty($r['like_text']) || ! empty($r['improve_text']))),
+        ];
+
+        // 10. Opsi Filter Demografi
         $demographics = [
             'units' => Demographic::active()->where('type', 'unit')->pluck('name')->all(),
             'professions' => Demographic::active()->where('type', 'profession')->pluck('name')->all(),
@@ -148,6 +190,8 @@ class SentimentDashboardController extends Controller
             'insights' => $insights,
             'feedbackPaginator' => $paginatedFeedback,
             'totalFeedbackCount' => $allResponses->count(),
+            'sentimentProportion' => $sentimentProportion,
+            'sampleQuotes' => $sampleQuotes,
         ]);
     }
 
@@ -157,5 +201,88 @@ class SentimentDashboardController extends Controller
     public function export(SentimentFilterRequest $request): StreamedResponse
     {
         return $this->exportService->exportExcel($request->filters());
+    }
+
+    /**
+     * Tampilkan Laporan Eksekutif Analisis Sentimen (Print / PDF View).
+     */
+    public function report(SentimentFilterRequest $request): View
+    {
+        $filters = $request->filters();
+
+        $periods = Period::orderByDesc('start_date')->get();
+        $selectedPeriodId = ! empty($filters['period_id']) ? (int) $filters['period_id'] : null;
+        $selectedPeriod = $selectedPeriodId
+            ? Period::find($selectedPeriodId)
+            : Period::active()->first();
+        $selectedPeriod ??= $periods->first();
+        $periodId = $selectedPeriod?->id;
+
+        $query = Response::query()->with('period');
+
+        if ($periodId) {
+            $query->where('period_id', $periodId);
+        }
+
+        foreach (['unit', 'profession', 'status', 'tenure'] as $col) {
+            if (! empty($filters[$col])) {
+                $query->where($col, trim((string) $filters[$col]));
+            }
+        }
+
+        $allResponses = $query->where(function ($q) {
+            $q->whereNotNull('like_text')->orWhereNotNull('improve_text');
+        })->get();
+
+        $analysisResult = $this->analysisService->analyzeCollection($allResponses);
+        $classifiedResponses = $analysisResult['classified_responses'];
+        $totalWords = $analysisResult['total_words'];
+
+        $kpis = $this->analyticsService->getKpiSummary($classifiedResponses, $totalWords);
+        $topPositive = $this->keywordService->getTopKeywords($analysisResult['positive_frequencies'], 8);
+        $topNegative = $this->keywordService->getTopKeywords($analysisResult['negative_frequencies'], 8);
+        $insights = $this->insightService->generateInsights($kpis, $topPositive, $topNegative);
+
+        $posWords = array_sum($analysisResult['positive_frequencies'] ?? []);
+        $neuWords = array_sum($analysisResult['neutral_frequencies'] ?? []);
+        $negWords = array_sum($analysisResult['negative_frequencies'] ?? []);
+        $totalSentimentWords = $posWords + $neuWords + $negWords;
+
+        $useWords = $totalSentimentWords > 0;
+        $propTotal = $useWords ? $totalSentimentWords : $classifiedResponses->count();
+        $propPos = $useWords ? $posWords : ($kpis['positive']['count'] ?? 0);
+        $propNeu = $useWords ? $neuWords : ($kpis['neutral']['count'] ?? 0);
+        $propNeg = $useWords ? $negWords : ($kpis['negative']['count'] ?? 0);
+        $propUnit = $useWords ? 'kata' : 'respon';
+
+        $propPosPct = $propTotal > 0 ? (int) round(($propPos / $propTotal) * 100) : 0;
+        $propNeuPct = $propTotal > 0 ? (int) round(($propNeu / $propTotal) * 100) : 0;
+        $propNegPct = $propTotal > 0 ? max(0, 100 - $propPosPct - $propNeuPct) : 0;
+
+        $sentimentProportion = [
+            'total' => $propTotal,
+            'unit' => $propUnit,
+            'positive' => ['count' => $propPos, 'percent' => $propPosPct],
+            'neutral' => ['count' => $propNeu, 'percent' => $propNeuPct],
+            'negative' => ['count' => $propNeg, 'percent' => $propNegPct],
+            'series' => [$propPos, $propNeu, $propNeg],
+        ];
+
+        // Ambil kutipan representatif
+        $positiveQuotes = $classifiedResponses->filter(fn ($r) => $r['sentiment'] === 'positive' && ! empty($r['like_text']))->take(3)->values();
+        $negativeQuotes = $classifiedResponses->filter(fn ($r) => $r['sentiment'] === 'negative' && ! empty($r['improve_text']))->take(3)->values();
+
+        return view('admin.sentiment.report', [
+            'selectedPeriod' => $selectedPeriod,
+            'kpis' => $kpis,
+            'sentimentProportion' => $sentimentProportion,
+            'topPositive' => $topPositive,
+            'topNegative' => $topNegative,
+            'insights' => $insights,
+            'positiveQuotes' => $positiveQuotes,
+            'negativeQuotes' => $negativeQuotes,
+            'totalResponses' => $allResponses->count(),
+            'generatedAt' => now()->translatedFormat('d F Y, H:i'),
+        ]);
     }
 }

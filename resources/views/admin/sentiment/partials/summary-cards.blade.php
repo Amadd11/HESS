@@ -1,5 +1,5 @@
-{{-- 5 KPI Summary Cards --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+{{-- 4 KPI Summary Cards --}}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- Card 1: Sentimen Positif -->
     <div class="bg-white rounded-3xl p-5 border border-emerald-200/90 shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-emerald-300 transition">
         <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-emerald-50 rounded-full blur-xl pointer-events-none"></div>
@@ -16,11 +16,14 @@
                 </div>
             </div>
             <div>
-                <div class="text-3xl font-black tracking-tight text-emerald-950">
-                    {{ $kpis['positive']['percent'] }}%
+                <div class="text-3xl font-black tracking-tight text-emerald-950 flex items-baseline gap-2 flex-wrap">
+                    <span>{{ $sentimentProportion['positive']['percent'] ?? $kpis['positive']['percent'] }}%</span>
+                    @if(isset($sentimentProportion['positive']['count']))
+                    <span class="text-xs font-semibold text-emerald-700/80 font-mono">({{ number_format($sentimentProportion['positive']['count']) }} {{ $sentimentProportion['unit'] }})</span>
+                    @endif
                 </div>
                 <div class="text-xs font-semibold text-emerald-700/90 mt-0.5">
-                    {{ $kpis['positive']['count'] }} Masukan
+                    {{ $kpis['positive']['count'] }} Masukan Responden
                 </div>
             </div>
         </div>
@@ -45,11 +48,14 @@
                 </div>
             </div>
             <div>
-                <div class="text-3xl font-black tracking-tight text-amber-950">
-                    {{ $kpis['neutral']['percent'] }}%
+                <div class="text-3xl font-black tracking-tight text-amber-950 flex items-baseline gap-2 flex-wrap">
+                    <span>{{ $sentimentProportion['neutral']['percent'] ?? $kpis['neutral']['percent'] }}%</span>
+                    @if(isset($sentimentProportion['neutral']['count']))
+                    <span class="text-xs font-semibold text-amber-700/80 font-mono">({{ number_format($sentimentProportion['neutral']['count']) }} {{ $sentimentProportion['unit'] }})</span>
+                    @endif
                 </div>
                 <div class="text-xs font-semibold text-amber-700/90 mt-0.5">
-                    {{ $kpis['neutral']['count'] }} Masukan
+                    {{ $kpis['neutral']['count'] }} Masukan Responden
                 </div>
             </div>
         </div>
@@ -74,11 +80,14 @@
                 </div>
             </div>
             <div>
-                <div class="text-3xl font-black tracking-tight text-rose-950">
-                    {{ $kpis['negative']['percent'] }}%
+                <div class="text-3xl font-black tracking-tight text-rose-950 flex items-baseline gap-2 flex-wrap">
+                    <span>{{ $sentimentProportion['negative']['percent'] ?? $kpis['negative']['percent'] }}%</span>
+                    @if(isset($sentimentProportion['negative']['count']))
+                    <span class="text-xs font-semibold text-rose-700/80 font-mono">({{ number_format($sentimentProportion['negative']['count']) }} {{ $sentimentProportion['unit'] }})</span>
+                    @endif
                 </div>
                 <div class="text-xs font-semibold text-rose-700/90 mt-0.5">
-                    {{ $kpis['negative']['count'] }} Masukan
+                    {{ $kpis['negative']['count'] }} Masukan Responden
                 </div>
             </div>
         </div>
@@ -103,39 +112,13 @@
                     {{ $kpis['total_feedback'] }}
                 </div>
                 <div class="text-xs font-semibold text-gray-500 mt-0.5">
-                    {{ $kpis['total_words'] }} Total Kata
+                    {{ $kpis['total_words'] }} Total Kata Teranalisis
                 </div>
             </div>
         </div>
         <div class="mt-3 pt-2.5 border-t border-gray-100 text-[11px] text-gray-500 font-medium flex items-center justify-between">
-            <span>Respon Terkumpul</span>
-            <span class="font-bold text-gray-700">{{ $totalFeedbackCount }} Akumulasi</span>
-        </div>
-    </div>
-
-    <!-- Card 5: Average Sentiment Score -->
-    <div class="bg-white rounded-3xl p-5 border border-indigo-200/90 shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-indigo-300 transition">
-        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-indigo-50 rounded-full blur-xl pointer-events-none"></div>
-        <div class="space-y-3">
-            <div class="flex items-center justify-between">
-                <span class="text-[11px] font-extrabold uppercase tracking-wider text-indigo-800">Skor Sentimen</span>
-                <div class="w-9 h-9 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                </div>
-            </div>
-            <div>
-                <div class="text-3xl font-black tracking-tight {{ $kpis['avg_score'] >= 0 ? 'text-emerald-700' : 'text-rose-700' }}">
-                    {{ $kpis['avg_score'] > 0 ? '+'.$kpis['avg_score'] : $kpis['avg_score'] }}
-                </div>
-                <div class="text-xs font-semibold text-indigo-900/80 mt-0.5">
-                    Skala -1.00 s/d +1.00
-                </div>
-            </div>
-        </div>
-        <div class="mt-3 pt-2.5 border-t border-indigo-100 text-[11px] text-indigo-700 font-medium flex items-center gap-1">
-            <span>Rata-Rata Net Persepsi</span>
+            <span>Respon Masukan</span>
+            <span class="font-bold text-gray-700">{{ $totalFeedbackCount }} Responden</span>
         </div>
     </div>
 </div>

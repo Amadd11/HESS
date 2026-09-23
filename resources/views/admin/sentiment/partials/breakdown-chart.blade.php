@@ -12,8 +12,8 @@
         <div class="bg-white rounded-3xl p-5 border border-gray-200/90 shadow-xs space-y-3">
             <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
                 <div>
-                    <h4 class="text-xs font-black uppercase tracking-wider text-gray-800">Distribusi per Unit Kerja</h4>
-                    <span class="text-[11px] text-gray-400">Komposisi sentimen instalasi / unit</span>
+                    <h4 class="text-xs font-black uppercase tracking-wider text-gray-800">Distribusi per Satuan Kerja</h4>
+                    <span class="text-[11px] text-gray-400">Komposisi sentimen direktorat / satuan kerja</span>
                 </div>
                 <span class="text-[10px] font-bold bg-gray-100 px-2 py-0.5 rounded-md text-gray-600">Stacked Bar</span>
             </div>
