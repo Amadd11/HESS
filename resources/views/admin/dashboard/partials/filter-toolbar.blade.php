@@ -38,7 +38,7 @@
                     class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer">
                 @foreach($periods as $p)
                     <option value="{{ $p->id }}" {{ ($selectedPeriod?->id === $p->id) ? 'selected' : '' }}>
-                        {{ $p->name }} {{ $p->is_active ? '★ (Aktif)' : '' }}
+                        {{ $p->name }} {{ $p->is_active ? '(Aktif)' : '' }}
                     </option>
                 @endforeach
             </select>

@@ -29,3 +29,12 @@
     display: none !important;
 }
 
+/* Sembunyikan scrollbar tapi tetap bisa di-scroll */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+

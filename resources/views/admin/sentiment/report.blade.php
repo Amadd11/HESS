@@ -191,10 +191,14 @@
                         <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">Top 8</span>
                     </div>
                     <div class="space-y-1.5 text-xs">
-                        @forelse($topPositive as $item)
+                        @forelse($topPositive as $word => $count)
+                            @php
+                                $displayWord = is_array($count) ? ($count['word'] ?? $word) : $word;
+                                $displayCount = is_array($count) ? ($count['count'] ?? 0) : $count;
+                            @endphp
                             <div class="flex items-center justify-between py-1 border-b border-emerald-100/80 last:border-none">
-                                <span class="font-bold text-gray-800 font-mono">{{ $item['word'] }}</span>
-                                <span class="font-semibold text-emerald-700">{{ $item['count'] }} sebutan</span>
+                                <span class="font-bold text-gray-800 font-mono">{{ $displayWord }}</span>
+                                <span class="font-semibold text-emerald-700">{{ $displayCount }} sebutan</span>
                             </div>
                         @empty
                             <div class="text-xs text-gray-400 italic">Belum ada kata positif</div>
@@ -209,10 +213,14 @@
                         <span class="text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full">Top 8</span>
                     </div>
                     <div class="space-y-1.5 text-xs">
-                        @forelse($topNegative as $item)
+                        @forelse($topNegative as $word => $count)
+                            @php
+                                $displayWord = is_array($count) ? ($count['word'] ?? $word) : $word;
+                                $displayCount = is_array($count) ? ($count['count'] ?? 0) : $count;
+                            @endphp
                             <div class="flex items-center justify-between py-1 border-b border-rose-100/80 last:border-none">
-                                <span class="font-bold text-gray-800 font-mono">{{ $item['word'] }}</span>
-                                <span class="font-semibold text-rose-700">{{ $item['count'] }} keluhan</span>
+                                <span class="font-bold text-gray-800 font-mono">{{ $displayWord }}</span>
+                                <span class="font-semibold text-rose-700">{{ $displayCount }} keluhan</span>
                             </div>
                         @empty
                             <div class="text-xs text-gray-400 italic">Belum ada keluhan tercatat</div>

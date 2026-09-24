@@ -234,7 +234,8 @@
 
                                 <!-- Delete Button -->
                                 <form action="{{ route('admin.sentiment-words.destroy', $item->id) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus kata \'{{ $item->word }}\'?');">
+                                      data-title="Hapus Kata Kamus Sentimen?"
+                                      data-confirm="Apakah Anda yakin ingin menghapus kata '{{ $item->word }}' dari kamus sentimen?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

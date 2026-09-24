@@ -277,7 +277,8 @@
 
                                 <!-- Delete Button -->
                                 <form action="{{ route('admin.demographics.destroy', $demo->id) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus opsi {{ $demo->name }}?');">
+                                      data-title="Hapus Opsi Demografi?"
+                                      data-confirm="Apakah Anda yakin ingin menghapus opsi '{{ $demo->name }}'?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

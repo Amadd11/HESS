@@ -3,7 +3,7 @@
     class="fixed inset-0 z-40 bg-gray-900/50 lg:hidden transition-opacity"></div>
 
 <!-- Sidebar Navigation -->
-<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-200 lg:static lg:translate-x-0"
+<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-200 lg:static lg:translate-x-0 h-full no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
     <!-- Logo & Brand -->
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Navigation Links -->
-    <nav class="p-4 space-y-1.5 flex-1 overflow-y-auto">
+    <nav class="p-4 space-y-1.5 flex-1 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <a href="{{ route('admin.dashboard') }}"
             class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition {{ request()->routeIs('admin.dashboard') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.dashboard') ? 'text-primary-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,15 +146,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </a>
-                <form action="{{ route('admin.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" title="Logout"
-                        class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                    </button>
-                </form>
+                <button type="button" @click="$dispatch('open-logout-modal')" title="Keluar / Logout"
+                    class="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>

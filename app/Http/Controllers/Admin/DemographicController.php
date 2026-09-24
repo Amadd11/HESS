@@ -24,7 +24,7 @@ class DemographicController extends Controller
         $query = Demographic::query();
 
         if ($currentType !== 'all') {
-            $query->where('type', $currentType);
+            $query->type($currentType);
         }
 
         if ($request->filled('search')) {
@@ -40,10 +40,10 @@ class DemographicController extends Controller
 
         $stats = [
             'total' => Demographic::count(),
-            'unit' => Demographic::where('type', 'unit')->count(),
-            'profession' => Demographic::where('type', 'profession')->count(),
-            'status' => Demographic::where('type', 'status')->count(),
-            'tenure' => Demographic::where('type', 'tenure')->count(),
+            'unit' => Demographic::type('unit')->count(),
+            'profession' => Demographic::type('profession')->count(),
+            'status' => Demographic::type('status')->count(),
+            'tenure' => Demographic::type('tenure')->count(),
         ];
 
         return view('admin.demographics.index', [

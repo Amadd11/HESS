@@ -16,7 +16,7 @@ class PeriodSeeder extends Seeder
         Period::updateOrCreate(
             ['slug' => 'survei-kepuasan-2026-s1'],
             [
-                'name' => 'Survei Kepuasan Pegawai 2026 — Semester 1',
+                'name' => 'Survei Kepuasan Pegawai 2026 — Periode 1',
                 'slug' => 'survei-kepuasan-2026-s1',
                 'target' => 500,
                 'start_date' => Carbon::now()->startOfMonth(),

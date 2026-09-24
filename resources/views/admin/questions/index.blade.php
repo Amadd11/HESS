@@ -427,7 +427,8 @@
 
                                 <!-- Tombol Hapus (SoftDelete) -->
                                 <form action="{{ route('admin.questions.destroy', $q->id) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus butir pertanyaan {{ $q->code }}? Data histori survei yang lampau akan tetap aman.');">
+                                      data-title="Hapus Pertanyaan {{ $q->code }}?"
+                                      data-confirm="Apakah Anda yakin ingin menghapus butir pertanyaan {{ $q->code }}? Data histori survei yang lampau akan tetap aman tersimpan.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

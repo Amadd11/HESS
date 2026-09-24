@@ -6,7 +6,7 @@
         <x-input
             label="Nama Periode Survei"
             name="name"
-            placeholder="Contoh: Survei Kepuasan Pegawai 2026 — Semester 2"
+            placeholder="Contoh: Survei Kepuasan Pegawai 2026 — Periode 2"
             :required="true"
         />
 

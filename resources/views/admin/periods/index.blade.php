@@ -198,7 +198,7 @@ $publicSurveyUrl = route('survey.index');
                     </svg>
                 </div>
                 <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Cari nama periode survei (contoh: 2026, Semester 1)..."
+                    placeholder="Cari nama periode survei (contoh: 2026, Periode 1)..."
                     class="w-full pl-10 pr-10 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                 @if(request()->filled('search'))
                 <a href="{{ route('admin.periods.index', request()->only('status')) }}"
@@ -383,7 +383,8 @@ $publicSurveyUrl = route('survey.index');
 
                             <!-- Delete Button -->
                             <form action="{{ route('admin.periods.destroy', $period->id) }}" method="POST" class="inline"
-                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus periode ini?');">
+                                data-title="Hapus Periode Survei?"
+                                data-confirm="Apakah Anda yakin ingin menghapus periode '{{ $period->name }}'?">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"

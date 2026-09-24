@@ -298,7 +298,8 @@
 
                                 <!-- Delete Button -->
                                 <form action="{{ route('admin.categories.destroy', $cat->id) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori {{ $cat->name }}?');">
+                                      data-title="Hapus Kategori?"
+                                      data-confirm="Apakah Anda yakin ingin menghapus kategori '{{ $cat->name }}'? Seluruh butir kuesioner terkait akan terdampak.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

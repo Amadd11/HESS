@@ -41,7 +41,7 @@ class ResponseSeeder extends Seeder
             'Kolaborasi interprofesi antara dokter penanggung jawab, perawat bangsal, dan farmasi klinis berjalan baik.',
             'Gaji, tunjangan pokok, dan insentif bulanan selalu dibayarkan tepat waktu tanpa kendala.',
             'Rasa bangga yang tinggi bisa melayani dan merawat kesembuhan pasien secara optimal.',
-            'Adanya program apresiasi dan penghargaan untuk pegawai serta unit teladan tiap semester.',
+            'Adanya program apresiasi dan penghargaan untuk pegawai serta unit teladan tiap periode.',
             'Jadwal dinas yang disusun dengan bijak dan toleran terhadap kebutuhan mendesak keluarga.',
             'Budaya saling bantu dan sigap saling mem-backup saat ada pasien gawat darurat atau lonjakan IGD.',
             'Proses orientasi bagi staf baru sangat terstruktur dan didampingi perawat senior yang ramah.',

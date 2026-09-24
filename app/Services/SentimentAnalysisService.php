@@ -10,176 +10,57 @@ use Illuminate\Support\Facades\Schema;
 class SentimentAnalysisService
 {
     /**
-     * Kamus Kata / Frasa Positif (Konteks RS & Kepuasan Kerja).
+     * Daftar Kata / Frasa Positif (Konteks RS & Kepuasan Kerja).
      *
-     * @var array<string, int>
+     * @var array<string>
      */
     protected array $positiveWords = [
-        'pelayanan' => 2,
-        'teamwork' => 2,
-        'kerja tim' => 2,
-        'kerjasama' => 2,
-        'dukungan' => 2,
-        'mendukung' => 2,
-        'profesional' => 2,
-        'nyaman' => 2,
-        'kenyamanan' => 2,
-        'semangat' => 2,
-        'apresiasi' => 2,
-        'kesempatan' => 1,
-        'kolaborasi' => 2,
-        'termotivasi' => 2,
-        'motivasi' => 2,
-        'membantu' => 2,
-        'komunikasi baik' => 2,
-        'pengembangan' => 1,
-        'lingkungan kerja baik' => 2,
-        'ramah' => 2,
-        'cepat' => 2,
-        'bersih' => 2,
-        'puas' => 2,
-        'memuaskan' => 2,
-        'bagus' => 2,
-        'baik' => 1,
-        'solid' => 2,
-        'kompak' => 2,
-        'adil' => 2,
-        'aman' => 2,
-        'disiplin' => 1,
-        'transparan' => 2,
-        'tepat waktu' => 2,
-        'didukung' => 2,
-        'suka' => 1,
-        'bangga' => 2,
-        'responsif' => 2,
-        'peduli' => 2,
-        'terbantu' => 2,
-        'fasilitas memadai' => 2,
-        'lengkap' => 1,
-        'teratur' => 1,
-        'harmonis' => 2,
-        'kompeten' => 2,
-        'berkualitas' => 2,
-        'terbuka' => 1,
-        'menghargai' => 2,
-        'terarah' => 1,
-        'kondusif' => 2,
-        'efisien' => 2,
-        'solutif' => 2,
-        'penghargaan' => 2,
-        'terjamin' => 2,
-        'kebersihan' => 2,
-        'keamanan' => 2,
-        'komunikasi efektif' => 2,
-        'pelatihan' => 1,
+        'pelayanan', 'teamwork', 'kerja tim', 'kerjasama', 'dukungan',
+        'mendukung', 'profesional', 'nyaman', 'kenyamanan', 'semangat',
+        'apresiasi', 'kesempatan', 'kolaborasi', 'termotivasi', 'motivasi',
+        'membantu', 'komunikasi baik', 'pengembangan', 'lingkungan kerja baik',
+        'ramah', 'cepat', 'bersih', 'puas', 'memuaskan', 'bagus',
+        'baik', 'solid', 'kompak', 'adil', 'aman', 'disiplin',
+        'transparan', 'tepat waktu', 'didukung', 'suka', 'bangga',
+        'responsif', 'peduli', 'terbantu', 'fasilitas memadai', 'lengkap',
+        'teratur', 'harmonis', 'kompeten', 'berkualitas', 'terbuka',
+        'menghargai', 'terarah', 'kondusif', 'efisien', 'solutif',
+        'penghargaan', 'terjamin', 'kebersihan', 'keamanan',
+        'komunikasi efektif', 'pelatihan',
     ];
 
     /**
-     * Kamus Kata / Frasa Negatif (Konteks Keluhan, Kendala, Perbaikan RS).
+     * Daftar Kata / Frasa Negatif (Konteks Keluhan, Kendala, Perbaikan RS).
      *
-     * @var array<string, int>
+     * @var array<string>
      */
     protected array $negativeWords = [
-        'beban kerja' => 3,
-        'beban' => 2,
-        'gaji' => 2,
-        'kurang' => 2,
-        'stres' => 3,
-        'lembur' => 2,
-        'fasilitas kurang' => 2,
-        'keterbatasan tenaga' => 2,
-        'kurang tenaga' => 2,
-        'komunikasi kurang' => 2,
-        'tidak adil' => 3,
-        'tekanan' => 2,
-        'kejelasan karir' => 2,
-        'ketidakpastian' => 2,
-        'turnover' => 2,
-        'waktu istirahat' => 2,
-        'istirahat kurang' => 2,
-        'lama' => 2,
-        'lambat' => 2,
-        'lelet' => 2,
-        'antri' => 2,
-        'antrean' => 2,
-        'menumpuk' => 2,
-        'kotor' => 2,
-        'bau' => 2,
-        'rusak' => 2,
-        'panas' => 1,
-        'sempit' => 2,
-        'pengap' => 2,
-        'kasar' => 3,
-        'jutek' => 3,
-        'kecewa' => 2,
-        'kecewa sekali' => 3,
-        'buruk' => 2,
-        'ribet' => 2,
-        'berbelit' => 2,
-        'sepihak' => 2,
-        'terhambat' => 2,
-        'tertunda' => 2,
-        'telat' => 2,
-        'kelelahan' => 3,
-        'capek' => 2,
-        'keluhan' => 2,
-        'komplain' => 2,
-        'tidak jelas' => 2,
-        'tidak ramah' => 3,
-        'tidak nyaman' => 3,
-        'kurang nyaman' => 2,
-        'kurang bersih' => 2,
-        'kurang cepat' => 2,
-        'kurang ramah' => 2,
-        'kurang transparan' => 2,
-        'tidak transparan' => 3,
-        'minim' => 2,
-        'sulit' => 2,
-        'susah' => 2,
-        'bingung' => 1,
-        'diskriminatif' => 3,
-        'konflik' => 2,
-        'masalah' => 1,
-        'terabaikan' => 2,
+        'beban kerja', 'beban', 'gaji', 'kurang', 'stres',
+        'lembur', 'fasilitas kurang', 'keterbatasan tenaga', 'kurang tenaga',
+        'komunikasi kurang', 'tidak adil', 'tekanan', 'kejelasan karir',
+        'ketidakpastian', 'turnover', 'waktu istirahat', 'istirahat kurang',
+        'lama', 'lambat', 'lelet', 'antri', 'antrean',
+        'menumpuk', 'kotor', 'bau', 'rusak', 'panas',
+        'sempit', 'pengap', 'kasar', 'jutek', 'kecewa',
+        'kecewa sekali', 'buruk', 'ribet', 'berbelit', 'sepihak',
+        'terhambat', 'tertunda', 'telat', 'kelelahan', 'capek',
+        'keluhan', 'komplain', 'tidak jelas', 'tidak ramah',
+        'tidak nyaman', 'kurang nyaman', 'kurang bersih', 'kurang cepat',
+        'kurang ramah', 'kurang transparan', 'tidak transparan', 'minim',
+        'sulit', 'susah', 'bingung', 'diskriminatif', 'konflik',
+        'masalah', 'terabaikan', 'habis', 'antrian', 'lelah',
+        'penat', 'berat', 'kendala', 'hambatan', 'bising',
+        'gaduh', 'tumpang tindih',
     ];
 
     /**
-     * Kamus Kata Netral / Operasional (Prosedur, Sistem, Administrasi).
+     * Daftar Kata Netral / Operasional (SOP, Kebijakan, dan Standar Prosedur RS).
      *
-     * @var array<string, int>
+     * @var array<string>
      */
     protected array $neutralWords = [
-        'prosedur' => 2,
-        'sistem' => 2,
-        'aturan' => 2,
-        'standar' => 2,
-        'kebijakan' => 2,
-        'informasi' => 2,
-        'laporan' => 2,
-        'administrasi' => 2,
-        'jadwal' => 2,
-        'tugas' => 2,
-        'mekanisme' => 2,
-        'proses' => 2,
-        'rotasi' => 2,
-        'pelatihan' => 2,
-        'manajemen' => 2,
-        'ketersediaan' => 1,
-        'ruang kerja' => 1,
-        'sosialisasi' => 1,
-        'koordinasi' => 1,
-        'aplikasi' => 1,
-        'pengaturan' => 1,
-        'struktur' => 1,
-        'rencana' => 1,
-        'revisi' => 1,
-        'evaluasi' => 1,
-        'kegiatan' => 1,
-        'dokumen' => 1,
-        'pertemuan' => 1,
-        'rapat' => 1,
-        'data' => 1,
-        'arsip' => 1,
+        'sop', 'prosedur', 'standar', 'kebijakan', 'administrasi',
+        'rotasi', 'koordinasi', 'evaluasi', 'aturan', 'rme', 'simrs',
     ];
 
     /**
@@ -187,39 +68,58 @@ class SentimentAnalysisService
      *
      * @var array<string>
      */
-    protected array $negationWords = [
-        'tidak', 'bukan', 'kurang', 'belum', 'tanpa', 'jangan',
-    ];
+    protected array $negationWords = ['tidak', 'bukan', 'kurang', 'belum', 'tanpa', 'jangan'];
 
     /**
-     * Stopwords Bahasa Indonesia.
+     * Stopwords Bahasa Indonesia dan Entitas Fisik/Konteks Umum RS.
      *
      * @var array<string, bool>
      */
     protected array $stopWords = [
-        'yang' => true, 'di' => true, 'ke' => true, 'dari' => true, 'ini' => true,
-        'itu' => true, 'untuk' => true, 'pada' => true, 'adalah' => true, 'dan' => true,
-        'atau' => true, 'dengan' => true, 'oleh' => true, 'karena' => true, 'juga' => true,
-        'saya' => true, 'kami' => true, 'kita' => true, 'mereka' => true, 'dia' => true,
-        'bisa' => true, 'dapat' => true, 'akan' => true, 'telah' => true, 'sudah' => true,
-        'harus' => true, 'perlu' => true, 'ada' => true, 'jadi' => true, 'dalam' => true,
+        'yang' => true, 'di' => true, 'ke' => true, 'dari' => true, 'ini' => true, 'itu' => true,
+        'untuk' => true, 'pada' => true, 'adalah' => true, 'dan' => true, 'atau' => true, 'dengan' => true,
+        'oleh' => true, 'karena' => true, 'juga' => true, 'saya' => true, 'kami' => true, 'kita' => true,
+        'mereka' => true, 'dia' => true, 'bisa' => true, 'dapat' => true, 'akan' => true, 'telah' => true,
+        'sudah' => true, 'harus' => true, 'perlu' => true, 'ada' => true, 'jadi' => true, 'dalam' => true,
         'secara' => true, 'agar' => true, 'supaya' => true, 'tentang' => true, 'sebagai' => true,
         'lebih' => true, 'sangat' => true, 'selalu' => true, 'banyak' => true, 'hanya' => true,
         'bila' => true, 'jika' => true, 'ketika' => true, 'saat' => true, 'karyawan' => true,
-        'pegawai' => true, 'staf' => true, 'rumah' => true, 'sakit' => true, 'rs' => true,
-        'hal' => true, 'saja' => true, 'masih' => true, 'bagi' => true, 'antara' => true,
-        'yg' => true, 'nya' => true, 'dgn' => true, 'utk' => true, 'dg' => true,
-        'saling' => true, 'sebaiknya' => true, 'semoga' => true, 'mohon' => true, 'tolong' => true,
-        'terima' => true, 'kasih' => true, 'terimakasih' => true, 'maupun' => true,
-        'namun' => true, 'tetapi' => true, 'tapi' => true, 'serta' => true, 'lain' => true, 'lainnya' => true,
-        'pasien' => true, 'keluarga' => true, 'hari' => true, 'bulan' => true, 'tahun' => true, 'orang' => true, 'antar' => true,
+        'pegawai' => true, 'staf' => true, 'rumah' => true, 'sakit' => true, 'rs' => true, 'hal' => true,
+        'saja' => true, 'masih' => true, 'bagi' => true, 'antara' => true, 'yg' => true, 'nya' => true,
+        'dgn' => true, 'utk' => true, 'dg' => true, 'saling' => true, 'sebaiknya' => true, 'semoga' => true,
+        'mohon' => true, 'tolong' => true, 'terima' => true, 'kasih' => true, 'terimakasih' => true,
+        'maupun' => true, 'namun' => true, 'tetapi' => true, 'tapi' => true, 'serta' => true,
+        'lain' => true, 'lainnya' => true, 'pasien' => true, 'keluarga' => true, 'hari' => true,
+        'bulan' => true, 'tahun' => true, 'orang' => true, 'antar' => true, 'sering' => true,
+        'berkala' => true, 'ditambah' => true, 'diganti' => true, 'ditingkatkan' => true,
+        'diperbaiki' => true, 'diberikan' => true, 'baru' => true, 'jaga' => true, 'malam' => true,
+        'jam' => true, 'rawat' => true, 'inap' => true, 'petugas' => true, 'fasilitas' => true,
+        'ruang' => true, 'ruangan' => true, 'stasi' => true, 'obat' => true, 'komputer' => true,
+        'peralatan' => true, 'sarana' => true, 'prasarana' => true, 'ketersediaan' => true,
+        'sistem' => true, 'manajemen' => true, 'rawat inap' => true, 'farmasi' => true, 'apd' => true,
+        'shift' => true, 'igd' => true, 'cssd' => true, 'k3rs' => true, 'rawat jalan' => true,
+        'rekam medis' => true, 'informasi' => true, 'laporan' => true, 'jadwal' => true, 'tugas' => true,
+        'proses' => true, 'kegiatan' => true, 'dokumen' => true, 'data' => true,
     ];
+
+    /**
+     * Map lookup internal untuk performa tinggi O(1).
+     *
+     * @var array<string, bool>
+     */
+    protected array $positiveMap = [];
+    protected array $negativeMap = [];
+    protected array $neutralMap = [];
 
     /**
      * Inisialisasi service dan muat kamus kustom dari database.
      */
     public function __construct()
     {
+        $this->positiveMap = array_fill_keys($this->positiveWords, true);
+        $this->negativeMap = array_fill_keys($this->negativeWords, true);
+        $this->neutralMap = array_fill_keys($this->neutralWords, true);
+
         $this->loadCustomLexicon();
     }
 
@@ -230,16 +130,13 @@ class SentimentAnalysisService
     {
         try {
             if (Schema::hasTable('sentiment_words')) {
-                $customWords = SentimentWord::query()->active()->get();
-                foreach ($customWords as $cw) {
+                foreach (SentimentWord::query()->active()->get() as $cw) {
                     $w = strtolower(trim($cw->word));
-                    if ($cw->sentiment === 'positive') {
-                        $this->positiveWords[$w] = 1;
-                    } elseif ($cw->sentiment === 'negative') {
-                        $this->negativeWords[$w] = 1;
-                    } else {
-                        $this->neutralWords[$w] = 1;
-                    }
+                    match ($cw->sentiment) {
+                        'positive' => $this->positiveMap[$w] = true,
+                        'negative' => $this->negativeMap[$w] = true,
+                        default => $this->neutralMap[$w] = true,
+                    };
                 }
             }
         } catch (\Throwable $e) {
@@ -250,41 +147,47 @@ class SentimentAnalysisService
     /**
      * Klasifikasikan satu record Response ke sentimen (positive, neutral, negative) & skor.
      *
-     * @return array{sentiment: string, score: float, label: string, positive_tokens: array<string>, negative_tokens: array<string>, neutral_tokens: array<string>, total_words: int}
+     * @return array{
+     *     sentiment: string,
+     *     score: float,
+     *     label: string,
+     *     positive_tokens: array<string>,
+     *     negative_tokens: array<string>,
+     *     neutral_tokens: array<string>,
+     *     total_words: int
+     * }
      */
     public function classifyResponse(Response $response): array
     {
-        $likeText = trim((string) ($response->like_text ?? ''));
-        $improveText = trim((string) ($response->improve_text ?? ''));
+        $like = $this->analyzeText(trim((string) ($response->like_text ?? '')));
+        $improve = $this->analyzeText(trim((string) ($response->improve_text ?? '')));
 
-        $likeAnalysis = $this->analyzeText($likeText, isLikelyPositive: true);
-        $improveAnalysis = $this->analyzeText($improveText, isLikelyPositive: false);
+        $posTokens = array_merge($like['positive_tokens'], $improve['positive_tokens']);
+        $negTokens = array_merge($like['negative_tokens'], $improve['negative_tokens']);
+        $neuTokens = array_merge($like['neutral_tokens'], $improve['neutral_tokens']);
 
-        $netScore = ($likeAnalysis['score'] * 1.2) + ($improveAnalysis['score']);
-        $totalWords = $likeAnalysis['word_count'] + $improveAnalysis['word_count'];
+        $posCount = count($posTokens);
+        $negCount = count($negTokens);
 
-        // Normalisasi skor ke skala -1.0 s/d +1.0
-        $normalizedScore = round(max(-1.0, min(1.0, $netScore / 5.0)), 2);
+        [$sentiment, $label] = match (true) {
+            $posCount > $negCount => ['positive', 'Positif'],
+            $negCount > $posCount => ['negative', 'Negatif'],
+            default => ['neutral', 'Netral'],
+        };
 
-        if ($netScore > 0.5) {
-            $sentiment = 'positive';
-            $label = 'Positif';
-        } elseif ($netScore < -0.5) {
-            $sentiment = 'negative';
-            $label = 'Negatif';
-        } else {
-            $sentiment = 'neutral';
-            $label = 'Netral';
-        }
+        $totalSentimentTokens = $posCount + $negCount;
+        $score = $totalSentimentTokens > 0
+            ? round(($posCount - $negCount) / $totalSentimentTokens, 2)
+            : 0.0;
 
         return [
             'sentiment' => $sentiment,
-            'score' => $normalizedScore,
+            'score' => $score,
             'label' => $label,
-            'positive_tokens' => array_merge($likeAnalysis['positive_tokens'], $improveAnalysis['positive_tokens']),
-            'negative_tokens' => array_merge($likeAnalysis['negative_tokens'], $improveAnalysis['negative_tokens']),
-            'neutral_tokens' => array_merge($likeAnalysis['neutral_tokens'], $improveAnalysis['neutral_tokens']),
-            'total_words' => $totalWords,
+            'positive_tokens' => $posTokens,
+            'negative_tokens' => $negTokens,
+            'neutral_tokens' => $neuTokens,
+            'total_words' => $like['word_count'] + $improve['word_count'],
         ];
     }
 
@@ -306,51 +209,18 @@ class SentimentAnalysisService
         $negativeFreq = [];
         $neutralFreq = [];
         $totalWords = 0;
-        $wordCorrelations = [];
 
-        $classified = $responses->map(function (Response $response) use (&$positiveFreq, &$negativeFreq, &$neutralFreq, &$totalWords, &$wordCorrelations) {
+        $classified = $responses->map(function (Response $response) use (&$positiveFreq, &$negativeFreq, &$neutralFreq, &$totalWords) {
             $res = $this->classifyResponse($response);
             $totalWords += $res['total_words'];
 
-            foreach ($res['positive_tokens'] as $tok) {
-                $t = trim($tok);
-                if ($t !== '' && ! isset($this->stopWords[$t])) {
-                    $positiveFreq[$t] = ($positiveFreq[$t] ?? 0) + 1;
+            foreach (['positive' => &$positiveFreq, 'negative' => &$negativeFreq, 'neutral' => &$neutralFreq] as $type => &$freqMap) {
+                foreach ($res["{$type}_tokens"] as $tok) {
+                    $t = trim($tok);
+                    if ($t !== '' && ! isset($this->stopWords[$t])) {
+                        $freqMap[$t] = ($freqMap[$t] ?? 0) + 1;
+                    }
                 }
-            }
-
-            foreach ($res['negative_tokens'] as $tok) {
-                $t = trim($tok);
-                if ($t !== '' && ! isset($this->stopWords[$t])) {
-                    $negativeFreq[$t] = ($negativeFreq[$t] ?? 0) + 1;
-                }
-            }
-
-            foreach ($res['neutral_tokens'] as $tok) {
-                $t = trim($tok);
-                if ($t !== '' && ! isset($this->stopWords[$t])) {
-                    $neutralFreq[$t] = ($neutralFreq[$t] ?? 0) + 1;
-                }
-            }
-
-            // Lacak kata-kata responden untuk korelasi skor kepuasan (Hybrid Engine)
-            $overall = (float) ($response->overall_score ?? 3);
-            $nps = (float) ($response->nps_score ?? 5);
-
-            $likeWords = $this->extractCandidateWords((string) ($response->like_text ?? ''));
-            foreach ($likeWords as $w) {
-                $wordCorrelations[$w]['scores'][] = $overall;
-                $wordCorrelations[$w]['nps'][] = $nps;
-                $wordCorrelations[$w]['like_count'] = ($wordCorrelations[$w]['like_count'] ?? 0) + 1;
-                $wordCorrelations[$w]['improve_count'] = $wordCorrelations[$w]['improve_count'] ?? 0;
-            }
-
-            $improveWords = $this->extractCandidateWords((string) ($response->improve_text ?? ''));
-            foreach ($improveWords as $w) {
-                $wordCorrelations[$w]['scores'][] = $overall;
-                $wordCorrelations[$w]['nps'][] = $nps;
-                $wordCorrelations[$w]['improve_count'] = ($wordCorrelations[$w]['improve_count'] ?? 0) + 1;
-                $wordCorrelations[$w]['like_count'] = $wordCorrelations[$w]['like_count'] ?? 0;
             }
 
             return array_merge($response->toArray(), [
@@ -360,34 +230,6 @@ class SentimentAnalysisService
                 'formatted_date' => $response->completed_at ? $response->completed_at->format('d M Y') : $response->created_at->format('d M Y'),
             ]);
         });
-
-        // Terapkan Hybrid Rating Correlation untuk kata yang belum terdaftar di kamus eksplisit
-        foreach ($wordCorrelations as $w => $data) {
-            $totalAppearances = ($data['like_count'] ?? 0) + ($data['improve_count'] ?? 0);
-            if ($totalAppearances < 2) {
-                continue;
-            }
-
-            // Jika kata sudah ada di salah satu kamus/frekuensi, lewati
-            if (isset($positiveFreq[$w]) || isset($negativeFreq[$w]) || isset($neutralFreq[$w])) {
-                continue;
-            }
-
-            $avgScore = array_sum($data['scores']) / count($data['scores']);
-            $avgNps = array_sum($data['nps']) / count($data['nps']);
-            $likeCount = $data['like_count'] ?? 0;
-            $improveCount = $data['improve_count'] ?? 0;
-
-            // 1. Dominan ditulis di Hal Positif (like_text)
-            if ($likeCount >= ($improveCount * 1.5)) {
-                $positiveFreq[$w] = $totalAppearances;
-            }
-            // 2. Dominan ditulis di Saran Perbaikan / Keluhan (improve_text)
-            elseif ($improveCount >= ($likeCount * 1.5)) {
-                $negativeFreq[$w] = $totalAppearances;
-            }
-            // Catatan: Kata netral TIDAK menyerap kata acak, melainkan hanya istilah yang didefinisikan di kamus netral/SOP RS.
-        }
 
         arsort($positiveFreq);
         arsort($negativeFreq);
@@ -403,39 +245,19 @@ class SentimentAnalysisService
     }
 
     /**
-     * Ekstrak kata-kata bermakna (min 3 huruf, non-stopwords, tanpa angka/tanda baca).
-     *
-     * @return array<string>
-     */
-    protected function extractCandidateWords(string $text): array
-    {
-        if (trim($text) === '') {
-            return [];
-        }
-
-        $cleaned = mb_strtolower($text, 'UTF-8');
-        $cleaned = (string) preg_replace('/[^\p{L}\s\-]/u', ' ', $cleaned);
-        $rawWords = preg_split('/\s+/', trim($cleaned), -1, PREG_SPLIT_NO_EMPTY) ?: [];
-
-        $candidates = [];
-        foreach ($rawWords as $w) {
-            $w = trim($w);
-            if (mb_strlen($w, 'UTF-8') >= 3 && ! isset($this->stopWords[$w]) && ! in_array($w, $this->negationWords, true)) {
-                $candidates[] = $w;
-            }
-        }
-
-        return array_unique($candidates);
-    }
-
-    /**
      * Analisis teks perorangan.
+     *
+     * @return array{
+     *     word_count: int,
+     *     positive_tokens: array<string>,
+     *     negative_tokens: array<string>,
+     *     neutral_tokens: array<string>
+     * }
      */
-    protected function analyzeText(string $text, bool $isLikelyPositive): array
+    protected function analyzeText(string $text): array
     {
         if (trim($text) === '') {
             return [
-                'score' => 0,
                 'word_count' => 0,
                 'positive_tokens' => [],
                 'negative_tokens' => [],
@@ -445,15 +267,12 @@ class SentimentAnalysisService
 
         $cleaned = mb_strtolower($text, 'UTF-8');
         $cleaned = (string) preg_replace('/[^\p{L}\p{N}\s\-]/u', ' ', $cleaned);
-
         $words = preg_split('/\s+/', trim($cleaned), -1, PREG_SPLIT_NO_EMPTY) ?: [];
         $wordCount = count($words);
 
-        $positiveTokens = [];
-        $negativeTokens = [];
-        $neutralTokens = [];
-
-        $score = $isLikelyPositive ? 1.0 : -0.5;
+        $posTokens = [];
+        $negTokens = [];
+        $neuTokens = [];
         $skipNext = false;
 
         for ($i = 0; $i < $wordCount; $i++) {
@@ -468,43 +287,35 @@ class SentimentAnalysisService
             $bigram = $nextW !== '' ? "{$w} {$nextW}" : null;
 
             // 1. Frasa 2 Kata
-            if ($bigram && isset($this->negativeWords[$bigram])) {
-                $negativeTokens[] = $bigram;
-                $score -= $this->negativeWords[$bigram];
+            if ($bigram && isset($this->negativeMap[$bigram])) {
+                $negTokens[] = $bigram;
+                $skipNext = true;
+
+                continue;
+            }
+            if ($bigram && isset($this->positiveMap[$bigram])) {
+                $posTokens[] = $bigram;
+                $skipNext = true;
+
+                continue;
+            }
+            if ($bigram && isset($this->neutralMap[$bigram])) {
+                $neuTokens[] = $bigram;
                 $skipNext = true;
 
                 continue;
             }
 
-            if ($bigram && isset($this->positiveWords[$bigram])) {
-                $positiveTokens[] = $bigram;
-                $score += $this->positiveWords[$bigram];
-                $skipNext = true;
-
-                continue;
-            }
-
-            if ($bigram && isset($this->neutralWords[$bigram])) {
-                $neutralTokens[] = $bigram;
-                $skipNext = true;
-
-                continue;
-            }
-
-            // 2. Negasi
+            // 2. Negasi (misal: "tidak ramah" -> negatif, "tidak menumpuk" -> positif)
             if (in_array($w, $this->negationWords, true) && $nextW !== '') {
-                if (isset($this->positiveWords[$nextW])) {
-                    $phrase = "{$w} {$nextW}";
-                    $negativeTokens[] = $phrase;
-                    $score -= 2;
+                if (isset($this->positiveMap[$nextW])) {
+                    $negTokens[] = "{$w} {$nextW}";
                     $skipNext = true;
 
                     continue;
                 }
-                if (isset($this->negativeWords[$nextW])) {
-                    $phrase = "{$w} {$nextW}";
-                    $positiveTokens[] = $phrase;
-                    $score += 1.5;
+                if (isset($this->negativeMap[$nextW])) {
+                    $posTokens[] = "{$w} {$nextW}";
                     $skipNext = true;
 
                     continue;
@@ -512,33 +323,20 @@ class SentimentAnalysisService
             }
 
             // 3. Kata Tunggal
-            if (isset($this->positiveWords[$w])) {
-                $positiveTokens[] = $w;
-                $score += $this->positiveWords[$w];
-
-                continue;
-            }
-
-            if (isset($this->negativeWords[$w])) {
-                $negativeTokens[] = $w;
-                $score -= $this->negativeWords[$w];
-
-                continue;
-            }
-
-            if (isset($this->neutralWords[$w])) {
-                $neutralTokens[] = $w;
-
-                continue;
+            if (isset($this->positiveMap[$w])) {
+                $posTokens[] = $w;
+            } elseif (isset($this->negativeMap[$w])) {
+                $negTokens[] = $w;
+            } elseif (isset($this->neutralMap[$w])) {
+                $neuTokens[] = $w;
             }
         }
 
         return [
-            'score' => $score,
             'word_count' => $wordCount,
-            'positive_tokens' => $positiveTokens,
-            'negative_tokens' => $negativeTokens,
-            'neutral_tokens' => $neutralTokens,
+            'positive_tokens' => $posTokens,
+            'negative_tokens' => $negTokens,
+            'neutral_tokens' => $neuTokens,
         ];
     }
 }

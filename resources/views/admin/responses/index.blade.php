@@ -376,7 +376,8 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
 
                             <!-- Delete Button -->
                             <form action="{{ route('admin.responses.destroy', $resp->id) }}" method="POST" class="inline"
-                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus respon #{{ $resp->id }} ini?');">
+                                data-title="Hapus Respon #{{ $resp->id }}?"
+                                data-confirm="Apakah Anda yakin ingin menghapus respon #{{ $resp->id }} ini? Tindakan ini bersifat permanen.">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"

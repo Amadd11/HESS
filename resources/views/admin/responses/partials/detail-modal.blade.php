@@ -239,7 +239,8 @@
         <div class="px-6 py-3.5 border-t border-gray-100 bg-gray-50/70 flex items-center justify-between shrink-0">
             <template x-if="selectedResponse">
                 <form :action="'/admin/responses/' + selectedResponse.id" method="POST"
-                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus respon survei ini secara permanen?');">
+                      data-title="Hapus Respon Survei?"
+                      data-confirm="Apakah Anda yakin ingin menghapus data respon survei ini secara permanen?">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition cursor-pointer">

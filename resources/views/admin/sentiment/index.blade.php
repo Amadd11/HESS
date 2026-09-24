@@ -25,44 +25,35 @@
     @include('admin.sentiment.partials.header')
 
     @if(($kpis['total_feedback'] ?? 0) > 0)
-        {{-- 2. 5 KPI Summary Cards --}}
-        @include('admin.sentiment.partials.summary-cards')
+    {{-- 2. 5 KPI Summary Cards --}}
+    @include('admin.sentiment.partials.summary-cards')
 
-        {{-- 3. Interactive Word Cloud with Tabs --}}
-        @include('admin.sentiment.partials.word-cloud')
+    {{-- 3. Interactive Word Cloud with Tabs --}}
+    @include('admin.sentiment.partials.word-cloud')
 
-        {{-- 4. Baris Proporsi Sentimen, Top 10 Kata Kunci, & Contoh Kutipan (Sesuai Mockup) --}}
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-            <!-- 4a. Donut Proporsi Sentimen -->
-            <div class="lg:col-span-12 xl:col-span-4 flex flex-col">
-                @include('admin.sentiment.partials.proportion-chart')
-            </div>
-
-            <!-- 4b. Top 10 Kata Positif & Negatif -->
-            <div class="lg:col-span-12 xl:col-span-5 flex flex-col">
-                @include('admin.sentiment.partials.keyword-chart')
-            </div>
-
-            <!-- 4c. Contoh Kutipan Responden -->
-            <div class="lg:col-span-12 xl:col-span-3 flex flex-col">
-                @include('admin.sentiment.partials.quotes-card')
-            </div>
+    {{-- 4. Baris Proporsi Sentimen, Top 10 Kata Kunci, & Contoh Kutipan (Sesuai Mockup) --}}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        <!-- 4a. Donut Proporsi Sentimen -->
+        <div class="lg:col-span-12 xl:col-span-4 flex flex-col">
+            @include('admin.sentiment.partials.proportion-chart')
         </div>
 
-        {{-- 5. Sentiment Trend Line Chart --}}
-        @include('admin.sentiment.partials.trend-chart')
+        <!-- 4b. Top 10 Kata Positif & Negatif -->
+        <div class="lg:col-span-12 xl:col-span-5 flex flex-col">
+            @include('admin.sentiment.partials.keyword-chart')
+        </div>
 
-        {{-- 6. Multi-Dimensional Breakdown --}}
-        @include('admin.sentiment.partials.breakdown-chart')
+        <!-- 4c. Contoh Kutipan Responden -->
+        <div class="lg:col-span-12 xl:col-span-3 flex flex-col">
+            @include('admin.sentiment.partials.quotes-card')
+        </div>
+    </div>
 
-        {{-- 7. Feedback Explorer Table with Pagination & Search --}}
-        @include('admin.sentiment.partials.feedback-table')
-
-        {{-- 8. AI / Executive Insight Summary --}}
-        @include('admin.sentiment.partials.ai-summary')
+    {{-- 7. Feedback Explorer Table with Pagination & Search --}}
+    @include('admin.sentiment.partials.feedback-table')
     @else
-        {{-- Empty State jika data tidak ditemukan --}}
-        @include('admin.sentiment.partials.empty-state')
+    {{-- Empty State jika data tidak ditemukan --}}
+    @include('admin.sentiment.partials.empty-state')
     @endif
 
 </div>
