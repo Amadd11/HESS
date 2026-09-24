@@ -73,7 +73,7 @@
                             Laporan Eksekutif Analisis Sentimen & Suara Pegawai
                         </h1>
                         <p class="text-xs text-gray-500 font-medium">
-                            Hospital Employee Satisfaction Survey (HESS) &bull; Instrumen MSQ-20 & Faktor Rumah Sakit
+                            Hospital Employee Satisfaction Survey (HESS) &bull; Instrumen 8 Unsur Dimensi RS Dr. Sardjito
                         </p>
                     </div>
                 </div>

@@ -12,9 +12,40 @@
     <!-- 3 Quote Cards (Positif, Netral, Negatif) -->
     <div class="space-y-3 flex-1 flex flex-col justify-around">
         @php
-            $posText = $sampleQuotes['positive']['like_text'] ?? ($sampleQuotes['positive']['improve_text'] ?? 'Saya merasa bangga bisa bekerja di rumah sakit ini karena timnya sangat solid dan saling mendukung.');
-            $neuText = $sampleQuotes['neutral']['improve_text'] ?? ($sampleQuotes['neutral']['like_text'] ?? 'Prosedur dan aturan sudah jelas, tinggal konsistensinya yang perlu ditingkatkan.');
-            $negText = $sampleQuotes['negative']['improve_text'] ?? ($sampleQuotes['negative']['like_text'] ?? 'Beban kerja sangat tinggi, sementara jumlah tenaga kurang, sehingga sering harus lembur.');
+            $extractSampleQuote = function(?array $quoteResp, string $type, string $default) {
+                if (! $quoteResp) {
+                    return $default;
+                }
+                $fb = $quoteResp['feedback_data'] ?? null;
+                if (is_string($fb)) {
+                    $fb = json_decode($fb, true);
+                }
+                if (! empty($fb) && is_array($fb)) {
+                    $preferred = $type === 'positive' ? 'reason' : 'suggestion';
+                    $alt = $type === 'positive' ? 'suggestion' : 'reason';
+                    foreach ($fb as $aspect => $item) {
+                        $txt = trim($item[$preferred] ?? ($item[$alt] ?? ''));
+                        if (! empty($txt)) {
+                            return $txt;
+                        }
+                    }
+                }
+                $raw = $type === 'positive'
+                    ? ($quoteResp['like_text'] ?? ($quoteResp['improve_text'] ?? null))
+                    : ($quoteResp['improve_text'] ?? ($quoteResp['like_text'] ?? null));
+                if (! $raw) {
+                    return $default;
+                }
+                $cleaned = preg_replace('/^\[.*?\]\s*/', '', trim($raw));
+                if (preg_match('/^(.*?)(?=\[|$)/s', $cleaned, $m) && ! empty(trim($m[1]))) {
+                    return trim($m[1]);
+                }
+                return $cleaned ?: $default;
+            };
+
+            $posText = $extractSampleQuote($sampleQuotes['positive'] ?? null, 'positive', 'Saya merasa bangga bisa bekerja di rumah sakit ini karena timnya sangat solid dan saling mendukung.');
+            $neuText = $extractSampleQuote($sampleQuotes['neutral'] ?? null, 'neutral', 'Prosedur dan aturan sudah jelas, tinggal konsistensinya yang perlu ditingkatkan.');
+            $negText = $extractSampleQuote($sampleQuotes['negative'] ?? null, 'negative', 'Beban kerja cukup tinggi, ketersediaan sarana pendukung perlu ditambah agar pelayanan optimal.');
         @endphp
 
         <!-- Kutipan Positif -->

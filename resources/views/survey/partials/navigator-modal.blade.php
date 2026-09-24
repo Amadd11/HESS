@@ -55,28 +55,44 @@
                 </div>
             </div>
 
-            <!-- Grid Numbers 1 to 44 -->
-            <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-11 gap-1.5 max-h-[320px] overflow-y-auto p-1">
-                <template x-for="(q, idx) in questions" :key="q.id">
-                    <button type="button"
-                        @click="jumpToQuestion(idx)"
-                        class="h-9 rounded-xl text-xs font-bold transition flex items-center justify-center relative cursor-pointer"
-                        :class="currentIndex === idx
-                                ? 'bg-primary-700 text-white ring-2 ring-primary-400 shadow-sm'
-                                : (isQuestionAnswered(idx)
-                                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent')">
-                        <span x-text="idx + 1"></span>
-                        <!-- Tiny checkmark indicator if answered and not active -->
-                        <template x-if="isQuestionAnswered(idx) && currentIndex !== idx">
-                            <span class="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                        </template>
-                    </button>
+            <!-- 8 Dimensions with Question Chips and Feedback Badges -->
+            <div class="space-y-2 max-h-[360px] overflow-y-auto p-1">
+                <template x-for="(aspect, aIdx) in aspectList" :key="aIdx">
+                    <div class="p-2.5 rounded-xl border border-gray-200 bg-gray-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="text-xs font-bold text-gray-800 truncate" x-text="(aIdx + 1) + '. ' + aspect"></div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <!-- 3 Soal Tertutup -->
+                            <template x-for="qOffset in [0, 1, 2]" :key="qOffset">
+                                <button type="button"
+                                    @click="jumpToQuestion((aIdx * 3) + qOffset)"
+                                    class="w-8 h-8 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer"
+                                    :class="currentIndex === ((aIdx * 3) + qOffset) && step === 'questionnaire'
+                                        ? 'bg-primary-700 text-white ring-2 ring-primary-400 shadow-xs'
+                                        : (isQuestionAnswered((aIdx * 3) + qOffset)
+                                            ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                                            : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100')">
+                                    <span x-text="(aIdx * 3) + qOffset + 1"></span>
+                                </button>
+                            </template>
+                            <!-- Tombol Umpan Balik Aspek -->
+                            <button type="button"
+                                @click="jumpToFeedback(aIdx)"
+                                class="px-2 h-8 rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer"
+                                :class="currentAspectIndex === aIdx && step === 'feedback'
+                                    ? 'bg-primary-700 text-white ring-2 ring-primary-400 shadow-xs'
+                                    : (isFeedbackFilled(aspect)
+                                        ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                                        : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100')">
+                                <span>💬</span>
+                                <span class="hidden sm:inline" x-text="isFeedbackFilled(aspect) ? 'Saran ✓' : 'Saran'"></span>
+                            </button>
+                        </div>
+                    </div>
                 </template>
             </div>
 
             <!-- Modal Actions -->
-            <div class="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+            <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
                 <button type="button" @click="questionListModalOpen = false"
                     class="px-3.5 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-bold transition cursor-pointer">
                     Tutup
@@ -84,7 +100,7 @@
                 <template x-if="answeredCount === questions.length">
                     <button type="button" @click="step = 'overall'; questionListModalOpen = false; window.scrollTo({ top: 0, behavior: 'smooth' });"
                         class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-xs cursor-pointer">
-                        Lanjut ke Evaluasi Akhir
+                        Lanjut ke Konfirmasi
                     </button>
                 </template>
             </div>

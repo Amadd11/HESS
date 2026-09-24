@@ -23,7 +23,10 @@
     {{-- 3. Step 2: Kuesioner Kartu Pertanyaan (1 Soal per Layar) --}}
     @include('survey.partials.step-questions')
 
-    {{-- 4. Step 3: Evaluasi Akhir & eNPS --}}
+    {{-- 4. Step 2.5: Umpan Balik Aspek Kualitatif (Alasan & Saran per Unsur) --}}
+    @include('survey.partials.step-aspect-feedback')
+
+    {{-- 5. Step 3: Evaluasi Akhir & Konfirmasi --}}
     @include('survey.partials.step-overall')
 
     {{-- 5. Floating Bottom Navigation Bar --}}

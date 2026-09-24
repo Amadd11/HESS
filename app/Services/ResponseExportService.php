@@ -25,7 +25,7 @@ class ResponseExportService
             $query->where('period_id', (int) $filters['period_id']);
         }
 
-        foreach (['profession', 'unit', 'status', 'tenure'] as $field) {
+        foreach (['profession', 'directorate', 'unit', 'status', 'tenure'] as $field) {
             if (! empty($filters[$field])) {
                 $query->where($field, trim((string) $filters[$field]));
             }
@@ -41,6 +41,7 @@ class ResponseExportService
                 $q->where('id', $search)
                     ->orWhere('like_text', 'like', "%{$search}%")
                     ->orWhere('improve_text', 'like', "%{$search}%")
+                    ->orWhere('directorate', 'like', "%{$search}%")
                     ->orWhere('unit', 'like', "%{$search}%")
                     ->orWhere('profession', 'like', "%{$search}%");
             });
@@ -82,15 +83,16 @@ class ResponseExportService
                     'ID Respon' => $r->id,
                     'Periode Survei' => $r->period?->name ?? ($r->period_id ? 'Periode #'.$r->period_id : '-'),
                     'Waktu Pengisian' => $r->completed_at?->format('Y-m-d H:i:s') ?? $r->created_at?->format('Y-m-d H:i:s') ?? '-',
-                    'Profesi' => $r->profession ?: '-',
+                    'Direktorat' => $r->directorate ?: '-',
                     'Unit Kerja' => $r->unit ?: '-',
+                    'Profesi' => $r->profession ?: '-',
                     'Status Kepegawaian' => $r->status ?: '-',
                     'Lama Bekerja' => $tenure ?: '-',
-                    'Kepuasan Umum MSQ (%)' => $r->general_score !== null ? (float) number_format((float) $r->general_score, 1, '.', '') : '-',
+                    'Kepuasan Pegawai (8 Unsur) (%)' => $r->general_score !== null ? (float) number_format((float) $r->general_score, 1, '.', '') : '-',
                     'Kepuasan Intrinsik (%)' => $r->intrinsic_score !== null ? (float) number_format((float) $r->intrinsic_score, 1, '.', '') : '-',
                     'Kepuasan Ekstrinsik (%)' => $r->extrinsic_score !== null ? (float) number_format((float) $r->extrinsic_score, 1, '.', '') : '-',
-                    'Faktor Rumah Sakit (%)' => $r->hospital_score !== null ? (float) number_format((float) $r->hospital_score, 1, '.', '') : '-',
-                    'Skor Keseluruhan (1-5)' => $r->overall_score !== null ? (int) $r->overall_score : '-',
+                    'Faktor Dimensi RS (%)' => $r->hospital_score !== null ? (float) number_format((float) $r->hospital_score, 1, '.', '') : '-',
+                    'Skor Keseluruhan (1-4)' => $r->overall_score !== null ? (int) $r->overall_score : '-',
                     'eNPS (0-10)' => $r->nps_score !== null ? (int) $r->nps_score : '-',
                     'Kategori eNPS' => $r->nps_category ? ucfirst($r->nps_category) : '-',
                     'Hal yang Disukai' => $likeText ?: '-',

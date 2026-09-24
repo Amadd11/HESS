@@ -33,7 +33,7 @@ class SentimentExportService
             $query->where('period_id', $periodId);
         }
 
-        foreach (['unit', 'profession', 'status', 'tenure'] as $col) {
+        foreach (['directorate', 'unit', 'profession', 'status', 'tenure'] as $col) {
             if (! empty($filters[$col])) {
                 $query->where($col, trim((string) $filters[$col]));
             }
@@ -45,6 +45,7 @@ class SentimentExportService
                 $q->where('id', $search)
                     ->orWhere('like_text', 'like', "%{$search}%")
                     ->orWhere('improve_text', 'like', "%{$search}%")
+                    ->orWhere('directorate', 'like', "%{$search}%")
                     ->orWhere('unit', 'like', "%{$search}%")
                     ->orWhere('profession', 'like', "%{$search}%");
             });
@@ -76,6 +77,7 @@ class SentimentExportService
                     },
                     'Hal yang Disukai' => $response->like_text ?? '-',
                     'Saran Perbaikan' => $response->improve_text ?? '-',
+                    'Direktorat' => $response->directorate ?? '-',
                     'Unit Kerja' => $response->unit ?? '-',
                     'Profesi' => $response->profession ?? '-',
                     'Status Pegawai' => $response->status ?? '-',

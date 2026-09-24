@@ -27,9 +27,21 @@ class ResponseSeeder extends Seeder
         $questions = Question::with('category')->active()->get();
         $demographics = Demographic::getGroupedOptions();
         $professions = $demographics['professions'];
+        $directorates = $demographics['directorates'];
         $units = $demographics['units'];
         $statuses = $demographics['statuses'];
         $tenures = $demographics['tenures'];
+
+        $aspectNames = [
+            'Lingkungan Kerja',
+            'Hubungan dengan Atasan',
+            'Penghargaan dan Pengukuran Kerja',
+            'Kesempatan Pengembangan Karir',
+            'Gaji dan Kompensasi',
+            'Keseimbangan Kerja dan Kehidupan / Work Life Balance',
+            'Komunikasi dalam Rumah Sakit',
+            'Budaya Rumah Sakit',
+        ];
 
         // 35+ Kalimat Pujian / Hal Positif Realistis Khas Rumah Sakit
         $likesPool = [
@@ -119,16 +131,19 @@ class ResponseSeeder extends Seeder
         for ($i = 1; $i <= $totalResponden; $i++) {
             $profile = [
                 'profession' => $professions[array_rand($professions)],
+                'directorate' => $directorates[array_rand($directorates)],
                 'unit' => $units[array_rand($units)],
                 'status' => $statuses[array_rand($statuses)],
                 'tenure' => $tenures[array_rand($tenures)],
             ];
 
-            // 1. Tentukan profil kepuasan umum responden (60% puas/tinggi, 25% moderat, 15% kritis/rendah)
+            // 1. Tentukan profil kepuasan umum responden secara realistis (30% sangat puas, 40% puas, 20% moderat, 10% kritis)
             $persona = fake()->randomElement([
                 'promoter_high',
                 'promoter_high',
                 'promoter_high',
+                'satisfied',
+                'satisfied',
                 'satisfied',
                 'satisfied',
                 'moderate',
@@ -136,28 +151,31 @@ class ResponseSeeder extends Seeder
                 'critical',
             ]);
 
-            // 2. Acak skor per butir pertanyaan dengan variasi realistis (ada yang 1 s/d 5)
+            // 2. Acak skor per butir pertanyaan pada skala 4 poin murni (1 s/d 4)
             $answers = [];
             foreach ($questions as $q) {
-                $categoryType = $q->category?->type ?? 'msq';
-                $subscale = $q->subscale;
-
-                // Tentukan probabilitas skor sesuai profil responden & karakteristik kategori
                 $scoreWeights = match ($persona) {
-                    'promoter_high' => [5 => 60, 4 => 30, 3 => 8, 2 => 2, 1 => 0],
-                    'satisfied' => [5 => 35, 4 => 45, 3 => 15, 2 => 4, 1 => 1],
-                    'moderate' => [5 => 15, 4 => 35, 3 => 35, 2 => 12, 1 => 3],
-                    'critical' => [5 => 5, 4 => 15, 3 => 30, 2 => 30, 1 => 20],
+                    'promoter_high' => [4 => 65, 3 => 30, 2 => 5, 1 => 0],
+                    'satisfied' => [4 => 30, 3 => 60, 2 => 8, 1 => 2],
+                    'moderate' => [4 => 10, 3 => 50, 2 => 32, 1 => 8],
+                    'critical' => [4 => 5, 3 => 20, 2 => 45, 1 => 30],
                 };
 
-                // Soal kompensasi/beban kerja secara umum di rumah sakit cenderung dinilai sedikit lebih kritis
-                if (in_array($q->category?->code, ['CAT-003', 'CAT-002', 'C-EXT'])) {
-                    $scoreWeights[5] = max(0, $scoreWeights[5] - 15);
-                    $scoreWeights[3] += 10;
-                    $scoreWeights[2] += 5;
+                // Aspek kompensasi/remunerasi secara umum dinilai sedikit lebih kritis
+                if ($q->category?->code === 'GK') {
+                    $scoreWeights[4] = max(0, $scoreWeights[4] - 15);
+                    $scoreWeights[3] = max(0, $scoreWeights[3] - 10);
+                    $scoreWeights[2] += 15;
+                    $scoreWeights[1] += 10;
                 }
 
-                // Bangun array acak berbobot
+                // Aspek Budaya RS (BRS) dan Lingkungan Kerja (LK) cenderung memiliki kepuasan lebih tinggi
+                if (in_array($q->category?->code, ['BRS', 'LK'], true)) {
+                    $scoreWeights[4] += 10;
+                    $scoreWeights[3] = max(0, $scoreWeights[3] - 5);
+                    $scoreWeights[2] = max(0, $scoreWeights[2] - 5);
+                }
+
                 $weightedPool = [];
                 foreach ($scoreWeights as $sc => $weight) {
                     for ($w = 0; $w < $weight; $w++) {
@@ -165,15 +183,15 @@ class ResponseSeeder extends Seeder
                     }
                 }
 
-                $answers[$q->id] = ! empty($weightedPool) ? fake()->randomElement($weightedPool) : rand(1, 5);
+                $answers[$q->id] = ! empty($weightedPool) ? fake()->randomElement($weightedPool) : rand(1, 4);
             }
 
-            // 3. Skor Keseluruhan & eNPS yang berkorelasi natural dengan persona
+            // 3. Skor Keseluruhan (1-4) & eNPS (0-10)
             $overallScore = match ($persona) {
-                'promoter_high' => fake()->randomElement([5, 5, 4]),
-                'satisfied' => fake()->randomElement([4, 4, 5, 3]),
-                'moderate' => fake()->randomElement([3, 4, 3]),
-                'critical' => fake()->randomElement([1, 2, 2, 3]),
+                'promoter_high' => fake()->randomElement([4, 4, 4]),
+                'satisfied' => fake()->randomElement([3, 4, 4, 3]),
+                'moderate' => fake()->randomElement([3, 3, 2]),
+                'critical' => fake()->randomElement([1, 2, 2]),
             };
 
             $npsScore = match ($persona) {
@@ -183,21 +201,29 @@ class ResponseSeeder extends Seeder
                 'critical' => fake()->randomElement([2, 3, 4, 5, 1, 6]),
             };
 
-            // 4. Komentar kualitatif bervariasi (70-80% mengisi, 20-30% mengosongkan layaknya survei nyata)
+            // 4. Umpan balik kualitatif 8 aspek
+            $feedback = [];
+            foreach ($aspectNames as $aName) {
+                $feedback[$aName] = [
+                    'reason' => $likesPool[array_rand($likesPool)],
+                    'suggestion' => $improvesPool[array_rand($improvesPool)],
+                ];
+            }
+
             $overall = [
                 'overall_score' => $overallScore,
                 'nps_score' => $npsScore,
-                'like_text' => fake()->boolean(78) ? $likesPool[array_rand($likesPool)] : null,
-                'improve_text' => fake()->boolean(72) ? $improvesPool[array_rand($improvesPool)] : null,
+                'like_text' => null,
+                'improve_text' => null,
             ];
 
-            // 5. Waktu pengisian acak tersebar selama 30 hari terakhir agar grafik tren timeline hidup
+            // 5. Waktu pengisian acak tersebar selama 30 hari terakhir
             $randomDaysAgo = rand(0, 30);
             $randomHoursAgo = rand(0, 23);
             $randomMinutesAgo = rand(0, 59);
             $completedAt = Carbon::now()->subDays($randomDaysAgo)->subHours($randomHoursAgo)->subMinutes($randomMinutesAgo);
 
-            $responseService->saveResponse($period, $profile, $overall, $answers, $completedAt);
+            $responseService->saveResponse($period, $profile, $overall, $answers, $completedAt, $feedback);
         }
 
         $this->command->info("Berhasil men-generate {$totalResponden} data responden survei realistis dan acak alami.");

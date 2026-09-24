@@ -21,12 +21,6 @@ class QuestionController extends Controller
     {
         $query = Question::with('category')->orderBy('order');
 
-        if ($request->filled('type')) {
-            $type = $request->string('type')->value();
-            if (in_array($type, ['msq', 'hospital'], true)) {
-                $query->whereHas('category', fn ($q) => $q->where('type', $type));
-            }
-        }
 
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->integer('category_id'));
@@ -52,8 +46,6 @@ class QuestionController extends Controller
             'total' => Question::count(),
             'active' => Question::where('is_active', true)->count(),
             'inactive' => Question::where('is_active', false)->count(),
-            'msq' => Question::whereHas('category', fn ($q) => $q->where('type', 'msq'))->count(),
-            'hospital' => Question::whereHas('category', fn ($q) => $q->where('type', 'hospital'))->count(),
         ];
 
         return view('admin.questions.index', [

@@ -1,5 +1,6 @@
 <!-- Response Detail Modal -->
 <div x-show="detailModalOpen" x-cloak
+     @keydown.escape.window="closeDetail()"
      class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
      role="dialog" aria-modal="true" aria-labelledby="modal-headline">
 
@@ -39,7 +40,7 @@
                             <span class="font-mono text-xs px-2 py-0.5 rounded bg-gray-200 text-gray-700 font-bold" x-text="'#' + selectedResponse.id"></span>
                         </template>
                     </div>
-                    <p class="text-xs text-gray-500 mt-0.5" x-text="selectedResponse ? ('Terkirim pada: ' + new Date(selectedResponse.completed_at).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })) : 'Memuat data...'"></p>
+                    <p class="text-xs text-gray-500 mt-0.5" x-text="selectedResponse ? ('Terkirim pada: ' + (selectedResponse.completed_at ? new Date(selectedResponse.completed_at).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' }) : (selectedResponse.created_at ? new Date(selectedResponse.created_at).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' }) : '-'))) : 'Memuat data...'"></p>
                 </div>
             </div>
 
@@ -63,28 +64,25 @@
                         :class="activeTab === 'summary' ? 'bg-primary-700 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100'"
                         class="px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    <span>Profil & Kualitatif</span>
-                </button>
-
-                <button type="button" @click="activeTab = 'msq'"
-                        :class="activeTab === 'msq' ? 'bg-purple-700 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100'"
-                        class="px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                    <span>Butir MSQ-20 (<span x-text="msqAnswers.length"></span>)</span>
+                    <span>Profil & Ringkasan</span>
                 </button>
 
                 <button type="button" @click="activeTab = 'hospital'"
                         :class="activeTab === 'hospital' ? 'bg-blue-700 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100'"
                         class="px-3.5 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                    <span>Faktor Lingkungan RS (<span x-text="hospitalAnswers.length"></span>)</span>
+                    <span>Indikator Survei Kepuasan Pegawai (<span x-text="hospitalAnswers.length"></span>)</span>
                 </button>
             </div>
 
             <!-- Tab 1: Ringkasan & Kualitatif -->
             <div x-show="activeTab === 'summary'" class="space-y-5">
                 <!-- Demographic & Overall Cards -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Direktorat</span>
+                        <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse && selectedResponse.directorate ? selectedResponse.directorate : '-'"></span>
+                    </div>
                     <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
                         <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Satuan Kerja</span>
                         <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse ? selectedResponse.unit : '-'"></span>
@@ -109,7 +107,7 @@
                         <span class="text-[10px] uppercase font-bold text-primary-600 tracking-wider block">Kepuasan Menyeluruh</span>
                         <div class="flex items-baseline gap-1 mt-1">
                             <span class="text-2xl font-black text-primary-900" x-text="selectedResponse ? selectedResponse.overall_score : 0"></span>
-                            <span class="text-xs text-primary-600 font-bold">/ 5</span>
+                            <span class="text-xs text-primary-600 font-bold">/ 4</span>
                         </div>
                     </div>
                     <div class="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-100">
@@ -128,106 +126,99 @@
                         </span>
                     </div>
                     <div class="p-3.5 rounded-xl bg-purple-50/50 border border-purple-100">
-                        <span class="text-[10px] uppercase font-bold text-purple-600 tracking-wider block">Indeks MSQ-20</span>
+                        <span class="text-[10px] uppercase font-bold text-purple-600 tracking-wider block">Indeks Kepuasan Pegawai</span>
                         <div class="flex items-baseline gap-1 mt-1">
                             <span class="text-2xl font-black text-purple-900" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '0%'"></span>
                         </div>
                         <div class="text-[11px] text-purple-600 font-semibold mt-0.5 flex items-center justify-between">
                             <span>Rata-rata:</span>
-                            <span class="font-bold font-mono" x-text="selectedResponse ? (((selectedResponse.general_score / 100) * 5).toFixed(2) + ' / 5.0') : '-'"></span>
+                            <span class="font-bold font-mono" x-text="selectedResponse ? (((selectedResponse.general_score / 100) * 4).toFixed(2) + ' / 4.0') : '-'"></span>
                         </div>
                     </div>
-                    <div class="p-3.5 rounded-xl bg-sky-50/50 border border-sky-100">
-                        <span class="text-[10px] uppercase font-bold text-sky-600 tracking-wider block">Indeks Faktor RS</span>
-                        <div class="flex items-baseline gap-1 mt-1">
-                            <span class="text-2xl font-black text-sky-900" x-text="selectedResponse ? Number(selectedResponse.hospital_score).toFixed(1) + '%' : '0%'"></span>
+                    <div class="p-3.5 rounded-xl border flex flex-col justify-between" :class="satisfactionPredicate.class">
+                        <span class="text-[10px] uppercase font-bold tracking-wider block opacity-80">Predikat Kepuasan</span>
+                        <div class="mt-1">
+                            <span class="text-xs sm:text-sm font-black block leading-snug" x-text="satisfactionPredicate.label"></span>
                         </div>
-                        <div class="text-[11px] text-sky-600 font-semibold mt-0.5 flex items-center justify-between">
-                            <span>Rata-rata:</span>
-                            <span class="font-bold font-mono" x-text="selectedResponse ? (((selectedResponse.hospital_score / 100) * 5).toFixed(2) + ' / 5.0') : '-'"></span>
+                        <div class="text-[10px] font-semibold mt-1 flex items-center justify-between opacity-80">
+                            <span>Skor Rata-rata:</span>
+                            <span class="font-bold font-mono" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '-'"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Qualitative Text Feedback -->
-                <div class="space-y-3 pt-2">
-                    <h4 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Umpan Balik Kualitatif Responden</h4>
-                    
-                    <div class="p-4 rounded-xl bg-emerald-50/40 border border-emerald-200/80 space-y-1">
-                        <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
-                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
-                            <span>Hal yang Paling Disukai dari Bekerja di RS:</span>
-                        </div>
-                        <p class="text-xs text-gray-700 leading-relaxed italic pl-5.5" x-text="selectedResponse && selectedResponse.like_text ? selectedResponse.like_text : '(Tidak diisi / kosong)'"></p>
-                    </div>
-
-                    <div class="p-4 rounded-xl bg-amber-50/40 border border-amber-200/80 space-y-1">
-                        <div class="flex items-center gap-1.5 text-xs font-bold text-amber-800">
-                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <span>Saran Perbaikan / Hal yang Perlu Ditingkatkan:</span>
-                        </div>
-                        <p class="text-xs text-gray-700 leading-relaxed italic pl-5.5" x-text="selectedResponse && selectedResponse.improve_text ? selectedResponse.improve_text : '(Tidak diisi / kosong)'"></p>
-                    </div>
-                </div>
             </div>
-
-            <!-- Tab 2: Butir MSQ-20 Answers -->
-            <div x-show="activeTab === 'msq'" class="space-y-3">
-                <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 flex items-center justify-between text-xs">
-                    <span class="font-bold text-purple-800">Instrumen Baku Minnesota Satisfaction Questionnaire (MSQ-20)</span>
-                    <span class="text-purple-600 font-semibold">Skala 1 - 5</span>
+            <!-- Tab 3: Butir Indikator Survei Kepuasan Pegawai -->
+            <div x-show="activeTab === 'hospital'" class="space-y-4">
+                <div class="p-3.5 bg-blue-50/70 rounded-2xl border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <span class="font-extrabold text-blue-900">Rincian Jawaban per Indikator Survei Kepuasan</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-blue-700 font-semibold text-[11px]">
+                        <span x-text="indicatorGroups.length + ' Indikator'"></span>
+                        <span>•</span>
+                        <span x-text="hospitalAnswers.length + ' Butir Pertanyaan (Skala 1 - 4)'"></span>
+                    </div>
                 </div>
 
-                <div class="border border-gray-200 rounded-xl overflow-hidden divide-y divide-gray-100">
-                    <template x-for="(ans, idx) in msqAnswers" :key="ans.id">
-                        <div class="p-3.5 flex items-start justify-between gap-4 hover:bg-gray-50/80 transition">
-                            <div class="flex items-start gap-3 min-w-0">
-                                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800 shrink-0" x-text="ans.question_code"></span>
-                                <div class="min-w-0">
-                                    <p class="text-xs font-medium text-gray-800" x-text="ans.question_text"></p>
-                                    <span class="text-[10px] text-gray-400 mt-0.5 block" x-text="ans.category_name"></span>
+                <!-- Indicator Group Cards -->
+                <div class="space-y-3.5">
+                    <template x-for="group in indicatorGroups" :key="group.name">
+                        <div class="border border-gray-200/90 rounded-2xl bg-white shadow-2xs overflow-hidden transition hover:border-gray-300">
+                            <!-- Group Header -->
+                            <div class="p-3.5 sm:px-4 bg-gray-50/80 border-b border-gray-100 flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="w-6 h-6 rounded-lg bg-primary-100 text-primary-800 text-xs font-black flex items-center justify-center shrink-0" x-text="group.index"></span>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs sm:text-sm font-bold text-gray-900 truncate" x-text="group.name"></h4>
+                                        <span class="text-[10px] text-gray-400 font-medium" x-text="group.questions.length + ' butir penilaian'"></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border"
+                                          :class="group.badgeClass"
+                                          x-text="group.pct + '% • ' + group.predicate"></span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1.5 shrink-0">
-                                <span class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs"
-                                      :class="{
-                                          'bg-emerald-100 text-emerald-800': ans.score >= 4,
-                                          'bg-amber-100 text-amber-800': ans.score === 3,
-                                          'bg-red-100 text-red-800': ans.score <= 2
-                                      }"
-                                      x-text="ans.score"></span>
+
+                            <!-- Questions List -->
+                            <div class="divide-y divide-gray-100">
+                                <template x-for="ans in group.questions" :key="ans.id">
+                                    <div class="p-3 sm:px-4 flex items-start justify-between gap-3 hover:bg-gray-50/50 transition">
+                                        <div class="flex items-start gap-2.5 min-w-0">
+                                            <span class="font-mono text-[11px] font-bold px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 shrink-0" x-text="ans.question_code"></span>
+                                            <p class="text-xs font-medium text-gray-800 leading-relaxed" x-text="ans.question_text"></p>
+                                        </div>
+                                        <div class="shrink-0">
+                                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold inline-flex items-center gap-1"
+                                                  :class="{
+                                                      'bg-emerald-100 text-emerald-800 border border-emerald-200': Number(ans.score) === 4,
+                                                      'bg-sky-100 text-sky-800 border border-sky-200': Number(ans.score) === 3,
+                                                      'bg-amber-100 text-amber-800 border border-amber-200': Number(ans.score) === 2,
+                                                      'bg-red-100 text-red-800 border border-red-200': Number(ans.score) <= 1
+                                                  }">
+                                                <span class="font-mono font-black" x-text="ans.score"></span>
+                                                <span class="hidden sm:inline text-[11px]" x-text="Number(ans.score) === 4 ? '• Sangat Setuju' : (Number(ans.score) === 3 ? '• Setuju' : (Number(ans.score) === 2 ? '• Tidak Setuju' : '• Sangat Tidak Setuju'))"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
 
-            <!-- Tab 3: Butir Faktor RS Answers -->
-            <div x-show="activeTab === 'hospital'" class="space-y-3">
-                <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-between text-xs">
-                    <span class="font-bold text-blue-800">Faktor Lingkungan & Kondisi Operasional Rumah Sakit</span>
-                    <span class="text-blue-600 font-semibold">Skala 1 - 5</span>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl overflow-hidden divide-y divide-gray-100">
-                    <template x-for="(ans, idx) in hospitalAnswers" :key="ans.id">
-                        <div class="p-3.5 flex items-start justify-between gap-4 hover:bg-gray-50/80 transition">
-                            <div class="flex items-start gap-3 min-w-0">
-                                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800 shrink-0" x-text="ans.question_code"></span>
-                                <div class="min-w-0">
-                                    <p class="text-xs font-medium text-gray-800" x-text="ans.question_text"></p>
-                                    <span class="text-[10px] text-gray-400 mt-0.5 block" x-text="ans.category_name"></span>
+                            <!-- Indicator Qualitative Feedback (Reason & Suggestion) -->
+                            <template x-if="group.reason || group.suggestion">
+                                <div class="p-3 sm:px-4 bg-gray-50/60 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                    <div class="p-2.5 rounded-xl bg-white border border-gray-200/80 space-y-1">
+                                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Alasan Penilaian:</span>
+                                        <p class="text-[11px] text-gray-800 italic leading-relaxed" x-text="group.reason || '-'"></p>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-white border border-gray-200/80 space-y-1">
+                                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Saran Perbaikan:</span>
+                                        <p class="text-[11px] text-gray-800 italic leading-relaxed" x-text="group.suggestion || '-'"></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex items-center gap-1.5 shrink-0">
-                                <span class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs"
-                                      :class="{
-                                          'bg-emerald-100 text-emerald-800': ans.score >= 4,
-                                          'bg-amber-100 text-amber-800': ans.score === 3,
-                                          'bg-red-100 text-red-800': ans.score <= 2
-                                      }"
-                                      x-text="ans.score"></span>
-                            </div>
+                            </template>
                         </div>
                     </template>
                 </div>

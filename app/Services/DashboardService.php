@@ -76,7 +76,18 @@ class DashboardService
             ->get()
             : collect();
 
-        // 4. Masukan Kualitatif Terbaru & Total Aspirasi
+        // 4. Skor per Direktorat
+        $directorateScores = $periodId
+            ? (clone $baseQuery)
+            ->whereNotNull('directorate')
+            ->where('directorate', '!=', '')
+            ->select('directorate', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
+            ->groupBy('directorate')
+            ->orderByDesc('avg_score')
+            ->get()
+            : collect();
+
+        // 5. Masukan Kualitatif Terbaru & Total Aspirasi
         $recentFeedbacks = $periodId
             ? (clone $baseQuery)
             ->where(fn($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
@@ -91,16 +102,16 @@ class DashboardService
             ->count()
             : 0;
 
-        // 5. Agregasi Kategori & 8 Dimensi Rumah Sakit
+        // 6. Agregasi Kategori & 8 Dimensi Rumah Sakit
         $categoryScores = $this->getCategoryScores($baseQuery, $periodId);
         $hospitalCategoryScores = $categoryScores->where('type', 'hospital');
 
-        // 6. Actionable Insights: Top 5 Strengths vs Top 5 Priority Areas
+        // 7. Actionable Insights: Top 5 Strengths vs Top 5 Priority Areas
         [$topStrengths, $topImprovements] = $this->getActionableInsights($baseQuery, $periodId, $totalResponses);
 
-        // 7. Opsi demografi & status filter aktif
+        // 8. Opsi demografi & status filter aktif
         $demographics = Demographic::getGroupedOptions();
-        $hasFilters = ! empty($filters['profession']) || ! empty($filters['unit']) || ! empty($filters['status']) || ! empty($filters['tenure']);
+        $hasFilters = ! empty($filters['profession']) || ! empty($filters['directorate']) || ! empty($filters['unit']) || ! empty($filters['status']) || ! empty($filters['tenure']);
 
         return [
             'periods' => $periods,
@@ -121,6 +132,7 @@ class DashboardService
             'npsScore' => $npsScore,
             'unitScores' => $unitScores,
             'professionScores' => $professionScores,
+            'directorateScores' => $directorateScores,
             'recentFeedbacks' => $recentFeedbacks,
             'totalFeedbacksCount' => $totalFeedbacksCount,
             'categoryScores' => $categoryScores,
@@ -145,7 +157,7 @@ class DashboardService
             $query->where('period_id', (int) $filters['period_id']);
         }
 
-        foreach (['profession', 'unit', 'status', 'tenure'] as $field) {
+        foreach (['profession', 'directorate', 'unit', 'status', 'tenure'] as $field) {
             if (! empty($filters[$field])) {
                 $query->where($field, trim((string) $filters[$field]));
             }
@@ -161,6 +173,7 @@ class DashboardService
                 $q->where('id', $search)
                     ->orWhere('like_text', 'like', "%{$search}%")
                     ->orWhere('improve_text', 'like', "%{$search}%")
+                    ->orWhere('directorate', 'like', "%{$search}%")
                     ->orWhere('unit', 'like', "%{$search}%")
                     ->orWhere('profession', 'like', "%{$search}%");
             });
@@ -170,7 +183,7 @@ class DashboardService
     }
 
     /**
-     * Agregasi skor per kategori kuesioner dan dimensi rumah sakit.
+     * Agregasi skor per kategori kuesioner dan dimensi rumah sakit (skala 4 poin).
      *
      * @return Collection<int, object>
      */
@@ -191,7 +204,7 @@ class DashboardService
                 'categories.type',
                 'categories.order',
                 DB::raw('COUNT(DISTINCT questions.id) as questions_count'),
-                DB::raw('COALESCE(ROUND((AVG(answers.score) / 5) * 100, 1), 0) as percentage_score'),
+                DB::raw('COALESCE(ROUND((AVG(answers.score) / 4) * 100, 1), 0) as percentage_score'),
                 DB::raw('COALESCE(ROUND(AVG(answers.score), 2), 0) as avg_raw_score')
             )
             ->groupBy('categories.id', 'categories.name', 'categories.code', 'categories.type', 'categories.order')
@@ -224,7 +237,7 @@ class DashboardService
                 'categories.code as category_code',
                 'categories.type as category_type',
                 DB::raw('ROUND(AVG(answers.score), 2) as avg_score'),
-                DB::raw('ROUND((AVG(answers.score) / 5) * 100, 1) as percentage_score'),
+                DB::raw('ROUND((AVG(answers.score) / 4) * 100, 1) as percentage_score'),
                 DB::raw('COUNT(answers.id) as answers_count')
             )
             ->groupBy('questions.id', 'questions.code', 'questions.text', 'categories.name', 'categories.code', 'categories.type')

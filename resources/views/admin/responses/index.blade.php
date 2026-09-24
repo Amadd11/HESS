@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-$hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profession', 'nps_category']);
+$hasActiveFilters = request()->anyFilled(['search', 'period_id', 'directorate', 'unit', 'profession', 'status', 'tenure', 'nps_category']);
 @endphp
 
 <div x-data="responsesManager()" class="space-y-6">
@@ -148,14 +148,14 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
             @endif
 
             <!-- Search Bar -->
-            <div class="lg:col-span-4 relative">
+            <div class="lg:col-span-3 relative">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
                 <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Cari ID respon, saran, atau kata kunci..."
+                    placeholder="Cari ID, saran, kata kunci..."
                     class="w-full h-10 pl-10 pr-9 rounded-xl border border-gray-200 text-xs text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white">
                 @if(request('search'))
                 <a href="{{ route('admin.responses.index', request()->except('search')) }}"
@@ -166,7 +166,7 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
             </div>
 
             <!-- Periode Dropdown -->
-            <div class="lg:col-span-3">
+            <div class="lg:col-span-2">
                 <select name="period_id"
                     class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
                     <option value="">Semua Periode</option>
@@ -178,10 +178,21 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
                 </select>
             </div>
 
+            <!-- Direktorat Dropdown -->
+            <div class="lg:col-span-2">
+                <select name="directorate"
+                    class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer {{ request('directorate') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
+                    <option value="">Semua Direktorat</option>
+                    @foreach($demographics['directorates'] ?? [] as $d)
+                    <option value="{{ $d }}" {{ request('directorate') === $d ? 'selected' : '' }}>{{ $d }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <!-- Satuan Kerja Dropdown -->
             <div class="lg:col-span-2">
                 <select name="unit"
-                    class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
+                    class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer {{ request('unit') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
                     <option value="">Semua Satuan Kerja</option>
                     @foreach($demographics['units'] ?? [] as $u)
                     <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
@@ -192,7 +203,7 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
             <!-- Profesi Dropdown -->
             <div class="lg:col-span-2">
                 <select name="profession"
-                    class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
+                    class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer {{ request('profession') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
                     <option value="">Semua Profesi</option>
                     @foreach($demographics['professions'] ?? [] as $p)
                     <option value="{{ $p }}" {{ request('profession') === $p ? 'selected' : '' }}>{{ $p }}</option>
@@ -232,6 +243,13 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 text-primary-800 font-semibold text-xs border border-primary-200">
                 <span>Periode: <strong>{{ $activeP?->name ?? request('period_id') }}</strong></span>
                 <a href="{{ route('admin.responses.index', request()->except('period_id')) }}" class="text-primary-400 hover:text-red-500 font-bold ml-0.5">✕</a>
+            </span>
+            @endif
+
+            @if(request('directorate'))
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 font-semibold text-xs border border-gray-200">
+                <span>Direktorat: <strong>{{ request('directorate') }}</strong></span>
+                <a href="{{ route('admin.responses.index', request()->except('directorate')) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5">✕</a>
             </span>
             @endif
 
@@ -307,6 +325,11 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
                     <!-- Demografi Responden -->
                     <td class="py-3.5 px-4 align-middle">
                         <div class="space-y-1">
+                            @if($resp->directorate)
+                            <span class="inline-block text-[10px] font-bold text-primary-700 bg-primary-50 px-2 py-0.5 rounded-md border border-primary-200/60 max-w-[220px] truncate" title="{{ $resp->directorate }}">
+                                {{ $resp->directorate }}
+                            </span>
+                            @endif
                             <div class="text-xs flex items-center gap-1.5 flex-wrap">
                                 <span class="font-bold text-gray-900">{{ $resp->unit }}</span>
                                 <span class="text-gray-300">•</span>
@@ -326,13 +349,13 @@ $hasActiveFilters = request()->anyFilled(['search', 'period_id', 'unit', 'profes
                             <div class="flex items-center gap-1.5 text-xs">
                                 <span class="text-gray-400 text-[11px] font-medium">Kepuasan:</span>
                                 <span class="font-bold text-gray-900 font-mono">{{ $resp->overall_score }}</span>
-                                <span class="text-[10px] text-gray-400">/5</span>
+                                <span class="text-[10px] text-gray-400">/4</span>
                             </div>
                             <div class="flex items-center gap-1.5 text-[11px]">
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-purple-50 text-purple-700 font-bold font-mono text-[10px] border border-purple-200/70" title="Minnesota Satisfaction Questionnaire (Indeks Persentase)">
-                                    <span class="text-[9px] text-purple-400 font-sans font-normal">MSQ</span> {{ number_format($resp->general_score, 1) }}%
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-purple-50 text-purple-700 font-bold font-mono text-[10px] border border-purple-200/70" title="Skor Rata-rata Indikator Survei Kepuasan Pegawai">
+                                    <span class="text-[9px] text-purple-400 font-sans font-normal">Indikator</span> {{ number_format($resp->general_score, 1) }}%
                                 </span>
-                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-sky-50 text-sky-700 font-bold font-mono text-[10px] border border-sky-200/70" title="Rumah Sakit Dimension (Indeks Persentase)">
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-sky-50 text-sky-700 font-bold font-mono text-[10px] border border-sky-200/70" title="Skor Dimensi RS">
                                     <span class="text-[9px] text-sky-400 font-sans font-normal">RS</span> {{ number_format($resp->hospital_score, 1) }}%
                                 </span>
                             </div>

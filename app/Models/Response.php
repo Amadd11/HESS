@@ -16,6 +16,7 @@ class Response extends Model
      */
     protected $fillable = [
         'period_id',
+        'directorate',
         'profession',
         'unit',
         'status',
@@ -24,6 +25,7 @@ class Response extends Model
         'nps_score',
         'like_text',
         'improve_text',
+        'feedback_data',
         'intrinsic_score',
         'extrinsic_score',
         'general_score',
@@ -41,6 +43,7 @@ class Response extends Model
             'period_id' => 'integer',
             'overall_score' => 'integer',
             'nps_score' => 'integer',
+            'feedback_data' => 'array',
             'intrinsic_score' => 'float',
             'extrinsic_score' => 'float',
             'general_score' => 'float',

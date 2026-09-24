@@ -8,38 +8,54 @@
             </p>
         </div>
 
-        <!-- Notice Kerahasiaan -->
-        <div class="bg-primary-50/70 border border-primary-100/80 rounded-xl p-4 text-xs text-primary-950/90 leading-relaxed flex items-start gap-3">
-            <span class="text-lg leading-none shrink-0">🔒</span>
-            <div>
-                <strong class="font-bold text-primary-950">Jaminan Kerahasiaan Penuh:</strong> Jawaban individual tidak akan pernah ditampilkan kepada atasan maupun kepala unit. Hasil evaluasi disajikan murni dalam bentuk agregat statistik.
+        <!-- Notice Instrumen & Kerahasiaan -->
+        <div class="space-y-2.5">
+            <div class="bg-primary-50/70 border border-primary-100/80 rounded-xl p-4 text-xs text-primary-950/90 leading-relaxed flex items-start gap-3">
+                <span class="text-lg leading-none shrink-0">🔒</span>
+                <div>
+                    <strong class="font-bold text-primary-950">Kerahasiaan Terjamin:</strong> Jawaban individual tidak akan ditampilkan kepada atasan/unit kerja. Hasil ditampilkan secara agregat untuk perbaikan berkelanjutan.
+                </div>
             </div>
         </div>
 
-        <!-- Form Demografi (2x2 Grid di Desktop) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <!-- Kelompok Profesi -->
+        <!-- Form Demografi -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            <!-- Kelompok Pegawai / Profesi -->
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
-                    Kelompok Tenaga / Profesi <span class="text-red-500">*</span>
+                    Kelompok Pegawai <span class="text-red-500">*</span>
                 </label>
                 <select x-model="profile.profession"
                     class="w-full h-12 px-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
-                    <option value="">Pilih Kelompok Tenaga</option>
+                    <option value="">Pilih Kelompok Pegawai...</option>
                     @foreach($professions as $prof)
                     <option value="{{ $prof }}">{{ $prof }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Satuan Kerja -->
+            <!-- Direktorat -->
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
-                    Satuan Kerja <span class="text-red-500">*</span>
+                    Direktorat <span class="text-red-500">*</span>
+                </label>
+                <select x-model="profile.directorate"
+                    class="w-full h-12 px-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
+                    <option value="">Pilih Direktorat...</option>
+                    @foreach($directorates as $dir)
+                    <option value="{{ $dir }}">{{ $dir }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Instalasi / Satuan Kerja -->
+            <div class="md:col-span-2">
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
+                    Instalasi / Unit Kerja <span class="text-red-500">*</span>
                 </label>
                 <select x-model="profile.unit"
                     class="w-full h-12 px-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
-                    <option value="">Pilih Satuan Kerja</option>
+                    <option value="">Pilih Instalasi / Unit Kerja...</option>
                     @foreach($units as $u)
                     <option value="{{ $u }}">{{ $u }}</option>
                     @endforeach
@@ -53,7 +69,7 @@
                 </label>
                 <select x-model="profile.status"
                     class="w-full h-12 px-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
-                    <option value="">Pilih Status Kepegawaian</option>
+                    <option value="">Pilih Status Kepegawaian...</option>
                     @foreach($statuses as $st)
                     <option value="{{ $st }}">{{ $st }}</option>
                     @endforeach
@@ -63,11 +79,11 @@
             <!-- Lama Bekerja -->
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
-                    Lama Bekerja di Rumah Sakit Ini <span class="text-red-500">*</span>
+                    Lama Bekerja <span class="text-red-500">*</span>
                 </label>
                 <select x-model="profile.tenure"
                     class="w-full h-12 px-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
-                    <option value="">Pilih Lama Bekerja</option>
+                    <option value="">Pilih Lama Bekerja...</option>
                     @foreach($tenures as $tn)
                     <option value="{{ $tn }}">{{ $tn }}</option>
                     @endforeach

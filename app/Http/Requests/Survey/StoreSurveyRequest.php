@@ -24,6 +24,7 @@ class StoreSurveyRequest extends FormRequest
         return [
             ...$this->profileRules(),
             ...$this->answerRules(),
+            ...$this->feedbackRules(),
             ...$this->overallRules(),
         ];
     }
@@ -37,6 +38,7 @@ class StoreSurveyRequest extends FormRequest
     {
         return [
             'profile.profession' => 'required|string|max:100',
+            'profile.directorate' => 'required|string|max:100',
             'profile.unit' => 'required|string|max:100',
             'profile.status' => 'required|string|max:100',
             'profile.tenure' => 'required|string|max:100',
@@ -44,7 +46,7 @@ class StoreSurveyRequest extends FormRequest
     }
 
     /**
-     * Aturan validasi butir jawaban kuesioner (dinamis sesuai jumlah soal aktif).
+     * Aturan validasi butir jawaban kuesioner (dinamis sesuai jumlah soal aktif, skala 1-4).
      *
      * @return array<string, array<int, mixed>|string>
      */
@@ -52,20 +54,35 @@ class StoreSurveyRequest extends FormRequest
     {
         return [
             'answers' => ['required', 'array', 'min:1'],
-            'answers.*' => 'required|integer|between:1,5',
+            'answers.*' => 'required|integer|between:1,4',
         ];
     }
 
     /**
-     * Aturan validasi penilaian keseluruhan dan masukan kualitatif.
+     * Aturan validasi umpan balik kualitatif per unsur/dimensi.
+     *
+     * @return array<string, string>
+     */
+    protected function feedbackRules(): array
+    {
+        return [
+            'feedback' => 'nullable|array',
+            'feedback.*.reason' => 'nullable|string|max:2000',
+            'feedback.*.suggestion' => 'nullable|string|max:2000',
+        ];
+    }
+
+    /**
+     * Aturan validasi penilaian keseluruhan dan masukan kualitatif opsional.
      *
      * @return array<string, string>
      */
     protected function overallRules(): array
     {
         return [
-            'overall.overall_score' => 'required|integer|between:1,5',
-            'overall.nps_score' => 'required|integer|between:0,10',
+            'overall' => 'nullable|array',
+            'overall.overall_score' => 'nullable|integer|between:1,5',
+            'overall.nps_score' => 'nullable|integer|between:0,10',
             'overall.like_text' => 'nullable|string|max:2000',
             'overall.improve_text' => 'nullable|string|max:2000',
         ];
@@ -80,11 +97,14 @@ class StoreSurveyRequest extends FormRequest
     {
         return [
             'profile.profession' => 'kelompok profesi',
-            'profile.unit' => 'unit kerja',
+            'profile.directorate' => 'direktorat',
+            'profile.unit' => 'instalasi / unit kerja',
             'profile.status' => 'status kepegawaian',
             'profile.tenure' => 'masa kerja',
             'answers' => 'seluruh pertanyaan kuesioner',
             'answers.*' => 'jawaban butir pertanyaan',
+            'feedback.*.reason' => 'alasan penilaian unsur',
+            'feedback.*.suggestion' => 'saran perbaikan unsur',
             'overall.overall_score' => 'skor kepuasan keseluruhan',
             'overall.nps_score' => 'skor rekomendasi rumah sakit (eNPS)',
             'overall.like_text' => 'masukan hal yang disukai',
@@ -102,9 +122,7 @@ class StoreSurveyRequest extends FormRequest
         return [
             'answers.required' => 'Seluruh butir pertanyaan kuesioner wajib dijawab.',
             'answers.size' => 'Semua butir pertanyaan kuesioner harus dijawab lengkap tanpa ada yang terlewat.',
-            'answers.*.between' => 'Pilihan jawaban skala harus berada antara nilai 1 hingga 5.',
-            'overall.overall_score.required' => 'Penilaian kepuasan kerja keseluruhan wajib dipilih.',
-            'overall.nps_score.required' => 'Penilaian rekomendasi rumah sakit (eNPS) wajib dipilih.',
+            'answers.*.between' => 'Pilihan jawaban skala harus berada antara nilai 1 hingga 4.',
             'overall.nps_score.between' => 'Skor eNPS harus berada dalam skala 0 hingga 10.',
         ];
     }
@@ -112,7 +130,7 @@ class StoreSurveyRequest extends FormRequest
     /**
      * Helper accessor untuk data profil pegawai tervalidasi.
      *
-     * @return array{profession: string, unit: string, status: string, tenure: string}
+     * @return array{profession: string, directorate: string, unit: string, status: string, tenure: string}
      */
     public function profile(): array
     {
@@ -130,9 +148,19 @@ class StoreSurveyRequest extends FormRequest
     }
 
     /**
+     * Helper accessor untuk seluruh umpan balik per aspek.
+     *
+     * @return array<string, array{reason: ?string, suggestion: ?string}>
+     */
+    public function feedback(): array
+    {
+        return $this->validated('feedback', []);
+    }
+
+    /**
      * Helper accessor untuk penilaian kepuasan keseluruhan & feedback kualitatif.
      *
-     * @return array{overall_score: int, nps_score: int, like_text: ?string, improve_text: ?string}
+     * @return array{overall_score: ?int, nps_score: ?int, like_text: ?string, improve_text: ?string}
      */
     public function overall(): array
     {

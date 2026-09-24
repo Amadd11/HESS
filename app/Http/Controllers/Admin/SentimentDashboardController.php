@@ -51,7 +51,7 @@ class SentimentDashboardController extends Controller
             $query->where('period_id', $periodId);
         }
 
-        foreach (['unit', 'profession', 'status', 'tenure'] as $col) {
+        foreach (['directorate', 'unit', 'profession', 'status', 'tenure'] as $col) {
             if (! empty($filters[$col])) {
                 $query->where($col, trim((string) $filters[$col]));
             }
@@ -97,6 +97,7 @@ class SentimentDashboardController extends Controller
             $tableItems = $tableItems->filter(function ($item) use ($s) {
                 return str_contains(mb_strtolower((string) ($item['like_text'] ?? ''), 'UTF-8'), $s)
                     || str_contains(mb_strtolower((string) ($item['improve_text'] ?? ''), 'UTF-8'), $s)
+                    || str_contains(mb_strtolower((string) ($item['directorate'] ?? ''), 'UTF-8'), $s)
                     || str_contains(mb_strtolower((string) ($item['unit'] ?? ''), 'UTF-8'), $s)
                     || str_contains(mb_strtolower((string) ($item['profession'] ?? ''), 'UTF-8'), $s);
             });
@@ -157,12 +158,16 @@ class SentimentDashboardController extends Controller
 
         // 10. Opsi Filter Demografi
         $demographics = [
+            'directorates' => Demographic::active()->where('type', 'directorate')->pluck('name')->all(),
             'units' => Demographic::active()->where('type', 'unit')->pluck('name')->all(),
             'professions' => Demographic::active()->where('type', 'profession')->pluck('name')->all(),
             'statuses' => Demographic::active()->where('type', 'status')->pluck('name')->all(),
             'tenures' => Demographic::active()->where('type', 'tenure')->pluck('name')->all(),
         ];
 
+        if (empty($demographics['directorates'])) {
+            $demographics['directorates'] = Response::whereNotNull('directorate')->distinct()->pluck('directorate')->all();
+        }
         if (empty($demographics['units'])) {
             $demographics['units'] = Response::whereNotNull('unit')->distinct()->pluck('unit')->all();
         }
@@ -224,7 +229,7 @@ class SentimentDashboardController extends Controller
             $query->where('period_id', $periodId);
         }
 
-        foreach (['unit', 'profession', 'status', 'tenure'] as $col) {
+        foreach (['directorate', 'unit', 'profession', 'status', 'tenure'] as $col) {
             if (! empty($filters[$col])) {
                 $query->where($col, trim((string) $filters[$col]));
             }

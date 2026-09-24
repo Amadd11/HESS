@@ -18,13 +18,11 @@ class MethodologyController extends Controller
             ->orderBy('order')
             ->get();
 
-        $msqQuestionsCount = Question::whereHas('category', fn ($q) => $q->where('type', 'msq'))->count();
-        $hospitalQuestionsCount = Question::whereHas('category', fn ($q) => $q->where('type', 'hospital'))->count();
+        $questionsCount = Question::where('is_active', true)->count();
 
         return view('admin.methodology.index', [
             'categories' => $categories,
-            'msqQuestionsCount' => $msqQuestionsCount,
-            'hospitalQuestionsCount' => $hospitalQuestionsCount,
+            'questionsCount' => $questionsCount,
         ]);
     }
 }

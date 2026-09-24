@@ -47,28 +47,17 @@ class Question extends Model
     }
 
     /**
-     * Pilihan teks skala Likert 1-5 sesuai tipe skala soal.
+     * Pilihan teks skala Likert 1-4 (Forced Choice) sesuai instrumen HESS RSUP Dr. Sardjito.
      *
      * @return array<int, string>
      */
     public function getLabelsAttribute(): array
     {
-        if ($this->scale === 'agreement') {
-            return [
-                'Sangat Tidak Setuju',
-                'Tidak Setuju',
-                'Ragu-ragu / Netral',
-                'Setuju',
-                'Sangat Setuju',
-            ];
-        }
-
         return [
-            'Sangat Tidak Puas',
-            'Tidak Puas',
-            'Cukup Puas',
-            'Puas',
-            'Sangat Puas',
+            'Sangat Tidak Setuju',
+            'Tidak Setuju',
+            'Setuju',
+            'Sangat Setuju',
         ];
     }
 

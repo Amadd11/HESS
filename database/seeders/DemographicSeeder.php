@@ -13,23 +13,47 @@ class DemographicSeeder extends Seeder
     public function run(): void
     {
         $professions = [
-            'Dokter/Dokter Gigi',
-            'Perawat',
-            'Bidan',
-            'Tenaga Kesehatan Lainnya',
-            'Administrasi',
-            'Penunjang',
-            'Manajemen',
-            'Lainnya',
+            'Medis',
+            'Penunjang Medis',
+            'Perawat dan Bidan',
+            'Non Medis',
+        ];
+
+        $directorates = [
+            'Direktorat Pelayanan Medis',
+            'Direktorat Keperawatan',
+            'Direktorat Penunjang Medis',
+            'Direktorat SDM',
+            'Direktorat Keuangan',
+            'Direktorat Umum',
+            'Direktorat lainnya',
         ];
 
         $units = [
-            'Direktorat Medik dan Keperawatan',
-            'Direktorat SDM, Pendidikan, dan Penelitian',
-            'Direktorat Perencanaan dan Pengembangan Strategi Layanan',
-            'Direktorat Keuangan dan BMN',
-            'Direktorat Layanan Operasional',
-            'Non Direktorat / Fungsional',
+            'Instalasi Gawat Darurat',
+            'Instalasi Rawat Jalan',
+            'Instalasi Rawat Inap',
+            'Instalasi Bedah Sentral',
+            'Instalasi ICU / Perawatan Intensif',
+            'Instalasi Pelayanan Jantung',
+            'Instalasi Pelayanan Anak',
+            'Instalasi Pelayanan Ibu dan Anak',
+            'Instalasi Farmasi',
+            'Instalasi Laboratorium',
+            'Instalasi Radiologi',
+            'Instalasi Gizi',
+            'Instalasi Rehabilitasi Medik',
+            'Instalasi Rekam Medis',
+            'Instalasi Keperawatan',
+            'Unit SDM',
+            'Unit Pendidikan dan Pelatihan',
+            'Unit Keuangan / Akuntansi',
+            'Unit Pengadaan',
+            'Unit Teknologi Informasi',
+            'Unit Sarana dan Prasarana',
+            'Unit Rumah Tangga',
+            'Unit Hukum / Humas',
+            'Unit lainnya',
         ];
 
         $statuses = [
@@ -48,36 +72,23 @@ class DemographicSeeder extends Seeder
             '> 10 tahun',
         ];
 
-        $order = 1;
-        foreach ($professions as $name) {
-            Demographic::updateOrCreate(
-                ['type' => 'profession', 'name' => $name],
-                ['order' => $order++, 'is_active' => true]
-            );
-        }
+        // Deactivate all previous demographics first to sync cleanly
+        Demographic::query()->update(['is_active' => false]);
 
-        $order = 1;
-        foreach ($units as $name) {
-            Demographic::updateOrCreate(
-                ['type' => 'unit', 'name' => $name],
-                ['order' => $order++, 'is_active' => true]
-            );
-        }
+        $syncDemographics = function (string $type, array $names): void {
+            $order = 1;
+            foreach ($names as $name) {
+                Demographic::updateOrCreate(
+                    ['type' => $type, 'name' => $name],
+                    ['order' => $order++, 'is_active' => true]
+                );
+            }
+        };
 
-        $order = 1;
-        foreach ($statuses as $name) {
-            Demographic::updateOrCreate(
-                ['type' => 'status', 'name' => $name],
-                ['order' => $order++, 'is_active' => true]
-            );
-        }
-
-        $order = 1;
-        foreach ($tenures as $name) {
-            Demographic::updateOrCreate(
-                ['type' => 'tenure', 'name' => $name],
-                ['order' => $order++, 'is_active' => true]
-            );
-        }
+        $syncDemographics('profession', $professions);
+        $syncDemographics('directorate', $directorates);
+        $syncDemographics('unit', $units);
+        $syncDemographics('status', $statuses);
+        $syncDemographics('tenure', $tenures);
     }
 }

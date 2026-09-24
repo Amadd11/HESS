@@ -1,46 +1,67 @@
-<!-- STEP 3: OVERALL SATISFACTION & eNPS -->
+<!-- STEP 3: KONFIRMASI PENGISIAN SURVEI (OVERALL) -->
 <section x-show="step === 'overall'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
     <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200/75 space-y-6">
         <div class="border-b border-gray-100 pb-4">
-            <h2 class="text-xl md:text-2xl font-black text-gray-900 tracking-tight">Penilaian Keseluruhan</h2>
+            <h2 class="text-xl md:text-2xl font-black text-gray-900 tracking-tight">Konfirmasi Pengisian</h2>
             <p class="text-xs md:text-sm text-gray-500 mt-1 leading-relaxed">
-                Bagian akhir ini mengukur penilaian kepuasan global serta kesediaan merekomendasikan rumah sakit.
+                Seluruh 8 unsur telah dinilai. Pastikan seluruh alasan penilaian dan saran perbaikan sudah lengkap sebelum mengirim survei.
             </p>
         </div>
 
-        <!-- Kepuasan Global (1-5) -->
+        <!-- Ringkasan Instrumen Box -->
+        <div class="bg-primary-50/70 border border-primary-200/70 rounded-2xl p-4 md:p-5 text-primary-950 space-y-2 text-xs md:text-sm leading-relaxed">
+            <div class="font-extrabold flex items-center gap-2 text-primary-900">
+                <span class="text-base">📋</span>
+                <span>Ringkasan Instrumen HESS RSUP Dr. Sardjito:</span>
+            </div>
+            <div class="pl-6 space-y-1 text-gray-700 text-xs">
+                <div>• 8 unsur × 3 pertanyaan penilaian = <strong>24 pertanyaan tertutup</strong> (skala 1–4)</div>
+                <div>• 8 unsur × 2 pertanyaan terbuka = <strong>16 isian kualitatif</strong> (alasan & saran)</div>
+                <div class="font-bold text-primary-900 pt-1">• Total = 40 isian per responden.</div>
+            </div>
+        </div>
+
+        <!-- Status Pengisian 8 Unsur -->
         <div class="space-y-3">
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Secara keseluruhan, seberapa puas Anda dengan pekerjaan Anda di rumah sakit ini? <span class="text-red-500">*</span>
-            </label>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-                <template x-for="(label, idx) in ['Sangat Tidak Puas', 'Tidak Puas', 'Netral', 'Puas', 'Sangat Puas']" :key="idx">
-                    <label class="cursor-pointer select-none">
-                        <input type="radio" name="overall_score" :value="idx + 1" x-model.number="overall.overall_score" class="sr-only">
-                        <div class="flex md:flex-col items-center justify-start md:justify-center p-3.5 md:p-4 rounded-2xl border transition-all text-left md:text-center min-h-[50px] md:min-h-[90px]"
-                            :class="overall.overall_score === (idx + 1)
-                                 ? 'border-primary-600 bg-primary-50/80 text-primary-900 ring-2 ring-primary-600/30 shadow-sm'
-                                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/60 bg-white text-gray-700'">
-                            <span class="w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center font-bold text-xs md:text-sm mr-2.5 md:mr-0 md:mb-1.5 transition"
-                                :class="overall.overall_score === (idx + 1) ? 'bg-primary-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600'"
-                                x-text="idx + 1"></span>
-                            <span class="text-xs font-medium leading-tight text-center" x-text="label"></span>
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Status Kelengkapan 8 Unsur & Umpan Balik:
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <template x-for="(aspect, aIdx) in aspectList" :key="aIdx">
+                    <div class="p-3.5 rounded-xl border border-gray-200 bg-gray-50/60 flex items-center justify-between text-xs transition hover:bg-gray-50">
+                        <div class="space-y-0.5 min-w-0 pr-2">
+                            <div class="font-bold text-gray-900 truncate" x-text="(aIdx + 1) + '. ' + aspect"></div>
+                            <div class="text-[11px] text-gray-500 flex items-center gap-2">
+                                <span :class="isAspectAnswered(aIdx) ? 'text-emerald-700 font-semibold' : 'text-amber-600'">
+                                    <span x-text="getAspectScoreCount(aIdx) + '/3 soal'"></span>
+                                </span>
+                                <span>•</span>
+                                <span :class="isFeedbackFilled(aspect) ? 'text-emerald-700 font-semibold' : 'text-amber-600'"
+                                    x-text="isFeedbackFilled(aspect) ? 'Alasan & Saran: Lengkap' : 'Belum lengkap'"></span>
+                            </div>
                         </div>
-                    </label>
+                        <button type="button" @click="editAspect(aIdx)"
+                            class="px-2.5 py-1 text-[11px] font-bold text-primary-700 hover:text-primary-800 bg-white border border-gray-200 rounded-lg shadow-2xs hover:bg-primary-50 transition shrink-0 cursor-pointer">
+                            Periksa
+                        </button>
+                    </div>
                 </template>
             </div>
         </div>
 
-        <!-- Rekomendasi Tempat Kerja (eNPS 0 - 10) -->
-        <div class="space-y-3 pt-2">
-            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Seberapa besar kemungkinan Anda merekomendasikan rumah sakit ini sebagai tempat kerja yang baik? (Skala 0–10) <span class="text-red-500">*</span>
-            </label>
+        <!-- Rekomendasi Tempat Kerja (eNPS 0 - 10) - Opsional Pelengkap -->
+        <div class="space-y-3 pt-2 border-t border-gray-100">
+            <div class="flex items-center justify-between">
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    Seberapa besar kemungkinan Anda merekomendasikan rumah sakit ini sebagai tempat kerja? (0–10)
+                </label>
+                <span class="text-[11px] text-gray-400 font-medium">Opsional</span>
+            </div>
             <div class="grid grid-cols-6 sm:grid-cols-11 gap-1.5 md:gap-2">
                 <template x-for="n in 11" :key="n - 1">
                     <label class="cursor-pointer select-none">
                         <input type="radio" name="nps_score" :value="n - 1" x-model.number="overall.nps_score" class="sr-only">
-                        <div class="h-11 md:h-12 rounded-xl border flex items-center justify-center font-bold text-sm md:text-base transition cursor-pointer"
+                        <div class="h-10 md:h-11 rounded-xl border flex items-center justify-center font-bold text-xs md:text-sm transition cursor-pointer"
                             :class="overall.nps_score === (n - 1)
                                  ? 'border-primary-600 bg-primary-600 text-white shadow-sm'
                                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 bg-white text-gray-700'"
@@ -48,32 +69,9 @@
                     </label>
                 </template>
             </div>
-            <div class="flex justify-between text-[11px] font-medium text-gray-400 px-1">
+            <div class="flex justify-between text-[10px] font-medium text-gray-400 px-1">
                 <span>0: Sangat Tidak Mungkin</span>
                 <span>10: Sangat Mungkin</span>
-            </div>
-        </div>
-
-        <!-- Pertanyaan Terbuka / Kualitatif (2 Kolom di Desktop) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-3">
-            <!-- Hal Perlu Diperbaiki -->
-            <div class="space-y-2">
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider leading-relaxed">
-                    Apa satu hal yang paling perlu diperbaiki untuk meningkatkan kepuasan kerja pegawai?
-                </label>
-                <textarea x-model="overall.improve_text" rows="4"
-                    placeholder="Tuliskan masukan atau saran konstruktif Anda (opsional)..."
-                    class="w-full p-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition resize-none"></textarea>
-            </div>
-
-            <!-- Hal Paling Disukai -->
-            <div class="space-y-2">
-                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider leading-relaxed">
-                    Apa hal yang paling Anda sukai dari bekerja di rumah sakit ini?
-                </label>
-                <textarea x-model="overall.like_text" rows="4"
-                    placeholder="Tuliskan hal-hal positif yang paling Anda apresiasi (opsional)..."
-                    class="w-full p-3.5 rounded-xl border border-gray-300 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition resize-none"></textarea>
             </div>
         </div>
     </div>

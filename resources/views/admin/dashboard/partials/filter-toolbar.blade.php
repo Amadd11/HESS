@@ -1,5 +1,5 @@
 @php
-    $hasFilters = request()->anyFilled(['profession', 'unit', 'status', 'tenure']);
+    $hasFilters = request()->anyFilled(['profession', 'directorate', 'unit', 'status', 'tenure']);
 @endphp
 
 <div class="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-xs space-y-3.5">
@@ -10,7 +10,7 @@
             </div>
             <div>
                 <h3 class="text-xs font-bold text-gray-900">Segmentasi Analitik & Filter Data</h3>
-                <p class="text-[11px] text-gray-400">Saring metrik berdasarkan satuan kerja, profesi medis, atau masa kerja pegawai.</p>
+                <p class="text-[11px] text-gray-400">Saring metrik berdasarkan direktorat, satuan kerja, profesi medis, atau masa kerja pegawai.</p>
             </div>
         </div>
 
@@ -30,7 +30,7 @@
     </div>
 
     <!-- Filter Controls Form -->
-    <form method="GET" action="{{ route('admin.dashboard') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
+    <form method="GET" action="{{ route('admin.dashboard') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-center">
         <!-- 1. Periode -->
         <div>
             <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Periode Survei</label>
@@ -44,7 +44,19 @@
             </select>
         </div>
 
-        <!-- 2. Satuan Kerja -->
+        <!-- 2. Direktorat -->
+        <div>
+            <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Direktorat</label>
+            <select name="directorate" onchange="this.form.submit()"
+                    class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('directorate') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
+                <option value="">Semua Direktorat</option>
+                @foreach($demographics['directorates'] ?? [] as $dir)
+                    <option value="{{ $dir }}" {{ request('directorate') === $dir ? 'selected' : '' }}>{{ $dir }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- 3. Satuan Kerja -->
         <div>
             <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Satuan Kerja</label>
             <select name="unit" onchange="this.form.submit()"

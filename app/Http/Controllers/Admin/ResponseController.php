@@ -24,12 +24,24 @@ class ResponseController extends Controller
             $query->where('period_id', $request->integer('period_id'));
         }
 
+        if ($request->filled('directorate')) {
+            $query->where('directorate', $request->string('directorate')->value());
+        }
+
         if ($request->filled('unit')) {
             $query->where('unit', $request->string('unit')->value());
         }
 
         if ($request->filled('profession')) {
             $query->where('profession', $request->string('profession')->value());
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->string('status')->value());
+        }
+
+        if ($request->filled('tenure')) {
+            $query->where('tenure', $request->string('tenure')->value());
         }
 
         if ($request->filled('nps_category')) {
@@ -42,6 +54,7 @@ class ResponseController extends Controller
                 $q->where('id', $search)
                     ->orWhere('like_text', 'like', "%{$search}%")
                     ->orWhere('improve_text', 'like', "%{$search}%")
+                    ->orWhere('directorate', 'like', "%{$search}%")
                     ->orWhere('unit', 'like', "%{$search}%")
                     ->orWhere('profession', 'like', "%{$search}%");
             });
@@ -72,7 +85,7 @@ class ResponseController extends Controller
     }
 
     /**
-     * Ambil data detail respon beserta seluruh butir jawaban (untuk modal detail).
+     * Ambil data detail respon beserta seluruh butir jawaban terurut (untuk modal detail).
      */
     public function show(Response $response): JsonResponse
     {
@@ -81,9 +94,16 @@ class ResponseController extends Controller
             'answers.question.category',
         ]);
 
+        $sortedAnswers = $response->answers->sortBy(function ($a) {
+            $code = (string) ($a->question?->code ?? '');
+            preg_match('/\d+/', $code, $matches);
+
+            return isset($matches[0]) ? (int) $matches[0] : 999;
+        })->values();
+
         return response()->json([
             'response' => $response,
-            'answers' => $response->answers->map(fn ($a) => [
+            'answers' => $sortedAnswers->map(fn ($a) => [
                 'id' => $a->id,
                 'score' => $a->score,
                 'question_code' => $a->question?->code,

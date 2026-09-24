@@ -6,12 +6,10 @@
 @php
     $stats = $stats ?? [
         'total' => $categories->count(),
-        'msq' => $categories->where('type', 'msq')->count(),
-        'hospital' => $categories->where('type', 'hospital')->count(),
-        'total_questions' => 44,
+        'total_questions' => 24,
     ];
 
-    $hasActiveFilters = request()->anyFilled(['search', 'type']);
+    $hasActiveFilters = request()->anyFilled(['search']);
 @endphp
 
 <div x-data="categoriesManager()" class="space-y-6">
@@ -25,8 +23,8 @@
                 </svg>
             </div>
             <div>
-                <h2 class="text-base md:text-lg font-bold text-gray-900 tracking-tight">Pengelompokan Dimensi & Faktor Kuesioner</h2>
-                <p class="text-xs text-gray-500 mt-0.5">Kelola kategori baku instrumen kepuasan kerja MSQ-20 dan dimensi faktor lingkungan rumah sakit.</p>
+                <h2 class="text-base md:text-lg font-bold text-gray-900 tracking-tight">Pengelompokan Indikator Kuesioner</h2>
+                <p class="text-xs text-gray-500 mt-0.5">Kelola master indikator dimensi survei kepuasan pegawai RSUP Dr. Sardjito.</p>
             </div>
         </div>
 
@@ -37,61 +35,27 @@
             </x-button>
             <x-button type="button" @click="createModalOpen = true" variant="primary" size="md">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-                <span>Tambah Kategori</span>
+                <span>Tambah Indikator</span>
             </x-button>
         </div>
     </div>
 
-    <!-- 4 KPI Summary Cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Total Kategori -->
+    <!-- 3 KPI Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Total Kategori / Indikator -->
         <a href="{{ route('admin.categories.index') }}"
            class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs hover:border-primary-300 hover:shadow-sm transition group">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Kategori</span>
-                <x-badge color="gray" size="xs">Dimensi</x-badge>
+                <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Indikator</span>
+                <x-badge color="blue" size="xs">Dimensi Survei</x-badge>
             </div>
             <div class="flex items-baseline justify-between">
                 <span class="text-2xl md:text-3xl font-black text-gray-900 group-hover:text-primary-700 transition">{{ $stats['total'] }}</span>
-                <span class="text-[11px] font-semibold text-gray-400">Kelompok</span>
-            </div>
-            <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
-                <span>Seluruh kategori kuesioner</span>
-            </div>
-        </a>
-
-        <!-- MSQ-20 -->
-        <a href="{{ route('admin.categories.index', ['type' => 'msq']) }}"
-           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('type') === 'msq' ? 'border-purple-400 ring-2 ring-purple-100 bg-purple-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-purple-300 hover:shadow-sm transition group">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold text-purple-700 uppercase tracking-wider">Instrumen MSQ-20</span>
-                <x-badge color="purple" size="xs">Baku</x-badge>
-            </div>
-            <div class="flex items-baseline justify-between">
-                <span class="text-2xl md:text-3xl font-black text-purple-900 group-hover:text-purple-700 transition">{{ $stats['msq'] }}</span>
-                <span class="text-[11px] font-semibold text-purple-500">Kategori Utama</span>
-            </div>
-            <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-                <span>20 Butir Minnesota Satisfaction</span>
-            </div>
-        </a>
-
-        <!-- Faktor RS -->
-        <a href="{{ route('admin.categories.index', ['type' => 'hospital']) }}"
-           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('type') === 'hospital' ? 'border-blue-400 ring-2 ring-blue-100 bg-blue-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-blue-300 hover:shadow-sm transition group">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold text-blue-700 uppercase tracking-wider">Faktor Lingkungan RS</span>
-                <x-badge color="blue" size="xs">Faktor Kerja</x-badge>
-            </div>
-            <div class="flex items-baseline justify-between">
-                <span class="text-2xl md:text-3xl font-black text-blue-900 group-hover:text-blue-700 transition">{{ $stats['hospital'] }}</span>
-                <span class="text-[11px] font-semibold text-blue-500">Dimensi Kerja</span>
+                <span class="text-[11px] font-semibold text-gray-400">Indikator Aktif</span>
             </div>
             <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                <span>24 Butir Hospital Work Factors</span>
+                <span>Seluruh indikator kepuasan pegawai</span>
             </div>
         </a>
 
@@ -100,56 +64,50 @@
            class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs hover:border-emerald-300 hover:shadow-sm transition group">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Butir Soal</span>
-                <x-badge color="emerald" size="xs">100% Terpetakan</x-badge>
+                <x-badge color="emerald" size="xs">100% Terhubung</x-badge>
             </div>
             <div class="flex items-baseline justify-between">
                 <span class="text-2xl md:text-3xl font-black text-emerald-600">{{ $stats['total_questions'] }}</span>
-                <span class="text-[11px] font-semibold text-gray-400">Butir Terhubung</span>
+                <span class="text-[11px] font-semibold text-gray-400">Butir Pertanyaan</span>
             </div>
             <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                <span>Semua butir terdistribusi di kategori</span>
+                <span>Terdistribusi di seluruh indikator</span>
             </div>
         </a>
+
+        <!-- Rata-rata Butir per Indikator -->
+        <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Rata-rata Butir</span>
+                <x-badge color="primary" size="xs">Keseimbangan</x-badge>
+            </div>
+            <div class="flex items-baseline justify-between">
+                <span class="text-2xl md:text-3xl font-black text-primary-700">
+                    {{ $stats['total'] > 0 ? round($stats['total_questions'] / $stats['total'], 1) : 0 }}
+                </span>
+                <span class="text-[11px] font-semibold text-gray-400">Soal / Indikator</span>
+            </div>
+            <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                <span>Standar 3 butir pertanyaan per unsur</span>
+            </div>
+        </div>
     </div>
 
     <!-- Quick Filter Tabs & Search Bar Container -->
     <div class="bg-white rounded-2xl border border-gray-200/90 shadow-xs p-5 space-y-4">
-        <!-- Quick Filter Tabs -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 border-b border-gray-100 scrollbar-none text-xs">
-            <span class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Filter Cepat:</span>
-
-            <a href="{{ route('admin.categories.index') }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ (!request()->has('type') && !request()->has('search')) ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
-                Semua Kategori ({{ $stats['total'] }})
-            </a>
-
-            <a href="{{ route('admin.categories.index', ['type' => 'msq']) }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ request('type') === 'msq' ? 'bg-purple-700 text-white shadow-xs' : 'bg-purple-50 text-purple-700 hover:bg-purple-100' }}">
-                MSQ-20 ({{ $stats['msq'] }})
-            </a>
-
-            <a href="{{ route('admin.categories.index', ['type' => 'hospital']) }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ request('type') === 'hospital' ? 'bg-blue-700 text-white shadow-xs' : 'bg-blue-50 text-blue-700 hover:bg-blue-100' }}">
-                Faktor RS ({{ $stats['hospital'] }})
-            </a>
-        </div>
-
         <!-- Filter & Search Form -->
         <form method="GET" action="{{ route('admin.categories.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
-            @if(request('type'))
-                <input type="hidden" name="type" value="{{ request('type') }}">
-            @endif
-
             <!-- Search Input -->
-            <div class="sm:col-span-8 relative">
+            <div class="sm:col-span-10 relative">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
                 <input type="text" name="search" value="{{ request('search') }}"
-                       placeholder="Cari kode dimensi (LS, WS, CR...) atau nama kategori..."
+                       placeholder="Cari kode indikator (LK, HA, PP...) atau nama indikator..."
                        class="w-full h-10 pl-10 pr-9 rounded-xl border border-gray-200 text-xs text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white">
                 @if(request('search'))
                     <a href="{{ route('admin.categories.index', request()->except('search')) }}"
@@ -157,16 +115,6 @@
                         ✕
                     </a>
                 @endif
-            </div>
-
-            <!-- Group Filter Dropdown -->
-            <div class="sm:col-span-2">
-                <select name="type"
-                        class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">Semua Kelompok</option>
-                    <option value="msq" {{ request('type') === 'msq' ? 'selected' : '' }}>MSQ-20</option>
-                    <option value="hospital" {{ request('type') === 'hospital' ? 'selected' : '' }}>Faktor RS</option>
-                </select>
             </div>
 
             <!-- Submit & Reset Action -->
@@ -193,13 +141,6 @@
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 font-semibold text-xs border border-gray-200">
                         <span>Pencarian: "<strong>{{ request('search') }}</strong>"</span>
                         <a href="{{ route('admin.categories.index', request()->except('search')) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5">✕</a>
-                    </span>
-                @endif
-
-                @if(request('type'))
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 text-purple-800 font-semibold text-xs border border-purple-200">
-                        <span>Kelompok: <strong>{{ request('type') === 'msq' ? 'MSQ-20' : 'Faktor Lingkungan RS' }}</strong></span>
-                        <a href="{{ route('admin.categories.index', request()->except('type')) }}" class="text-purple-400 hover:text-red-500 font-bold ml-0.5">✕</a>
                     </span>
                 @endif
 
@@ -235,15 +176,9 @@
 
                         <!-- Kode -->
                         <td class="py-4 px-4">
-                            @if($cat->type === 'msq')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black tracking-wide bg-purple-50 text-purple-700 border border-purple-200/80">
-                                    {{ $cat->code }}
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black tracking-wide bg-sky-50 text-sky-700 border border-sky-200/80">
-                                    {{ $cat->code }}
-                                </span>
-                            @endif
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black tracking-wide bg-sky-50 text-sky-700 border border-sky-200/80">
+                                {{ $cat->code }}
+                            </span>
                         </td>
 
                         <!-- Nama Kategori -->
@@ -253,24 +188,17 @@
                                     {{ $cat->name }}
                                 </span>
                                 <span class="text-[11px] text-gray-400 block">
-                                    {{ $cat->type === 'msq' ? 'Instrumen standar Minnesota Satisfaction Questionnaire' : 'Dimensi operasional lingkungan kerja rumah sakit' }}
+                                    Indikator dimensi kepuasan kerja pegawai RS
                                 </span>
                             </div>
                         </td>
 
                         <!-- Kelompok Instrumen -->
                         <td class="py-4 px-4">
-                            @if($cat->type === 'msq')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-                                    <span>MSQ-20 Instrument</span>
-                                </span>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
-                                    <span>Hospital Work Factor</span>
-                                </span>
-                            @endif
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                <span>Indikator Kepuasan RS</span>
+                            </span>
                         </td>
 
                         <!-- Jumlah Soal Terdaftar -->

@@ -37,6 +37,9 @@ $npsBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
     profLabels: {{ Js::from($professionScores->pluck('profession')) }},
     profData: {{ Js::from($professionScores->pluck('avg_score')) }},
     profCounts: {{ Js::from($professionScores->pluck('total')) }},
+    directorateLabels: {{ Js::from($directorateScores->pluck('directorate')) }},
+    directorateData: {{ Js::from($directorateScores->pluck('avg_score')) }},
+    directorateCounts: {{ Js::from($directorateScores->pluck('total')) }},
     promoters: {{ $promoters }},
     passives: {{ $passives }},
     detractors: {{ $detractors }},
@@ -73,8 +76,8 @@ $npsBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-xs font-bold text-gray-900">Skor 8 Dimensi Rumah Sakit</h3>
-                            <p class="text-[11px] text-gray-400">Peringkat kepuasan per faktor lingkungan & budaya kerja RS</p>
+                            <h3 class="text-xs font-bold text-gray-900">Skor Indikator Survei Kepuasan Pegawai</h3>
+                            <p class="text-[11px] text-gray-400">Peringkat kepuasan per indikator lingkungan & budaya kerja pegawai</p>
                         </div>
                     </div>
                     <x-badge color="blue" size="xs">Skala 0–100%</x-badge>
@@ -265,11 +268,21 @@ $npsBadgeClass = 'bg-rose-100 text-rose-800 border-rose-300';
                         </svg>
                         <span>Kelompok Profesi ({{ $professionScores->count() }})</span>
                     </button>
+                    @if($directorateScores->count() > 0)
+                    <button type="button" @click="setChartTab('directorate')"
+                        :class="chartTab === 'directorate' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-900'"
+                        class="px-3.5 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        <span>Direktorat ({{ $directorateScores->count() }})</span>
+                    </button>
+                    @endif
                 </div>
             </div>
 
             <div class="relative min-h-[350px] flex items-center justify-center">
-                @if(($unitScores->count() > 0 || $professionScores->count() > 0) && $totalResponses > 0)
+                @if(($unitScores->count() > 0 || $professionScores->count() > 0 || $directorateScores->count() > 0) && $totalResponses > 0)
                 <div id="comparisonBarChart" class="w-full"></div>
                 @else
                 <div class="text-center py-12 text-gray-400">

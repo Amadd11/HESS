@@ -24,6 +24,7 @@ class SentimentFilterRequest extends FormRequest
     {
         return [
             'period_id' => ['nullable', 'integer', 'exists:periods,id'],
+            'directorate' => ['nullable', 'string', 'max:100'],
             'unit' => ['nullable', 'string', 'max:100'],
             'profession' => ['nullable', 'string', 'max:100'],
             'status' => ['nullable', 'string', 'max:100'],
@@ -39,7 +40,7 @@ class SentimentFilterRequest extends FormRequest
      */
     public function hasActiveFilters(): bool
     {
-        return $this->anyFilled(['unit', 'profession', 'status', 'tenure', 'sentiment', 'search']);
+        return $this->anyFilled(['directorate', 'unit', 'profession', 'status', 'tenure', 'sentiment', 'search']);
     }
 
     /**

@@ -8,12 +8,10 @@
         'total' => $questions->total(),
         'active' => 0,
         'inactive' => 0,
-        'msq' => 0,
-        'hospital' => 0,
     ];
 
     $activeCategory = request('category_id') ? $categories->firstWhere('id', request('category_id')) : null;
-    $hasActiveFilters = request()->anyFilled(['search', 'category_id', 'type', 'scale', 'status']);
+    $hasActiveFilters = request()->anyFilled(['search', 'category_id', 'scale', 'status']);
 @endphp
 
 <div x-data="questionsManager()" class="space-y-6">
@@ -44,8 +42,8 @@
         </div>
     </div>
 
-    <!-- 4 KPI Summary Cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- 3 KPI Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <!-- Total Soal -->
         <a href="{{ route('admin.questions.index') }}"
            class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs hover:border-primary-300 hover:shadow-sm transition group">
@@ -63,43 +61,26 @@
             </div>
         </a>
 
-        <!-- MSQ-20 -->
-        <a href="{{ route('admin.questions.index', ['type' => 'msq']) }}"
-           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('type') === 'msq' ? 'border-purple-400 ring-2 ring-purple-100 bg-purple-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-purple-300 hover:shadow-sm transition group">
+        <!-- Butir Aktif -->
+        <a href="{{ route('admin.questions.index', ['status' => 'active']) }}"
+           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('status') === 'active' ? 'border-emerald-400 ring-2 ring-emerald-100 bg-emerald-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-emerald-300 hover:shadow-sm transition group">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold text-purple-700 uppercase tracking-wider">Instrumen MSQ-20</span>
-                <x-badge color="purple" size="xs">Baku</x-badge>
+                <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Butir Aktif</span>
+                <x-badge color="emerald" size="xs">Live</x-badge>
             </div>
             <div class="flex items-baseline justify-between">
-                <span class="text-2xl md:text-3xl font-black text-purple-900 group-hover:text-purple-700 transition">{{ $stats['msq'] }}</span>
-                <span class="text-[11px] font-semibold text-purple-500">Soal Kepuasan</span>
+                <span class="text-2xl md:text-3xl font-black text-emerald-700 group-hover:text-emerald-800 transition">{{ $stats['active'] }}</span>
+                <span class="text-[11px] font-semibold text-emerald-600">Disurveikan</span>
             </div>
             <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-                <span>Skala Likert Puas (1–5)</span>
-            </div>
-        </a>
-
-        <!-- Faktor RS -->
-        <a href="{{ route('admin.questions.index', ['type' => 'hospital']) }}"
-           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('type') === 'hospital' ? 'border-blue-400 ring-2 ring-blue-100 bg-blue-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-blue-300 hover:shadow-sm transition group">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-[11px] font-bold text-blue-700 uppercase tracking-wider">Faktor Lingkungan RS</span>
-                <x-badge color="blue" size="xs">8 Dimensi</x-badge>
-            </div>
-            <div class="flex items-baseline justify-between">
-                <span class="text-2xl md:text-3xl font-black text-blue-900 group-hover:text-blue-700 transition">{{ $stats['hospital'] }}</span>
-                <span class="text-[11px] font-semibold text-blue-500">Soal Persetujuan</span>
-            </div>
-            <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                <span>Skala Likert Setuju (1–5)</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <span>Tampil di kuesioner responden</span>
             </div>
         </a>
 
         <!-- Status Operasional -->
         <a href="{{ route('admin.questions.index', ['status' => 'inactive']) }}"
-           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('status') === 'inactive' ? 'border-amber-400 ring-2 ring-amber-100 bg-amber-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-emerald-300 hover:shadow-sm transition group">
+           class="bg-white p-4 md:p-5 rounded-2xl border {{ request('status') === 'inactive' ? 'border-amber-400 ring-2 ring-amber-100 bg-amber-50/20' : 'border-gray-200/90' }} shadow-xs hover:border-amber-300 hover:shadow-sm transition group">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Status Operasional</span>
                 <x-badge :color="$stats['inactive'] === 0 ? 'emerald' : 'amber'" size="xs">
@@ -107,8 +88,8 @@
                 </x-badge>
             </div>
             <div class="flex items-baseline justify-between">
-                <span class="text-2xl md:text-3xl font-black text-emerald-600">{{ $stats['active'] }}</span>
-                <span class="text-[11px] font-semibold text-gray-400">Aktif Disurveikan</span>
+                <span class="text-2xl md:text-3xl font-black text-gray-900">{{ $stats['inactive'] }}</span>
+                <span class="text-[11px] font-semibold text-gray-400">Nonaktif</span>
             </div>
             <div class="mt-2 text-[11px] text-gray-500 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full {{ $stats['inactive'] === 0 ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
@@ -124,18 +105,8 @@
             <span class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Filter Cepat:</span>
 
             <a href="{{ route('admin.questions.index') }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ (!request()->has('type') && !request()->has('status') && !request()->has('category_id') && !request()->has('scale')) ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ (!request()->has('status') && !request()->has('category_id') && !request()->has('scale')) ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                 Semua Butir ({{ $stats['total'] }})
-            </a>
-
-            <a href="{{ route('admin.questions.index', ['type' => 'msq']) }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ request('type') === 'msq' ? 'bg-purple-700 text-white shadow-xs' : 'bg-purple-50 text-purple-700 hover:bg-purple-100' }}">
-                MSQ-20 ({{ $stats['msq'] }})
-            </a>
-
-            <a href="{{ route('admin.questions.index', ['type' => 'hospital']) }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ request('type') === 'hospital' ? 'bg-blue-700 text-white shadow-xs' : 'bg-blue-50 text-blue-700 hover:bg-blue-100' }}">
-                Faktor RS ({{ $stats['hospital'] }})
             </a>
 
             <a href="{{ route('admin.questions.index', ['status' => 'active']) }}"
@@ -179,21 +150,12 @@
             <div class="lg:col-span-3">
                 <select name="category_id"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">Semua Kategori</option>
-                    <optgroup label="Instrumen Baku MSQ-20">
-                        @foreach($categories->where('type', 'msq') as $cat)
-                            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                [{{ $cat->code }}] {{ $cat->name }}
-                            </option>
-                        @endforeach
-                    </optgroup>
-                    <optgroup label="Faktor Kerja Rumah Sakit">
-                        @foreach($categories->where('type', 'hospital') as $cat)
-                            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                                [{{ $cat->code }}] {{ $cat->name }}
-                            </option>
-                        @endforeach
-                    </optgroup>
+                    <option value="">Semua Indikator</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                            [{{ $cat->code }}] {{ $cat->name }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
 
@@ -202,8 +164,8 @@
                 <select name="scale"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
                     <option value="">Semua Tipe Skala</option>
-                    <option value="satisfaction" {{ request('scale') === 'satisfaction' ? 'selected' : '' }}>Puas (1-5)</option>
-                    <option value="agreement" {{ request('scale') === 'agreement' ? 'selected' : '' }}>Setuju (1-5)</option>
+                    <option value="agreement" {{ request('scale') === 'agreement' ? 'selected' : '' }}>Setuju (Skala 1-4)</option>
+                    <option value="satisfaction" {{ request('scale') === 'satisfaction' ? 'selected' : '' }}>Puas (Skala 1-4)</option>
                 </select>
             </div>
 
@@ -248,13 +210,6 @@
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 text-primary-800 font-semibold text-xs border border-primary-200">
                         <span>Kategori: <strong>{{ $activeCategory->name }}</strong></span>
                         <a href="{{ route('admin.questions.index', request()->except('category_id')) }}" class="text-primary-400 hover:text-red-500 font-bold ml-0.5">✕</a>
-                    </span>
-                @endif
-
-                @if(request('type'))
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 text-purple-800 font-semibold text-xs border border-purple-200">
-                        <span>Kelompok: <strong>{{ request('type') === 'msq' ? 'MSQ-20' : 'Faktor Lingkungan RS' }}</strong></span>
-                        <a href="{{ route('admin.questions.index', request()->except('type')) }}" class="text-purple-400 hover:text-red-500 font-bold ml-0.5">✕</a>
                     </span>
                 @endif
 
@@ -305,15 +260,9 @@
 
                         <!-- Kode Soal -->
                         <td class="py-4 px-4">
-                            @if($q->category?->type === 'msq')
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black tracking-wide bg-purple-50 text-purple-700 border border-purple-200/80">
-                                    {{ $q->code }}
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black tracking-wide bg-sky-50 text-sky-700 border border-sky-200/80">
-                                    {{ $q->code }}
-                                </span>
-                            @endif
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-black tracking-wide bg-sky-50 text-sky-700 border border-sky-200/80">
+                                {{ $q->code }}
+                            </span>
                         </td>
 
                         <!-- Pernyataan Soal -->
@@ -329,15 +278,9 @@
                                         </svg>
                                         <span>Jangkar Respon:</span>
                                     </span>
-                                    @if($q->scale === 'satisfaction')
-                                        <span class="font-medium text-gray-600 bg-gray-100/80 px-2 py-0.5 rounded text-[10px]">
-                                            1: Sangat Tidak Puas ↔ 5: Sangat Puas
-                                        </span>
-                                    @else
-                                        <span class="font-medium text-gray-600 bg-gray-100/80 px-2 py-0.5 rounded text-[10px]">
-                                            1: Sangat Tidak Setuju ↔ 5: Sangat Setuju
-                                        </span>
-                                    @endif
+                                    <span class="font-medium text-gray-600 bg-gray-100/80 px-2 py-0.5 rounded text-[10px]">
+                                        1: Sangat Tidak Setuju ↔ 4: Sangat Setuju
+                                    </span>
                                 </div>
                             </div>
                         </td>
@@ -346,36 +289,19 @@
                         <td class="py-4 px-4">
                             <div class="space-y-1.5">
                                 <div class="flex items-center gap-1.5 flex-wrap">
-                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-black {{ $q->category?->type === 'msq' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-blue-100 text-blue-700 border border-blue-200' }}">
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-blue-100 text-blue-700 border border-blue-200">
                                         {{ $q->category?->code ?? 'DIM' }}
                                     </span>
                                     <span class="font-bold text-xs text-gray-800">
-                                        {{ $q->category?->name ?? 'MSQ-20' }}
+                                        {{ $q->category?->name ?? 'Indikator RS' }}
                                     </span>
                                 </div>
 
                                 <div>
-                                    @if($q->subscale === 'intrinsic')
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                            Kepuasan Intrinsik
-                                        </span>
-                                    @elseif($q->subscale === 'extrinsic')
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-200/80 px-2 py-0.5 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-                                            Kepuasan Ekstrinsik
-                                        </span>
-                                    @elseif($q->subscale === 'general')
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                                            Kepuasan Umum
-                                        </span>
-                                    @elseif($q->category?->type === 'hospital')
-                                        <span class="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/80 px-2 py-0.5 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                            Faktor Rumah Sakit
-                                        </span>
-                                    @endif
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/80 px-2 py-0.5 rounded-full">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                        Indikator Kepuasan
+                                    </span>
                                 </div>
                             </div>
                         </td>

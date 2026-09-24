@@ -1,5 +1,13 @@
 <!-- STEP 2: KUESIONER KARTU PERTANYAAN (1 SOAL PER LAYAR) -->
-<section x-show="step === 'questionnaire'" x-cloak x-transition:enter="transition ease-out duration-250" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+<section x-show="step === 'questionnaire'" x-cloak x-transition:enter="transition ease-out duration-250" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-4">
+    <!-- Notice Petunjuk Skala 4 Poin -->
+    <div class="bg-primary-50/60 border border-primary-100 rounded-xl p-3 text-xs text-primary-950 flex items-start gap-2.5">
+        <span class="text-base shrink-0 mt-0.5">💡</span>
+        <div class="leading-relaxed">
+            <b>Petunjuk:</b> Pilih salah satu pilihan jawaban yang paling sesuai (1: Sangat Tidak Setuju s/d 4: Sangat Setuju). Setelah 3 pertanyaan pada unsur ini selesai, Anda akan diminta mengisi alasan dan saran perbaikan.
+        </div>
+    </div>
+
     <template x-if="currentQuestion">
         <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-200/75 space-y-6">
             <!-- Meta Info Butir Soal -->
@@ -21,8 +29,8 @@
                     x-text="currentQuestion.text"></h3>
             </div>
 
-            <!-- Pilihan Jawaban Skala 1 - 5 -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-2.5">
+            <!-- Pilihan Jawaban Skala 1 - 4 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                 <template x-for="(label, idx) in currentQuestion.labels" :key="idx">
                     <label class="cursor-pointer select-none">
                         <input type="radio"
@@ -31,16 +39,16 @@
                             @change="setAnswer(idx + 1)"
                             :checked="answers[currentQuestion.id] === (idx + 1)"
                             class="sr-only">
-                        <div class="flex md:flex-col items-center justify-start md:justify-center p-3 md:p-4 rounded-xl border text-left md:text-center transition-all min-h-[52px] md:min-h-[95px] relative group"
+                        <div class="flex md:flex-col items-center justify-start md:justify-center p-3.5 md:p-4 rounded-xl border text-left md:text-center transition-all min-h-[54px] md:min-h-[96px] relative group"
                             :class="answers[currentQuestion.id] === (idx + 1)
                                  ? 'border-primary-600 bg-primary-50 text-primary-800 ring-2 ring-primary-600/30 shadow-sm'
                                  : 'border-gray-200 hover:border-gray-300 bg-white text-gray-700'">
-                            <div class="flex items-center gap-2 mr-3 md:mr-0 md:mb-1.5">
+                            <div class="flex items-center gap-2 mr-3 md:mr-0 md:mb-2">
                                 <span class="w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-sm"
                                     :class="answers[currentQuestion.id] === (idx + 1) ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600'"
                                     x-text="idx + 1"></span>
                             </div>
-                            <span class="text-xs md:text-[11px] font-medium leading-tight" x-text="label"></span>
+                            <span class="text-xs font-semibold leading-tight" x-text="label"></span>
                         </div>
                     </label>
                 </template>

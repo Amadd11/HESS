@@ -23,8 +23,5 @@
     {{-- 6. Detail 8 Faktor Kondisi & Lingkungan Kerja RS --}}
     @include('admin.dashboard.partials.hospital-dimensions')
 
-    {{-- 7. Feedback Kualitatif Pegawai & Pencarian Aspirasi --}}
-    @include('admin.dashboard.partials.qualitative-feedback')
-
 </div>
 @endsection

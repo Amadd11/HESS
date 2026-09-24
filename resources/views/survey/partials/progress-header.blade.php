@@ -5,16 +5,16 @@
         <div class="flex items-center gap-2.5 min-w-0">
             <span class="inline-block w-2.5 h-2.5 rounded-full bg-primary-600 animate-pulse shrink-0"></span>
             <span class="text-primary-800 font-extrabold truncate tracking-tight"
-                x-text="step === 'profile' ? 'Langkah 1: Profil Pegawai' : (step === 'overall' ? 'Langkah 3: Evaluasi Akhir & eNPS' : currentCategoryName)"></span>
+                x-text="step === 'profile' ? 'Langkah 1: Profil Pegawai' : (step === 'overall' ? 'Konfirmasi Pengisian Survei' : (step === 'feedback' ? 'Umpan Balik: ' + currentAspectTitle : currentCategoryName))"></span>
         </div>
 
         <!-- Right: Quick Controls (Question Counter & Auto-Advance Toggle) -->
         <div class="flex items-center gap-2.5 shrink-0">
             <!-- Question counter on desktop during questionnaire -->
-            <template x-if="step === 'questionnaire'">
+            <template x-if="step === 'questionnaire' || step === 'feedback'">
                 <button type="button" @click="questionListModalOpen = true"
                     class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600 hover:text-primary-700 bg-gray-50 hover:bg-primary-50 border border-gray-200 transition cursor-pointer">
-                    <span x-text="'Soal ' + (currentIndex + 1) + ' / ' + questions.length"></span>
+                    <span x-text="step === 'feedback' ? ('Unsur ' + (currentAspectIndex + 1) + ' / 8') : ('Soal ' + (currentIndex + 1) + ' / ' + questions.length)"></span>
                     <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>

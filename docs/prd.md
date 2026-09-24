@@ -6,7 +6,7 @@
 
 ## Overview
 
-HESS adalah aplikasi survei kepuasan pegawai rumah sakit berbasis MSQ-20 dan Hospital Work Factors.
+HESS adalah aplikasi survei kepuasan pegawai rumah sakit berbasis Indikator Survei Kepuasan Pegawai (skala 4 poin) dan Net Promoter Score (NPS).
 Aplikasi memiliki **2 role saja**:
 
 - Admin (Dashboard & Analytics)
@@ -61,8 +61,9 @@ resources/
 ### User Anonim
 
 - Langsung isi Profil (Kelompok tenaga, unit kerja, status kepegawaian, lama bekerja)
-- Isi 44 Pertanyaan (20 MSQ + 24 Hospital Work Factors) dengan kartu interaktif 1 per 1
-- Penilaian Keseluruhan (Overall Satisfaction, NPS 0–10, 2 Pertanyaan Kualitatif)
+- Isi Butir Pertanyaan Indikator Kepuasan Pegawai dengan kartu interaktif 1 per 1 (skala 4 poin)
+- Penilaian Kualitatif per Unsur (Alasan penilaian dan saran perbaikan per indikator)
+- Penilaian Keseluruhan (Overall Satisfaction & NPS 0–10)
 - Submit Survey & Halaman Selesai (Finish)
 
 ## Modules
@@ -70,8 +71,8 @@ resources/
 ### Survey (User Anonim)
 
 - **Profile**: Form demografi anonim awal.
-- **Questionnaire**: 44 pertanyaan (20 MSQ-20 + 24 Hospital Work Factors) dengan kartu interaktif berbasis Alpine.js & autosave di browser.
-- **Overall Satisfaction**: Skala kepuasan global, rekomendasi tempat kerja (eNPS 0–10), dan 2 masukan kualitatif (*hal yang disukai* & *hal yang perlu diperbaiki*).
+- **Questionnaire**: Butir pertanyaan indikator kepuasan pegawai dengan kartu interaktif berbasis Alpine.js & autosave di browser.
+- **Overall Satisfaction**: Skala kepuasan global, rekomendasi tempat kerja (eNPS 0–10), dan masukan kualitatif per unsur indikator (*alasan penilaian* & *saran perbaikan*).
 - **Finish**: Layar konfirmasi terima kasih setelah data berhasil disimpan ke database.
 
 ### Dashboard (Admin)

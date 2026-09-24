@@ -68,7 +68,7 @@
             @endif
         </div>
 
-        <form method="GET" action="{{ route('admin.sentiment.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-center">
+        <form method="GET" action="{{ route('admin.sentiment.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 items-center">
             <!-- 1. Periode -->
             <div>
                 <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Periode Survei</label>
@@ -82,7 +82,19 @@
                 </select>
             </div>
 
-            <!-- 2. Satuan Kerja -->
+            <!-- 2. Direktorat -->
+            <div>
+                <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Direktorat</label>
+                <select name="directorate" onchange="this.form.submit()"
+                        class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('directorate') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
+                    <option value="">Semua Direktorat</option>
+                    @foreach($demographics['directorates'] ?? [] as $d)
+                        <option value="{{ $d }}" {{ request('directorate') === $d ? 'selected' : '' }}>{{ $d }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- 3. Satuan Kerja -->
             <div>
                 <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Satuan Kerja</label>
                 <select name="unit" onchange="this.form.submit()"

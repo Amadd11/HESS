@@ -45,7 +45,7 @@ Dashboard
 │
 ├── Overview
 ├── Responses
-├── Analytics MSQ
+├── Analytics Kepuasan Pegawai
 ├── Sentiment Analysis ⭐
 │   ├── Summary
 │   ├── Word Cloud

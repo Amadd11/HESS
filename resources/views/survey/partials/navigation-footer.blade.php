@@ -4,7 +4,7 @@
     <div class="max-w-4xl mx-auto flex items-center gap-3 md:justify-end">
         <!-- Tombol Kembali -->
         <button type="button"
-            @click="step === 'overall' ? backToQuestions() : prevQuestion()"
+            @click="prevStep()"
             class="h-12 px-6 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 active:bg-gray-100 text-gray-700 font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-xs">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
@@ -18,6 +18,18 @@
                 @click="nextQuestion()"
                 :disabled="!isCurrentAnswered"
                 class="flex-1 md:flex-initial md:min-w-[220px] h-12 px-6 bg-primary-600 hover:bg-primary-700 active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-primary-600/20 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer">
+                <span>Lanjut</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </template>
+
+        <!-- Tombol Lanjut (di Step Feedback Aspek) -->
+        <template x-if="step === 'feedback'">
+            <button type="button"
+                @click="nextFeedback()"
+                class="flex-1 md:flex-initial md:min-w-[220px] h-12 px-6 bg-primary-600 hover:bg-primary-700 active:scale-[0.99] text-white font-bold rounded-xl shadow-md shadow-primary-600/20 transition flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer">
                 <span>Lanjut</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />

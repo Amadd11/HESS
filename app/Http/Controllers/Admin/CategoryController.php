@@ -20,12 +20,6 @@ class CategoryController extends Controller
     {
         $query = Category::withCount('questions')->orderBy('order');
 
-        if ($request->filled('type')) {
-            $type = $request->string('type')->value();
-            if (in_array($type, ['msq', 'hospital'], true)) {
-                $query->where('type', $type);
-            }
-        }
 
         if ($request->filled('search')) {
             $search = trim($request->string('search'));
@@ -34,8 +28,6 @@ class CategoryController extends Controller
 
         $stats = [
             'total' => Category::count(),
-            'msq' => Category::where('type', 'msq')->count(),
-            'hospital' => Category::where('type', 'hospital')->count(),
             'total_questions' => Question::count(),
         ];
 

@@ -4,17 +4,10 @@
         @csrf
         @method('PUT')
 
-        <x-select label="Kategori Instrumen" name="category_id" x-model="editQuestion.category_id" :required="true">
-            <optgroup label="Instrumen Baku MSQ-20">
-                @foreach($categories->where('type', 'msq') as $cat)
-                    <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
-                @endforeach
-            </optgroup>
-            <optgroup label="Faktor Kerja Rumah Sakit">
-                @foreach($categories->where('type', 'hospital') as $cat)
-                    <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
-                @endforeach
-            </optgroup>
+        <x-select label="Indikator Instrumen" name="category_id" x-model="editQuestion.category_id" :required="true">
+            @foreach($categories as $cat)
+                <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
+            @endforeach
         </x-select>
 
         <div class="grid grid-cols-2 gap-3">
@@ -40,17 +33,10 @@
             :required="true"
         />
 
-        <div class="grid grid-cols-2 gap-3">
+        <div>
             <x-select label="Tipe Skala Pilihan" name="scale" x-model="editQuestion.scale" :required="true">
-                <option value="satisfaction">Puas (Sangat Tidak Puas - Sangat Puas)</option>
-                <option value="agreement">Setuju (Sangat Tidak Setuju - Sangat Setuju)</option>
-            </x-select>
-
-            <x-select label="Subskala (Khusus MSQ)" name="subscale" x-model="editQuestion.subscale">
-                <option value="">Tidak Ada / Faktor RS</option>
-                <option value="intrinsic">Kepuasan Intrinsik</option>
-                <option value="extrinsic">Kepuasan Ekstrinsik</option>
-                <option value="general">Kepuasan Umum</option>
+                <option value="agreement">Setuju (1: Sangat Tidak Setuju - 4: Sangat Setuju)</option>
+                <option value="satisfaction">Puas (1: Sangat Tidak Puas - 4: Sangat Puas)</option>
             </x-select>
         </div>
 

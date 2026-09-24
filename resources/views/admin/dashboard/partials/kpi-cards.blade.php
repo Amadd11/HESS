@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- 1. Total Responden & Rate -->
     <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs group">
         <div class="flex items-center justify-between mb-2">
@@ -23,40 +23,22 @@
         </div>
     </div>
 
-    <!-- 2. Kepuasan Umum (MSQ-20) -->
+    <!-- 2. Indikator Survei Kepuasan Pegawai -->
     <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs group">
         <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Kepuasan Kerja (MSQ-20)</span>
-            <x-badge :color="$avgGeneral >= 75 ? 'emerald' : ($avgGeneral >= 65 ? 'primary' : 'amber')" size="xs">
-                {{ $avgGeneral >= 75 ? 'Sangat Puas' : ($avgGeneral >= 65 ? 'Puas' : 'Perhatian') }}
-            </x-badge>
-        </div>
-        <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-black text-primary-700">{{ $avgGeneral }}%</span>
-            <span class="text-xs font-semibold text-gray-400">Baku MSQ-20</span>
-        </div>
-        <div class="mt-3">
-            <div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div class="h-full rounded-full bg-primary-600 transition-all duration-500" style="width: {{ min($avgGeneral, 100) }}%"></div>
+            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Indikator Survei Kepuasan Pegawai</span>
+            <div class="flex items-center gap-1.5">
+                <x-badge color="blue" size="xs">
+                    {{ $hospitalCategoryScores->count() }} Indikator
+                </x-badge>
+                <x-badge :color="$avgHospital >= 81 ? 'emerald' : ($avgHospital >= 61 ? 'primary' : 'amber')" size="xs">
+                    {{ $avgHospital >= 81 ? 'Sangat Setuju' : ($avgHospital >= 61 ? 'Setuju' : ($avgHospital >= 41 ? 'Tidak Setuju' : 'Sangat Tidak Setuju')) }}
+                </x-badge>
             </div>
-        </div>
-        <div class="mt-2 text-[11px] text-gray-500 flex items-center justify-between">
-            <span>Intrinsik: <strong>{{ $avgIntrinsic }}%</strong></span>
-            <span>Ekstrinsik: <strong>{{ $avgExtrinsic }}%</strong></span>
-        </div>
-    </div>
-
-    <!-- 3. Faktor Lingkungan RS -->
-    <div class="bg-white p-4 md:p-5 rounded-2xl border border-gray-200/90 shadow-xs group">
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Faktor Lingkungan RS</span>
-            <x-badge color="blue" size="xs">
-                {{ $hospitalCategoryScores->count() }} Dimensi
-            </x-badge>
         </div>
         <div class="flex items-baseline justify-between">
             <span class="text-3xl font-black text-blue-700">{{ $avgHospital }}%</span>
-            <span class="text-xs font-semibold text-gray-400">24 Butir RS</span>
+            <span class="text-xs font-semibold text-gray-400">{{ $hospitalCategoryScores->sum('questions_count') ?: '24' }} Butir Soal Terdata</span>
         </div>
         <div class="mt-3">
             <div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
@@ -64,8 +46,8 @@
             </div>
         </div>
         <div class="mt-2 text-[11px] text-gray-500 flex items-center justify-between">
-            <span>Skor Budaya & Fasilitas Kerja</span>
-            <a href="#radar-section" class="text-blue-600 hover:underline font-bold">Lihat 8 Dimensi &darr;</a>
+            <span>Skala 1–4 Forced Choice</span>
+            <a href="#radar-section" class="text-blue-600 hover:underline font-bold">Lihat Rincian &darr;</a>
         </div>
     </div>
 </div>

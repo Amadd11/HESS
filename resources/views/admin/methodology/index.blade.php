@@ -3,7 +3,7 @@
 @section('header-title', 'Panduan Metodologi & Rumus Perhitungan')
 
 @section('content')
-<div class="space-y-6" x-data="{ activeTab: 'msq' }">
+<div class="space-y-6" x-data="{ activeTab: 'indicators' }">
 
     {{-- 1. Hero Header Banner yang Ramah --}}
     <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xs border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
@@ -19,13 +19,13 @@
                 Cara Aplikasi Menghitung Skor & Persentase
             </h1>
             <p class="text-xs md:text-sm text-slate-300 font-normal max-w-2xl leading-relaxed">
-                Penjelasan ramah, sederhana, dan mudah dipahami tentang bagaimana setiap klik jawaban pegawai diubah menjadi angka persentase, predikat kepuasan kerja (MSQ-20), dan indeks Net Promoter Score (NPS).
+                Penjelasan ramah, sederhana, dan mudah dipahami tentang bagaimana setiap klik jawaban pegawai diubah menjadi angka persentase berdasarkan instrumen Indikator Survei Kepuasan Pegawai RSUP Dr. Sardjito (skala 4 poin) dan indeks Net Promoter Score (NPS).
             </p>
         </div>
 
         <div class="relative z-10 flex flex-col items-start md:items-end gap-1 text-xs text-slate-300 bg-white/5 border border-white/10 p-4 rounded-2xl shrink-0">
             <span class="font-extrabold text-white text-sm">HESS Measurement Guide</span>
-            <span class="text-emerald-400 font-semibold">MSQ-20 & Net Promoter Score (NPS)</span>
+            <span class="text-emerald-400 font-semibold">Indikator Kepuasan & Skala 4 Poin</span>
             <span class="text-gray-400 text-[11px]">Bebas Jargon Rumit • 100% Gamblang</span>
         </div>
     </div>
@@ -33,11 +33,11 @@
     {{-- 2. Tab Menu Pilihan Topik --}}
     <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-gray-200/80">
         <button type="button"
-            @click="activeTab = 'msq'"
-            :class="activeTab === 'msq' ? 'bg-primary-600 text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200/80'"
+            @click="activeTab = 'indicators'"
+            :class="activeTab === 'indicators' ? 'bg-primary-600 text-white shadow-xs' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200/80'"
             class="px-4 py-2.5 rounded-2xl text-xs font-extrabold transition flex items-center gap-2 shrink-0 cursor-pointer">
             <span class="text-sm">📋</span>
-            <span>1. Kepuasan Kerja (MSQ-20)</span>
+            <span>1. Indikator Survei Kepuasan Pegawai (Skala 4 Poin)</span>
         </button>
 
         <button type="button"
@@ -49,48 +49,55 @@
         </button>
     </div>
 
-    {{-- 3. KONTEN TAB 1: METODE MSQ-20 --}}
-    <div x-show="activeTab === 'msq'" x-transition class="space-y-6">
-        <!-- Pengantar Santai -->
+    {{-- 3. KONTEN TAB 1: METODE INDIKATOR KEPUASAN --}}
+    <div x-show="activeTab === 'indicators'" x-transition class="space-y-6">
+        <!-- Pengantar Instrumen -->
         <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-xs space-y-4">
             <div class="flex items-start gap-4">
                 <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0 text-2xl">
                     🌟
                 </div>
                 <div class="space-y-1">
-                    <h2 class="text-base md:text-lg font-black text-gray-900">Apa Itu MSQ-20?</h2>
+                    <h2 class="text-base md:text-lg font-black text-gray-900">Instrumen Indikator Survei Kepuasan Pegawai RSUP Dr. Sardjito</h2>
                     <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
-                        <strong>MSQ (Minnesota Satisfaction Questionnaire)</strong> adalah standar kuesioner ilmiah yang dikembangkan oleh psikolog industri di University of Minnesota. Kuesioner ini dirancang untuk menjawab pertanyaan mendasar: <em>"Seberapa bahagia dan puas pegawai dengan pekerjaannya sehari-hari?"</em>
+                        Instrumen HESS RSUP Dr. Sardjito terdiri dari unsur-unsur <strong>indikator kepuasan pegawai</strong> dengan butir pertanyaan tertutup dan isian kualitatif terbuka (alasan penilaian dan saran perbaikan setiap unsur). Kuesioner menggunakan <strong>skala 4 poin (*forced choice*)</strong> tanpa pilihan netral untuk mendorong ketegasan penilaian responden.
                     </p>
                 </div>
             </div>
 
-            <!-- 2 Sisi Kepuasan -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                <div class="bg-emerald-50/60 border border-emerald-200/80 rounded-2xl p-4 space-y-2">
-                    <div class="flex items-center gap-2 text-emerald-900 font-extrabold text-sm">
-                        <span>🌱</span>
-                        <span>Kepuasan Intrinsik (12 Butir Soal)</span>
-                    </div>
-                    <p class="text-xs text-emerald-800/90 leading-relaxed">
-                        Kepuasan yang datang <strong>dari dalam diri pegawai sendiri</strong>. Contohnya: rasa bangga bisa menolong pasien sembuh, kebebasan mencoba ide baru, rasa tanggung jawab, dan perasaan bahwa pekerjaannya bermanfaat bagi masyarakat.
-                    </p>
-                    <div class="text-[11px] font-bold text-emerald-700">
-                        Bobot: 12 butir × skor maksimal 5 = Maksimal 60 Poin
-                    </div>
+            <!-- 8 Unsur Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+                <div class="bg-emerald-50/60 border border-emerald-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-emerald-900">1. Lingkungan Kerja</div>
+                    <p class="text-[11px] text-emerald-800 leading-relaxed">Teamwork, kolaborasi lintas satker, dan sarana prasarana kerja.</p>
                 </div>
-
-                <div class="bg-indigo-50/60 border border-indigo-200/80 rounded-2xl p-4 space-y-2">
-                    <div class="flex items-center gap-2 text-indigo-900 font-extrabold text-sm">
-                        <span>🏢</span>
-                        <span>Kepuasan Ekstrinsik (6 Butir Soal)</span>
-                    </div>
-                    <p class="text-xs text-indigo-800/90 leading-relaxed">
-                        Kepuasan yang dipengaruhi oleh <strong>faktor lingkungan di luar diri pegawai</strong>. Contohnya: gaji yang adil dan tepat waktu, bimbingan yang ramah dari atasan, hubungan yang rukun dengan teman sejawat, dan peluang naik pangkat.
-                    </p>
-                    <div class="text-[11px] font-bold text-indigo-700">
-                        Bobot: 6 butir × skor maksimal 5 = Maksimal 30 Poin
-                    </div>
+                <div class="bg-indigo-50/60 border border-indigo-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-indigo-900">2. Hubungan dengan Atasan</div>
+                    <p class="text-[11px] text-indigo-800 leading-relaxed">Hubungan atasan-pegawai dan pengakuan kinerja dari pimpinan/direksi.</p>
+                </div>
+                <div class="bg-purple-50/60 border border-purple-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-purple-900">3. Reward & Penilaian</div>
+                    <p class="text-[11px] text-purple-800 leading-relaxed">Sistem reward prestasi, sanksi disiplin, dan objektivitas penilaian kinerja.</p>
+                </div>
+                <div class="bg-sky-50/60 border border-sky-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-sky-900">4. Pengembangan Karir</div>
+                    <p class="text-[11px] text-sky-800 leading-relaxed">Pengembangan kompetensi, pendidikan formal, dan pelatihan non formal.</p>
+                </div>
+                <div class="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-amber-900">5. Gaji & Kompensasi</div>
+                    <p class="text-[11px] text-amber-800 leading-relaxed">Transparansi indikator remunerasi, daya saing komparatif, dan ketepatan waktu.</p>
+                </div>
+                <div class="bg-rose-50/60 border border-rose-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-rose-900">6. Work Life Balance</div>
+                    <p class="text-[11px] text-rose-800 leading-relaxed">Kesehatan fisik/mental, fleksibilitas waktu, dan kemudahan hak cuti/kepegawaian.</p>
+                </div>
+                <div class="bg-teal-50/60 border border-teal-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-teal-900">7. Komunikasi Internal</div>
+                    <p class="text-[11px] text-teal-800 leading-relaxed">Kelancaran informasi kerja dan efektivitas saluran komunikasi (hotline/e-prens/FGD).</p>
+                </div>
+                <div class="bg-blue-50/60 border border-blue-200/80 rounded-2xl p-3.5 space-y-1">
+                    <div class="text-xs font-extrabold text-blue-900">8. Budaya Rumah Sakit</div>
+                    <p class="text-[11px] text-blue-800 leading-relaxed">Penerapan budaya BerAKHLAK, 5R, dan nilai Pendidikan Bermartabat.</p>
                 </div>
             </div>
         </div>
@@ -98,24 +105,24 @@
         <!-- Rumus Perhitungan Persentase -->
         <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-xs space-y-5">
             <div class="border-b border-gray-100 pb-3">
-                <h3 class="text-sm md:text-base font-black text-gray-900">Rumus Mengubah Bintang Jawaban Menjadi Persentase (%)</h3>
-                <p class="text-xs text-gray-400">Pegawai memilih skala 1 sampai 5. Bagaimana cara sistem mengubahnya jadi angka persentase?</p>
+                <h3 class="text-sm md:text-base font-black text-gray-900">Rumus Mengubah Skor Jawaban Menjadi Persentase (%)</h3>
+                <p class="text-xs text-gray-400">Pegawai memilih skala 1 sampai 4. Bagaimana cara sistem menghitung persentase indeksnya?</p>
             </div>
 
             <!-- Rumus Visual Kotak -->
             <div class="bg-slate-900 text-white p-5 rounded-2xl text-center space-y-3 shadow-inner">
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Rumus Persentase Skor Butir:</span>
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Rumus Persentase Skor Skala 4 Poin:</span>
                 <div class="text-base md:text-xl font-mono font-extrabold flex items-center justify-center gap-3">
                     <span>Persentase (%)</span>
                     <span>=</span>
                     <span class="inline-flex flex-col items-center">
                         <span class="border-b border-white/60 pb-1">Total Skor yang Diberikan</span>
-                        <span class="pt-1">Jumlah Pertanyaan × 5</span>
+                        <span class="pt-1">Jumlah Pertanyaan × 4</span>
                     </span>
                     <span>× 100%</span>
                 </div>
                 <p class="text-xs text-slate-300">
-                    Atau lebih ringkasnya: <code>(Rata-Rata Skor Jawaban ÷ 5) × 100%</code>
+                    Atau lebih ringkasnya: <code>(Rata-Rata Skor Jawaban ÷ 4) × 100%</code>
                 </p>
             </div>
 
@@ -123,54 +130,54 @@
             <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-2">
                 <div class="font-extrabold text-amber-900 text-xs uppercase tracking-wider">Contoh Perhitungan Riil:</div>
                 <p class="text-xs text-amber-950 leading-relaxed">
-                    Seorang perawat menjawab 12 pertanyaan <strong>Kepuasan Intrinsik</strong> dengan nilai rata-rata <strong>4.0</strong> (karena rata-rata memilih tombol "Puas").<br>
+                    Seorang pegawai menjawab 3 pertanyaan pada unsur <strong>Lingkungan Kerja</strong> dengan skor: 4, 3, dan 4 (total skor = 11).<br>
                     Maka perhitungan di sistem adalah:
                 </p>
                 <div class="bg-white/80 border border-amber-300 rounded-xl p-3 font-mono text-xs text-amber-900 font-bold">
-                    Persentase = (4.0 ÷ 5) × 100% = 80.0%
+                    Persentase = (11 ÷ (3 × 4)) × 100% = (11 ÷ 12) × 100% = 91.7%
                 </div>
                 <p class="text-[11px] text-amber-800">
-                    Nilai <strong>80.0%</strong> ini yang Anda lihat muncul di kartu ringkasan Dashboard Analitik!
+                    Nilai <strong>91.7%</strong> ini dikategorikan ke predikat <strong>Sangat Setuju / Optimal</strong> pada Dashboard Analitik!
                 </p>
             </div>
 
             <!-- Tabel Pedoman Kategori Nilai -->
             <div class="space-y-3">
-                <h4 class="text-xs font-black uppercase tracking-wider text-gray-700">Tabel Makna Persentase Skor</h4>
+                <h4 class="text-xs font-black uppercase tracking-wider text-gray-700">Tabel Predikat Kategori Nilai Skala 4 Poin</h4>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border border-gray-100 rounded-xl overflow-hidden">
                         <thead class="bg-gray-50 text-[10px] font-extrabold uppercase text-gray-500 border-b border-gray-100">
                             <tr>
                                 <th class="p-3">Rentang Persentase</th>
-                                <th class="p-3">Rata-Rata Skala Likert</th>
+                                <th class="p-3">Rata-Rata Skala</th>
                                 <th class="p-3">Predikat Kepuasan</th>
                                 <th class="p-3">Artinya bagi Rumah Sakit</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <tr class="bg-emerald-50/30">
-                                <td class="p-3 font-bold text-emerald-800">80.0% – 100%</td>
-                                <td class="p-3 font-mono">4.00 – 5.00</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Sangat Tinggi (Sangat Puas)</span></td>
-                                <td class="p-3 text-gray-600">Area kekuatan utama. Pegawai sangat loyal, bersemangat, dan merasa dihargai.</td>
+                                <td class="p-3 font-bold text-emerald-800">81.0% – 100%</td>
+                                <td class="p-3 font-mono">3.25 – 4.00</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Sangat Setuju (Optimal)</span></td>
+                                <td class="p-3 text-gray-600">Area kekuatan utama. Pegawai sangat puas dan iklim kerja sangat kondusif.</td>
                             </tr>
                             <tr class="bg-teal-50/30">
-                                <td class="p-3 font-bold text-teal-800">60.0% – 79.9%</td>
-                                <td class="p-3 font-mono">3.00 – 3.99</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800">Tinggi (Puas)</span></td>
-                                <td class="p-3 text-gray-600">Kondisi kerja baik dan sehat, namun masih ada ruang kecil untuk disempurnakan.</td>
+                                <td class="p-3 font-bold text-teal-800">61.0% – 80.9%</td>
+                                <td class="p-3 font-mono">2.45 – 3.24</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-100 text-teal-800">Setuju (Baik)</span></td>
+                                <td class="p-3 text-gray-600">Kondisi kerja baik dan sehat, dengan beberapa area penyempurnaan minor.</td>
                             </tr>
                             <tr class="bg-amber-50/30">
-                                <td class="p-3 font-bold text-amber-800">40.0% – 59.9%</td>
-                                <td class="p-3 font-mono">2.00 – 2.99</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Sedang (Cukup / Netral)</span></td>
-                                <td class="p-3 text-gray-600">Pegawai merasa biasa saja. Perlu dialog terbuka agar tidak merosot menjadi ketidakpuasan.</td>
+                                <td class="p-3 font-bold text-amber-800">41.0% – 60.9%</td>
+                                <td class="p-3 font-mono">1.65 – 2.44</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Tidak Setuju (Perhatian)</span></td>
+                                <td class="p-3 text-gray-600">Pegawai merasakan hambatan atau kekurangan. Membutuhkan evaluasi pimpinan.</td>
                             </tr>
                             <tr class="bg-rose-50/30">
-                                <td class="p-3 font-bold text-rose-800">&lt; 40.0%</td>
-                                <td class="p-3 font-mono">1.00 – 1.99</td>
-                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">Rendah (Area Perbaikan / RTL)</span></td>
-                                <td class="p-3 text-gray-600">Lampu kuning! Prioritas tindakan perbaikan manajemen (Rencana Tindak Lanjut).</td>
+                                <td class="p-3 font-bold text-rose-800">&lt; 41.0%</td>
+                                <td class="p-3 font-mono">1.00 – 1.64</td>
+                                <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">Sangat Tidak Setuju (Prioritas RTL)</span></td>
+                                <td class="p-3 text-gray-600">Lampu merah! Prioritas utama Rencana Tindak Lanjut (RTL) segera.</td>
                             </tr>
                         </tbody>
                     </table>

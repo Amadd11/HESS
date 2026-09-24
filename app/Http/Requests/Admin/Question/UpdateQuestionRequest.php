@@ -48,7 +48,7 @@ class UpdateQuestionRequest extends FormRequest
             'code' => 'kode pertanyaan',
             'text' => 'teks butir pertanyaan',
             'scale' => 'skala respon',
-            'subscale' => 'subskala MSQ',
+            'subscale' => 'subskala',
             'order' => 'nomor urutan',
             'is_active' => 'status aktif',
         ];

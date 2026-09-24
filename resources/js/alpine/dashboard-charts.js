@@ -10,6 +10,8 @@ export default (config = {}) => ({
     unitData: (config.unitData || []).map(v => Number(v) || 0),
     profLabels: config.profLabels || [],
     profData: (config.profData || []).map(v => Number(v) || 0),
+    directorateLabels: config.directorateLabels || [],
+    directorateData: (config.directorateData || []).map(v => Number(v) || 0),
     promoters: Number(config.promoters) || 0,
     passives: Number(config.passives) || 0,
     detractors: Number(config.detractors) || 0,
@@ -47,7 +49,15 @@ export default (config = {}) => ({
             'Work Environment & Facilities': 'Fasilitas',
             'Teamwork & Interprofessional Collaboration': 'Kerjasama',
             'Psychological & Patient Safety': 'Keselamatan',
-            'Work-Life Balance': 'Work-Life'
+            'Work-Life Balance': 'Work-Life',
+            'Lingkungan Kerja': 'Lingk. Kerja',
+            'Hubungan dengan Atasan': 'Hub. Atasan',
+            'Penghargaan dan Pengukuran Kerja': 'Penghargaan',
+            'Kesempatan Pengembangan Karir': 'Pengemb. Karir',
+            'Gaji dan Kompensasi': 'Gaji & Komp.',
+            'Keseimbangan Kerja dan Kehidupan / Work Life Balance': 'Work-Life Balance',
+            'Komunikasi dalam Rumah Sakit': 'Komunikasi RS',
+            'Budaya Rumah Sakit': 'Budaya RS'
         };
 
         const categories = this.rawRadarCategories.map(name => labelMap[name] || name);
@@ -205,9 +215,16 @@ export default (config = {}) => ({
             return;
         }
 
-        const isUnit = this.chartTab === 'unit';
-        const rawLabels = isUnit ? this.unitLabels : this.profLabels;
-        const rawData = isUnit ? this.unitData : this.profData;
+        let rawLabels = this.unitLabels;
+        let rawData = this.unitData;
+
+        if (this.chartTab === 'profession') {
+            rawLabels = this.profLabels;
+            rawData = this.profData;
+        } else if (this.chartTab === 'directorate') {
+            rawLabels = this.directorateLabels;
+            rawData = this.directorateData;
+        }
 
         const labels = rawLabels.length ? rawLabels : ['Belum Ada Data'];
         const data = rawData.length ? rawData : [0];

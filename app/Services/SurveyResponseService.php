@@ -19,10 +19,15 @@ class SurveyResponseService
         return DB::transaction(function () use ($period, $data) {
             $questions = Question::with('category')->active()->get()->keyBy('id');
             $answers = $data['answers'] ?? [];
+            $feedbackData = $data['feedback'] ?? [];
             $overall = $data['overall'] ?? [];
             $profile = $data['profile'] ?? [];
 
-            $scores = ['intrinsic' => [], 'extrinsic' => [], 'general' => [], 'hospital' => []];
+            $allValues = [];
+            $scores = ['intrinsic' => [], 'extrinsic' => []];
+
+            // Mapping skor per kelompok indikator (LK, HA, dsb.)
+            $aspectScores = [];
 
             foreach ($answers as $key => $val) {
                 $q = $questions[$key] ?? $questions->firstWhere('code', $key);
@@ -31,39 +36,74 @@ class SurveyResponseService
                 }
 
                 $val = (int) $val;
+                $allValues[] = $val;
+
+                $catCode = $q->category?->code;
+                if ($catCode) {
+                    $aspectScores[$catCode] = $aspectScores[$catCode] ?? [];
+                    $aspectScores[$catCode][] = $val;
+                }
+
                 if ($q->subscale === 'intrinsic') {
                     $scores['intrinsic'][] = $val;
                 }
                 if ($q->subscale === 'extrinsic') {
                     $scores['extrinsic'][] = $val;
                 }
-                if ($q->category?->type === 'msq') {
-                    $scores['general'][] = $val;
-                }
-                if ($q->category?->type === 'hospital') {
-                    $scores['hospital'][] = $val;
+            }
+
+            // Hitung persentase skala 4 poin: (sum / (count * 4)) * 100
+            $calcPct = fn (array $items) => count($items) ? round((array_sum($items) / (count($items) * 4)) * 100, 2) : 0;
+
+            $intrinsicScore = ! empty($scores['intrinsic']) ? $calcPct($scores['intrinsic']) : (! empty($aspectScores['LK']) ? $calcPct($aspectScores['LK']) : $calcPct($allValues));
+            $extrinsicScore = ! empty($scores['extrinsic']) ? $calcPct($scores['extrinsic']) : (! empty($aspectScores['HA']) ? $calcPct($aspectScores['HA']) : $calcPct($allValues));
+            $generalScore = $calcPct($allValues);
+            $hospitalScore = $generalScore;
+
+            // Rangkum feedback kualitatif per unsur ke like_text (alasan) dan improve_text (saran)
+            $likeParts = [];
+            $improveParts = [];
+
+            if (! empty($feedbackData) && is_array($feedbackData)) {
+                foreach ($feedbackData as $aspectName => $entry) {
+                    $reason = trim($entry['reason'] ?? '');
+                    $suggestion = trim($entry['suggestion'] ?? '');
+                    if ($reason !== '') {
+                        $likeParts[] = "[$aspectName] $reason";
+                    }
+                    if ($suggestion !== '') {
+                        $improveParts[] = "[$aspectName] $suggestion";
+                    }
                 }
             }
 
-            $calcPct = fn (array $items) => count($items) ? round((array_sum($items) / (count($items) * 5)) * 100, 2) : 0;
-            $npsScore = (int) ($overall['nps_score'] ?? 0);
+            $likeText = ! empty($likeParts) ? implode("\n\n", $likeParts) : (! empty($overall['like_text']) ? trim($overall['like_text']) : null);
+            $improveText = ! empty($improveParts) ? implode("\n\n", $improveParts) : (! empty($overall['improve_text']) ? trim($overall['improve_text']) : null);
+
+            $overallAvgScore = count($allValues) ? (int) round(array_sum($allValues) / count($allValues)) : 4;
+            $overallScore = isset($overall['overall_score']) && $overall['overall_score'] !== '' ? (int) $overall['overall_score'] : $overallAvgScore;
+
+            $defaultNps = round(($generalScore / 100) * 10);
+            $npsScore = isset($overall['nps_score']) && $overall['nps_score'] !== '' ? (int) $overall['nps_score'] : (int) $defaultNps;
 
             $completedAt = ! empty($data['completed_at']) ? Carbon::parse($data['completed_at']) : Carbon::now();
 
             $response = Response::create([
                 'period_id' => $period->id,
                 'profession' => $profile['profession'] ?? '',
+                'directorate' => $profile['directorate'] ?? null,
                 'unit' => $profile['unit'] ?? '',
                 'status' => $profile['status'] ?? '',
                 'tenure' => $profile['tenure'] ?? '',
-                'overall_score' => (int) ($overall['overall_score'] ?? 0),
+                'overall_score' => $overallScore,
                 'nps_score' => $npsScore,
-                'like_text' => ! empty($overall['like_text']) ? trim($overall['like_text']) : null,
-                'improve_text' => ! empty($overall['improve_text']) ? trim($overall['improve_text']) : null,
-                'intrinsic_score' => $calcPct($scores['intrinsic']),
-                'extrinsic_score' => $calcPct($scores['extrinsic']),
-                'general_score' => $calcPct($scores['general']),
-                'hospital_score' => $calcPct($scores['hospital']),
+                'like_text' => $likeText,
+                'improve_text' => $improveText,
+                'feedback_data' => ! empty($feedbackData) ? $feedbackData : null,
+                'intrinsic_score' => $intrinsicScore,
+                'extrinsic_score' => $extrinsicScore,
+                'general_score' => $generalScore,
+                'hospital_score' => $hospitalScore,
                 'nps_category' => $npsScore >= 9 ? 'promoter' : ($npsScore >= 7 ? 'passive' : 'detractor'),
                 'completed_at' => $completedAt,
                 'created_at' => $completedAt,
@@ -93,12 +133,13 @@ class SurveyResponseService
     /**
      * Alias method untuk kemudahan pemanggilan terpisah.
      */
-    public function saveResponse(Period $period, array $profile, array $overall, array $answers, ?Carbon $completedAt = null): Response
+    public function saveResponse(Period $period, array $profile, array $overall, array $answers, ?Carbon $completedAt = null, ?array $feedback = null): Response
     {
         return $this->save($period, [
             'profile' => $profile,
             'overall' => $overall,
             'answers' => $answers,
+            'feedback' => $feedback,
             'completed_at' => $completedAt,
         ]);
     }

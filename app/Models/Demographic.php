@@ -50,7 +50,7 @@ class Demographic extends Model
     /**
      * Ambil seluruh opsi demografi aktif yang dikelompokkan berdasarkan tipe.
      *
-     * @return array{professions: array<int, string>, units: array<int, string>, statuses: array<int, string>, tenures: array<int, string>}
+     * @return array{professions: array<int, string>, directorates: array<int, string>, units: array<int, string>, statuses: array<int, string>, tenures: array<int, string>}
      */
     public static function getGroupedOptions(): array
     {
@@ -58,6 +58,7 @@ class Demographic extends Model
 
         return [
             'professions' => $all->get('profession', collect())->pluck('name')->toArray(),
+            'directorates' => $all->get('directorate', collect())->pluck('name')->toArray(),
             'units' => $all->get('unit', collect())->pluck('name')->toArray(),
             'statuses' => $all->get('status', collect())->pluck('name')->toArray(),
             'tenures' => $all->get('tenure', collect())->pluck('name')->toArray(),

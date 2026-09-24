@@ -55,9 +55,9 @@ erDiagram
 
     CATEGORIES {
         bigint id PK
-        string name "MSQ-20, Leadership, Workload, dll."
-        string code "MSQ, LS, WS, dll."
-        string type "msq / hospital"
+        string name "Lingkungan Kerja, Hubungan dengan Atasan, dll."
+        string code "LK, HA, PP, dll."
+        string type "hospital"
         int order "Urutan tampilan kategori"
         timestamps timestamps
         softDeletes deleted_at
@@ -66,10 +66,10 @@ erDiagram
     QUESTIONS {
         bigint id PK
         bigint category_id FK
-        string code "MSQ1..MSQ20, H1..H24"
+        string code "H1..H24"
         text text "Pernyataan survei"
-        string scale "satisfaction / agreement"
-        int order "Urutan pertanyaan (1..44)"
+        string scale "agreement / satisfaction"
+        int order "Urutan pertanyaan"
         boolean is_active
         timestamps timestamps
         softDeletes deleted_at
@@ -82,14 +82,14 @@ erDiagram
         string unit "Unit Kerja"
         string status "Status Kepegawaian"
         string tenure "Lama Bekerja"
-        tinyint overall_score "Kepuasan Umum (1-5)"
+        tinyint overall_score "Kepuasan Umum (1-4)"
         tinyint nps_score "eNPS (0-10)"
-        text like_text "Hal paling disukai (Opsional)"
-        text improve_text "Hal yang perlu diperbaiki (Opsional)"
-        decimal intrinsic_score "Skor Intrinsik MSQ (0.00 - 100.00)"
-        decimal extrinsic_score "Skor Ekstrinsik MSQ (0.00 - 100.00)"
-        decimal general_score "Skor Kepuasan Umum MSQ (0.00 - 100.00)"
-        decimal hospital_score "Skor Faktor Lingkungan RS (0.00 - 100.00)"
+        text like_text "Alasan Penilaian (Feedback Kualitatif)"
+        text improve_text "Saran Perbaikan (Feedback Kualitatif)"
+        decimal intrinsic_score "Skor Faktor Internal/Kerja (0.00 - 100.00)"
+        decimal extrinsic_score "Skor Faktor Eksternal/Atasan (0.00 - 100.00)"
+        decimal general_score "Skor Kepuasan Rata-rata (0.00 - 100.00)"
+        decimal hospital_score "Skor Indikator Kepuasan Pegawai (0.00 - 100.00)"
         string nps_category "promoter / passive / detractor"
         datetime completed_at
         timestamps timestamps
@@ -146,9 +146,9 @@ Menyimpan kelompok instrumen soal kuesioner.
 | Kolom | Tipe Data | Atribut | Keterangan |
 | :--- | :--- | :--- | :--- |
 | `id` | BIGINT UNSIGNED | PK, Auto Increment | ID kategori |
-| `name` | VARCHAR(255) | NOT NULL | Misal: *"MSQ-20"*, *"Leadership & Supervision"* |
-| `code` | VARCHAR(50) | NOT NULL | Kode pengenal singkat: `MSQ`, `LS`, `WS`, dll. |
-| `type` | VARCHAR(20) | NOT NULL | Nilai: `msq` atau `hospital` |
+| `name` | VARCHAR(255) | NOT NULL | Misal: *"Lingkungan Kerja"*, *"Hubungan dengan Atasan"* |
+| `code` | VARCHAR(50) | NOT NULL | Kode pengenal singkat: `LK`, `HA`, `PP`, dll. |
+| `type` | VARCHAR(20) | NOT NULL | Nilai: `hospital` |
 | `order` | INT | DEFAULT 0 | Urutan pengelompokan |
 | `timestamps` | TIMESTAMP | NOT NULL | `created_at` & `updated_at` |
 | `deleted_at` | TIMESTAMP | NULLABLE | Soft delete |
@@ -156,16 +156,16 @@ Menyimpan kelompok instrumen soal kuesioner.
 ---
 
 ### 3.4. `questions`
-Menyimpan 44 butir pertanyaan baku instrumen HESS.
+Menyimpan butir pertanyaan instrumen HESS.
 
 | Kolom | Tipe Data | Atribut | Keterangan |
 | :--- | :--- | :--- | :--- |
 | `id` | BIGINT UNSIGNED | PK, Auto Increment | ID pertanyaan |
 | `category_id` | BIGINT UNSIGNED | FK -> `categories.id` | Kategori induk pertanyaan |
-| `code` | VARCHAR(20) | NOT NULL | Kode item: `MSQ1`..`MSQ20`, `H1`..`H24` |
+| `code` | VARCHAR(20) | NOT NULL | Kode item: `H1`..`H24` |
 | `text` | TEXT | NOT NULL | Bunyi butir pernyataan |
 | `scale` | VARCHAR(20) | NOT NULL | Nilai: `satisfaction` (Puas) / `agreement` (Setuju) |
-| `order` | INT | DEFAULT 0 | Urutan tampil dalam survei (1–44) |
+| `order` | INT | DEFAULT 0 | Urutan tampil dalam survei |
 | `is_active` | BOOLEAN | DEFAULT TRUE | Status aktif pertanyaan |
 | `timestamps` | TIMESTAMP | NOT NULL | `created_at` & `updated_at` |
 | `deleted_at` | TIMESTAMP | NULLABLE | Soft delete |
@@ -185,15 +185,15 @@ Tabel transaksi utama untuk **satu sesi pengisian kuesioner oleh responden anoni
 | `status` | VARCHAR(50) | NOT NULL | Status kepegawaian (Tetap, Kontrak, dll.) |
 | `tenure` | VARCHAR(50) | NOT NULL | Lama bekerja (< 1 th, 1-3 th, dll.) |
 | **Penilaian Keseluruhan** | | | |
-| `overall_score` | TINYINT UNSIGNED| NOT NULL | Penilaian kepuasan global (skala 1–5) |
+| `overall_score` | TINYINT UNSIGNED| NOT NULL | Penilaian kepuasan global (skala 1–4) |
 | `nps_score` | TINYINT UNSIGNED| NOT NULL | Nilai eNPS rekomendasi tempat kerja (0–10) |
-| `like_text` | TEXT | NULLABLE | Masukan: hal yang paling disukai |
-| `improve_text` | TEXT | NULLABLE | Masukan: hal yang perlu diperbaiki |
+| `like_text` | TEXT | NULLABLE | Masukan: alasan penilaian per unsur |
+| `improve_text` | TEXT | NULLABLE | Masukan: saran perbaikan per unsur |
 | **Skor Analitik (Auto)** | | | |
-| `intrinsic_score`| DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor 12 item intrinsik MSQ |
-| `extrinsic_score`| DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor 6 item ekstrinsik MSQ |
-| `general_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor 20 item umum MSQ |
-| `hospital_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor 24 item faktor RS |
+| `intrinsic_score`| DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor faktor kerja/internal |
+| `extrinsic_score`| DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor faktor atasan/eksternal |
+| `general_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor rata-rata instrumen |
+| `hospital_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor indikator kepuasan pegawai |
 | `nps_category` | VARCHAR(20) | NOT NULL | `promoter` (9-10), `passive` (7-8), `detractor` (0-6) |
 | `completed_at` | DATETIME | NOT NULL | Waktu submit survei |
 | `timestamps` | TIMESTAMP | NOT NULL | `created_at` & `updated_at` |
