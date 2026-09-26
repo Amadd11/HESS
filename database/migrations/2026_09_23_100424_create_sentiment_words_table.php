@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('word')->unique();
             $table->enum('sentiment', ['positive', 'neutral', 'negative'])->index();
-            $table->unsignedTinyInteger('weight')->default(2);
             $table->boolean('is_active')->default(true)->index();
             $table->string('notes')->nullable();
             $table->timestamps();

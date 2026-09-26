@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Period;
 use App\Models\Question;
 use App\Models\Response;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class SurveySubmissionTest extends TestCase
@@ -52,16 +51,19 @@ class SurveySubmissionTest extends TestCase
 
         $payload = [
             'profile' => [
-                'profession' => 'Medis',
-                'directorate' => 'Direktorat Pelayanan Medis',
+                'profession' => 'Dokter / Medis',
+                'directorate' => 'Direktorat Medik dan Keperawatan',
                 'unit' => 'Instalasi Gawat Darurat',
-                'status' => 'Pegawai Tetap',
+                'status' => 'PNS',
                 'tenure' => '1–3 tahun',
+                'age' => '25–35 tahun',
+                'gender' => 'Laki-laki',
+                'education' => 'Profesi (Dokter / Ners / Apoteker / dll.)',
+                'income' => 'Rp 5.000.001 – Rp 10.000.000',
             ],
             'answers' => $answers,
             'feedback' => $feedback,
             'overall' => [
-                'overall_score' => 4,
                 'nps_score' => 10,
             ],
         ];
@@ -73,10 +75,13 @@ class SurveySubmissionTest extends TestCase
 
         $this->assertDatabaseHas('responses', [
             'period_id' => $period->id,
-            'profession' => 'Medis',
-            'directorate' => 'Direktorat Pelayanan Medis',
+            'profession' => 'Dokter / Medis',
+            'directorate' => 'Direktorat Medik dan Keperawatan',
             'unit' => 'Instalasi Gawat Darurat',
-            'overall_score' => 4,
+            'age' => '25–35 tahun',
+            'gender' => 'Laki-laki',
+            'education' => 'Profesi (Dokter / Ners / Apoteker / dll.)',
+            'income' => 'Rp 5.000.001 – Rp 10.000.000',
             'general_score' => 100.00, // (24 * 4) / (24 * 4) * 100
         ]);
 

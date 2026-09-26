@@ -1,5 +1,5 @@
 <!-- FLOATING BOTTOM NAVIGATION -->
-<nav x-show="step !== 'profile'" x-cloak
+<nav x-show="step !== 'profile' && step !== 'intro'" x-cloak
     class="fixed left-0 right-0 bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200/80 px-4 py-3 md:py-4 shadow-lg md:static md:bg-transparent md:border-0 md:shadow-none md:p-0">
     <div class="max-w-4xl mx-auto flex items-center gap-3 md:justify-end">
         <!-- Tombol Kembali -->

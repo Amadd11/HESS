@@ -19,8 +19,6 @@
     "dependencies": {
         "@alpinejs/persist": "^3.17.3",
         "alpinejs": "^3.17.3",
-        "apexcharts": "^7.4.0",
-        "wordcloud": "^1.2.3",
-        "wordcloud2": "^1.0.0"
+        "apexcharts": "^7.4.0"
     }
 }

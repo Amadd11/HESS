@@ -1,6 +1,6 @@
 export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
-    // Navigasi & Langkah: 'profile' | 'questionnaire' | 'feedback' | 'overall'
-    step: 'profile',
+    // Navigasi & Langkah: 'intro' | 'profile' | 'questionnaire' | 'feedback' | 'overall'
+    step: 'intro',
     currentIndex: 0,
     questions: questionsData,
     isSubmitting: false,
@@ -17,7 +17,11 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
         directorate: '',
         unit: '',
         status: '',
-        tenure: ''
+        tenure: '',
+        age: '',
+        gender: '',
+        education: '',
+        income: ''
     },
 
     // Jawaban Butir Kuesioner (key: question.id, value: 1-4)
@@ -28,7 +32,6 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
 
     // Penilaian Keseluruhan (Opsional Tambahan)
     overall: {
-        overall_score: null,
         nps_score: null,
         like_text: '',
         improve_text: ''
@@ -203,6 +206,7 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
 
     get progressPercentage() {
         if (this.questions.length === 0) return 0;
+        if (this.step === 'intro') return 0;
         if (this.step === 'profile') return 5;
         if (this.step === 'overall') return 100;
 
@@ -213,8 +217,20 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
         return Math.min(100, Math.round(5 + (totalDone / 32) * 90));
     },
 
+    goToProfile() {
+        this.errorMessage = '';
+        this.step = 'profile';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    goToIntro() {
+        this.errorMessage = '';
+        this.step = 'intro';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
     startSurvey() {
-        if (!this.profile.profession || !this.profile.directorate || !this.profile.unit || !this.profile.status || !this.profile.tenure) {
+        if (!this.profile.profession || !this.profile.directorate || !this.profile.unit || !this.profile.status || !this.profile.tenure || !this.profile.age || !this.profile.gender || !this.profile.education || !this.profile.income) {
             this.errorMessage = 'Mohon lengkapi seluruh kolom profil demografi terlebih dahulu.';
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
@@ -330,6 +346,9 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
                 this.step = 'profile';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        } else if (this.step === 'profile') {
+            this.step = 'intro';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     },
 
@@ -358,7 +377,6 @@ export default (questionsData = [], submitUrl = '', csrfToken = '') => ({
                 answers: this.answers,
                 feedback: this.feedback,
                 overall: {
-                    overall_score: this.overall.overall_score ? Number(this.overall.overall_score) : null,
                     nps_score: this.overall.nps_score !== null && this.overall.nps_score !== '' ? Number(this.overall.nps_score) : null,
                     like_text: this.overall.like_text || null,
                     improve_text: this.overall.improve_text || null,

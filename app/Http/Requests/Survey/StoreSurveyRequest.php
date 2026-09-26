@@ -42,6 +42,10 @@ class StoreSurveyRequest extends FormRequest
             'profile.unit' => 'required|string|max:100',
             'profile.status' => 'required|string|max:100',
             'profile.tenure' => 'required|string|max:100',
+            'profile.age' => 'required|string|max:100',
+            'profile.gender' => 'required|string|max:100',
+            'profile.education' => 'required|string|max:100',
+            'profile.income' => 'required|string|max:100',
         ];
     }
 
@@ -81,7 +85,6 @@ class StoreSurveyRequest extends FormRequest
     {
         return [
             'overall' => 'nullable|array',
-            'overall.overall_score' => 'nullable|integer|between:1,5',
             'overall.nps_score' => 'nullable|integer|between:0,10',
             'overall.like_text' => 'nullable|string|max:2000',
             'overall.improve_text' => 'nullable|string|max:2000',
@@ -101,11 +104,14 @@ class StoreSurveyRequest extends FormRequest
             'profile.unit' => 'instalasi / unit kerja',
             'profile.status' => 'status kepegawaian',
             'profile.tenure' => 'masa kerja',
+            'profile.age' => 'usia',
+            'profile.gender' => 'jenis kelamin',
+            'profile.education' => 'latar belakang pendidikan',
+            'profile.income' => 'jumlah pendapatan',
             'answers' => 'seluruh pertanyaan kuesioner',
             'answers.*' => 'jawaban butir pertanyaan',
             'feedback.*.reason' => 'alasan penilaian unsur',
             'feedback.*.suggestion' => 'saran perbaikan unsur',
-            'overall.overall_score' => 'skor kepuasan keseluruhan',
             'overall.nps_score' => 'skor rekomendasi rumah sakit (eNPS)',
             'overall.like_text' => 'masukan hal yang disukai',
             'overall.improve_text' => 'masukan hal yang perlu diperbaiki',
@@ -160,7 +166,7 @@ class StoreSurveyRequest extends FormRequest
     /**
      * Helper accessor untuk penilaian kepuasan keseluruhan & feedback kualitatif.
      *
-     * @return array{overall_score: ?int, nps_score: ?int, like_text: ?string, improve_text: ?string}
+     * @return array{nps_score: ?int, like_text: ?string, improve_text: ?string}
      */
     public function overall(): array
     {

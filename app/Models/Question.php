@@ -20,8 +20,6 @@ class Question extends Model
         'category_id',
         'code',
         'text',
-        'scale',
-        'subscale',
         'order',
         'is_active',
     ];

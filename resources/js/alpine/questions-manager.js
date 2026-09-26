@@ -6,8 +6,6 @@ export default () => ({
         category_id: '',
         code: '',
         text: '',
-        scale: 'satisfaction',
-        subscale: '',
         order: 1,
         is_active: true
     },
@@ -18,8 +16,6 @@ export default () => ({
             category_id: q.category_id,
             code: q.code,
             text: q.text,
-            scale: q.scale,
-            subscale: q.subscale || '',
             order: q.order,
             is_active: Boolean(q.is_active)
         };

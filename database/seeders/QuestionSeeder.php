@@ -69,8 +69,6 @@ class QuestionSeeder extends Seeder
                     'category_id' => $categoryMap[$factor[0]],
                     'code' => $factor[1],
                     'text' => $factor[2],
-                    'scale' => 'agreement',
-                    'subscale' => null,
                     'order' => $order++,
                     'is_active' => true,
                 ]

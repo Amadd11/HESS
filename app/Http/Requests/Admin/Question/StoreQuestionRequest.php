@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Admin\Question;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreQuestionRequest extends FormRequest
 {
@@ -18,7 +18,7 @@ class StoreQuestionRequest extends FormRequest
     /**
      * Aturan validasi penambahan butir pertanyaan kuesioner.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -26,8 +26,6 @@ class StoreQuestionRequest extends FormRequest
             'category_id' => ['required', 'exists:categories,id'],
             'code' => ['required', 'string', 'max:20', 'unique:questions,code'],
             'text' => ['required', 'string', 'max:1000'],
-            'scale' => ['required', Rule::in(['satisfaction', 'agreement'])],
-            'subscale' => ['nullable', Rule::in(['intrinsic', 'extrinsic', 'general'])],
             'order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
         ];
@@ -44,8 +42,6 @@ class StoreQuestionRequest extends FormRequest
             'category_id' => 'kategori kuesioner',
             'code' => 'kode pertanyaan',
             'text' => 'teks butir pertanyaan',
-            'scale' => 'skala respon',
-            'subscale' => 'subskala',
             'order' => 'nomor urutan',
             'is_active' => 'status aktif',
         ];
@@ -64,8 +60,6 @@ class StoreQuestionRequest extends FormRequest
             'code.required' => 'Kode unik pertanyaan wajib diisi.',
             'code.unique' => 'Kode pertanyaan sudah terdaftar.',
             'text.required' => 'Teks butir pertanyaan kuesioner wajib diisi.',
-            'scale.required' => 'Tipe skala respon wajib dipilih.',
-            'scale.in' => 'Tipe skala respon harus berupa Kepuasan atau Persetujuan.',
         ];
     }
 }

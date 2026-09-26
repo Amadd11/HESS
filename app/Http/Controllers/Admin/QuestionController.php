@@ -21,16 +21,8 @@ class QuestionController extends Controller
     {
         $query = Question::with('category')->orderBy('order');
 
-
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->integer('category_id'));
-        }
-
-        if ($request->filled('scale')) {
-            $scale = $request->string('scale')->value();
-            if (in_array($scale, ['satisfaction', 'agreement'], true)) {
-                $query->where('scale', $scale);
-            }
         }
 
         if ($request->filled('search')) {

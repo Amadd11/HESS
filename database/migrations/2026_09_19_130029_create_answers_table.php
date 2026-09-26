@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('response_id')->constrained('responses')->cascadeOnDelete();
             $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
-            $table->unsignedTinyInteger('score'); // Nilai 1 s/d 5
+            $table->unsignedTinyInteger('score'); // Nilai 1 s/d 4 (Forced Choice)
             $table->timestamps();
 
             // Mencegah duplikasi butir pertanyaan per sesi pengisian

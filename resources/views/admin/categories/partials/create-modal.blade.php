@@ -25,9 +25,6 @@
             />
         </div>
 
-        <x-select label="Kelompok Instrumen" name="type" :required="true">
-            <option value="hospital" selected>Indikator Kepuasan Pegawai</option>
-        </x-select>
 
         <div class="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
             <x-button type="button" @click="createModalOpen = false" variant="secondary">

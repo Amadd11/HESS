@@ -2,7 +2,6 @@ import Alpine from 'alpinejs';
 import persist from '@alpinejs/persist';
 import ApexCharts from 'apexcharts';
 import dashboardCharts from './alpine/dashboard-charts';
-import dashboardFeedback from './alpine/dashboard-feedback';
 import categoriesManager from './alpine/categories-manager';
 import periodsManager from './alpine/periods-manager';
 import questionsManager from './alpine/questions-manager';
@@ -16,7 +15,6 @@ Alpine.plugin(persist);
 
 // Register Alpine Data Modules for Admin Dashboard
 Alpine.data('dashboardCharts', dashboardCharts);
-Alpine.data('dashboardFeedback', dashboardFeedback);
 Alpine.data('sentimentDashboard', sentimentDashboard);
 Alpine.data('categoriesManager', categoriesManager);
 Alpine.data('periodsManager', periodsManager);

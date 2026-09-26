@@ -11,7 +11,7 @@
     ];
 
     $activeCategory = request('category_id') ? $categories->firstWhere('id', request('category_id')) : null;
-    $hasActiveFilters = request()->anyFilled(['search', 'category_id', 'scale', 'status']);
+    $hasActiveFilters = request()->anyFilled(['search', 'category_id', 'status']);
 @endphp
 
 <div x-data="questionsManager()" class="space-y-6">
@@ -105,7 +105,7 @@
             <span class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Filter Cepat:</span>
 
             <a href="{{ route('admin.questions.index') }}"
-               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ (!request()->has('status') && !request()->has('category_id') && !request()->has('scale')) ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
+               class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 {{ (!request()->has('status') && !request()->has('category_id')) ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                 Semua Butir ({{ $stats['total'] }})
             </a>
 
@@ -159,18 +159,8 @@
                 </select>
             </div>
 
-            <!-- Scale Filter (Span 2) -->
-            <div class="lg:col-span-2">
-                <select name="scale"
-                        class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="">Semua Tipe Skala</option>
-                    <option value="agreement" {{ request('scale') === 'agreement' ? 'selected' : '' }}>Setuju (Skala 1-4)</option>
-                    <option value="satisfaction" {{ request('scale') === 'satisfaction' ? 'selected' : '' }}>Puas (Skala 1-4)</option>
-                </select>
-            </div>
-
-            <!-- Status Filter (Span 2) -->
-            <div class="lg:col-span-2">
+            <!-- Status Filter (Span 4) -->
+            <div class="lg:col-span-4">
                 <select name="status"
                         class="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
                     <option value="">Semua Status</option>
@@ -210,13 +200,6 @@
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-50 text-primary-800 font-semibold text-xs border border-primary-200">
                         <span>Kategori: <strong>{{ $activeCategory->name }}</strong></span>
                         <a href="{{ route('admin.questions.index', request()->except('category_id')) }}" class="text-primary-400 hover:text-red-500 font-bold ml-0.5">✕</a>
-                    </span>
-                @endif
-
-                @if(request('scale'))
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 font-semibold text-xs border border-blue-200">
-                        <span>Skala: <strong>{{ request('scale') === 'satisfaction' ? 'Kepuasan' : 'Persetujuan' }}</strong></span>
-                        <a href="{{ route('admin.questions.index', request()->except('scale')) }}" class="text-blue-400 hover:text-red-500 font-bold ml-0.5">✕</a>
                     </span>
                 @endif
 
@@ -308,21 +291,12 @@
 
                         <!-- Skala Likert -->
                         <td class="py-4 px-4">
-                            @if($q->scale === 'satisfaction')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200/80">
-                                    <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span>Puas (1–5)</span>
-                                </span>
-                            @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200/80">
-                                    <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span>Setuju (1–5)</span>
-                                </span>
-                            @endif
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200/80">
+                                <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>1–4 (Forced Choice)</span>
+                            </span>
                         </td>
 
                         <!-- Status Toggle Button -->

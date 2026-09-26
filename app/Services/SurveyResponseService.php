@@ -24,9 +24,6 @@ class SurveyResponseService
             $profile = $data['profile'] ?? [];
 
             $allValues = [];
-            $scores = ['intrinsic' => [], 'extrinsic' => []];
-
-            // Mapping skor per kelompok indikator (LK, HA, dsb.)
             $aspectScores = [];
 
             foreach ($answers as $key => $val) {
@@ -43,22 +40,10 @@ class SurveyResponseService
                     $aspectScores[$catCode] = $aspectScores[$catCode] ?? [];
                     $aspectScores[$catCode][] = $val;
                 }
-
-                if ($q->subscale === 'intrinsic') {
-                    $scores['intrinsic'][] = $val;
-                }
-                if ($q->subscale === 'extrinsic') {
-                    $scores['extrinsic'][] = $val;
-                }
             }
 
-            // Hitung persentase skala 4 poin: (sum / (count * 4)) * 100
-            $calcPct = fn (array $items) => count($items) ? round((array_sum($items) / (count($items) * 4)) * 100, 2) : 0;
-
-            $intrinsicScore = ! empty($scores['intrinsic']) ? $calcPct($scores['intrinsic']) : (! empty($aspectScores['LK']) ? $calcPct($aspectScores['LK']) : $calcPct($allValues));
-            $extrinsicScore = ! empty($scores['extrinsic']) ? $calcPct($scores['extrinsic']) : (! empty($aspectScores['HA']) ? $calcPct($aspectScores['HA']) : $calcPct($allValues));
-            $generalScore = $calcPct($allValues);
-            $hospitalScore = $generalScore;
+            // Hitung Indeks Kepuasan Pegawai (skala 1–4): (Total Skor / (Jumlah Butir * 4)) * 100
+            $generalScore = count($allValues) ? round((array_sum($allValues) / (count($allValues) * 4)) * 100, 2) : 0.00;
 
             // Rangkum feedback kualitatif per unsur ke like_text (alasan) dan improve_text (saran)
             $likeParts = [];
@@ -80,9 +65,6 @@ class SurveyResponseService
             $likeText = ! empty($likeParts) ? implode("\n\n", $likeParts) : (! empty($overall['like_text']) ? trim($overall['like_text']) : null);
             $improveText = ! empty($improveParts) ? implode("\n\n", $improveParts) : (! empty($overall['improve_text']) ? trim($overall['improve_text']) : null);
 
-            $overallAvgScore = count($allValues) ? (int) round(array_sum($allValues) / count($allValues)) : 4;
-            $overallScore = isset($overall['overall_score']) && $overall['overall_score'] !== '' ? (int) $overall['overall_score'] : $overallAvgScore;
-
             $defaultNps = round(($generalScore / 100) * 10);
             $npsScore = isset($overall['nps_score']) && $overall['nps_score'] !== '' ? (int) $overall['nps_score'] : (int) $defaultNps;
 
@@ -95,15 +77,15 @@ class SurveyResponseService
                 'unit' => $profile['unit'] ?? '',
                 'status' => $profile['status'] ?? '',
                 'tenure' => $profile['tenure'] ?? '',
-                'overall_score' => $overallScore,
+                'age' => $profile['age'] ?? null,
+                'gender' => $profile['gender'] ?? null,
+                'education' => $profile['education'] ?? null,
+                'income' => $profile['income'] ?? null,
                 'nps_score' => $npsScore,
                 'like_text' => $likeText,
                 'improve_text' => $improveText,
                 'feedback_data' => ! empty($feedbackData) ? $feedbackData : null,
-                'intrinsic_score' => $intrinsicScore,
-                'extrinsic_score' => $extrinsicScore,
                 'general_score' => $generalScore,
-                'hospital_score' => $hospitalScore,
                 'nps_category' => $npsScore >= 9 ? 'promoter' : ($npsScore >= 7 ? 'passive' : 'detractor'),
                 'completed_at' => $completedAt,
                 'created_at' => $completedAt,

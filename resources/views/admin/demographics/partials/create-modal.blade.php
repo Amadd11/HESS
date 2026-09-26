@@ -53,10 +53,15 @@
                 </label>
                 <select name="type" id="create_type" x-model="createData.type" required
                         class="w-full h-10 px-3.5 rounded-xl border border-gray-300 text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition bg-white cursor-pointer">
-                    <option value="unit">Satuan Kerja / Direktorat RS</option>
+                    <option value="unit">Satuan Kerja / Sub-unit RS</option>
+                    <option value="directorate">Direktorat</option>
                     <option value="profession">Profesi Pegawai</option>
                     <option value="status">Status Kepegawaian</option>
                     <option value="tenure">Masa Kerja</option>
+                    <option value="age">Rentang Usia</option>
+                    <option value="gender">Jenis Kelamin</option>
+                    <option value="education">Latar Belakang Pendidikan</option>
+                    <option value="income">Jumlah Pendapatan</option>
                 </select>
             </div>
 

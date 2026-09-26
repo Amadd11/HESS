@@ -17,7 +17,10 @@
     {{-- 1. Header Progress Bar & Quick Controls --}}
     @include('survey.partials.progress-header')
 
-    {{-- 2. Step 1: Profil Pegawai --}}
+    {{-- 2. Step 0: Pengantar Survei (Introduction) --}}
+    @include('survey.partials.step-intro')
+
+    {{-- 3. Step 1: Profil Pegawai --}}
     @include('survey.partials.step-profile')
 
     {{-- 3. Step 2: Kuesioner Kartu Pertanyaan (1 Soal per Layar) --}}

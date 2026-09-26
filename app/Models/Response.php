@@ -21,15 +21,15 @@ class Response extends Model
         'unit',
         'status',
         'tenure',
-        'overall_score',
+        'age',
+        'gender',
+        'education',
+        'income',
         'nps_score',
         'like_text',
         'improve_text',
         'feedback_data',
-        'intrinsic_score',
-        'extrinsic_score',
         'general_score',
-        'hospital_score',
         'nps_category',
         'completed_at',
     ];
@@ -41,13 +41,9 @@ class Response extends Model
     {
         return [
             'period_id' => 'integer',
-            'overall_score' => 'integer',
             'nps_score' => 'integer',
             'feedback_data' => 'array',
-            'intrinsic_score' => 'float',
-            'extrinsic_score' => 'float',
             'general_score' => 'float',
-            'hospital_score' => 'float',
             'completed_at' => 'datetime',
         ];
     }

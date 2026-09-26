@@ -85,7 +85,7 @@
             <!-- 2. Direktorat -->
             <div>
                 <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Direktorat</label>
-                <select name="directorate" onchange="this.form.submit()"
+                <select name="directorate" onchange="this.form.unit.value = ''; this.form.submit()"
                         class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('directorate') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
                     <option value="">Semua Direktorat</option>
                     @foreach($demographics['directorates'] ?? [] as $d)
@@ -100,9 +100,25 @@
                 <select name="unit" onchange="this.form.submit()"
                         class="w-full h-9 px-2.5 text-xs bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer {{ request('unit') ? 'font-bold text-primary-700 bg-primary-50/50 border-primary-300' : '' }}">
                     <option value="">Semua Satuan Kerja</option>
-                    @foreach($demographics['units'] ?? [] as $u)
-                        <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
-                    @endforeach
+                    @if(! empty($demographics['directorate_units']))
+                        @if(request('directorate') && isset($demographics['directorate_units'][request('directorate')]))
+                            @foreach($demographics['directorate_units'][request('directorate')] as $u)
+                                <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
+                            @endforeach
+                        @else
+                            @foreach($demographics['directorate_units'] as $dirName => $dirUnits)
+                                <optgroup label="{{ $dirName }}">
+                                    @foreach($dirUnits as $u)
+                                        <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        @endif
+                    @else
+                        @foreach($demographics['units'] ?? [] as $u)
+                            <option value="{{ $u }}" {{ request('unit') === $u ? 'selected' : '' }}>{{ $u }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
 

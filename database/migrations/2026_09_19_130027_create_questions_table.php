@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('code', 20);
             $table->text('text');
-            $table->string('scale', 20)->default('satisfaction'); // 'satisfaction' or 'agreement'
-            $table->string('subscale', 20)->nullable(); // 'intrinsic', 'extrinsic', 'general'
             $table->integer('order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

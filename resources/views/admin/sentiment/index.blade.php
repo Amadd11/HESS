@@ -9,16 +9,6 @@
     negativeWords: @js(array_map(fn($item) => [$item['word'], (int)$item['count']], $wordClouds['negative'] ?? [])),
     sentimentSeries: @js($sentimentProportion['series'] ?? [0, 0, 0]),
     sentimentUnit: @js($sentimentProportion['unit'] ?? 'kata'),
-    trendCategories: @js($trend['categories'] ?? []),
-    trendSeries: @js($trend['series'] ?? []),
-    unitCategories: @js($breakdown['unit']['categories'] ?? []),
-    unitSeries: @js($breakdown['unit']['series'] ?? []),
-    profCategories: @js($breakdown['profession']['categories'] ?? []),
-    profSeries: @js($breakdown['profession']['series'] ?? []),
-    statusLabels: @js($breakdown['status']['labels'] ?? []),
-    statusSeries: @js($breakdown['status']['series'] ?? []),
-    tenureCategories: @js($breakdown['tenure']['categories'] ?? []),
-    tenureSeries: @js($breakdown['tenure']['series'] ?? []),
 })" x-init="initDashboard()">
 
     {{-- 1. Header, Filters, & Export --}}

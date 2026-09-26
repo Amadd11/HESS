@@ -10,6 +10,12 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ResponseExportService
 {
+    public function __construct(
+        protected ?DashboardService $dashboardService = null
+    ) {
+        $this->dashboardService ??= app(DashboardService::class);
+    }
+
     /**
      * Bangun query Response dengan filter multi-dimensi demografi, periode, NPS, dan pencarian.
      *
@@ -17,37 +23,7 @@ class ResponseExportService
      */
     public function buildFilteredQuery(array $filters = [], ?int $periodId = null): Builder
     {
-        $query = Response::query()->with('period');
-
-        if ($periodId) {
-            $query->where('period_id', $periodId);
-        } elseif (! empty($filters['period_id']) && $filters['period_id'] !== 'all') {
-            $query->where('period_id', (int) $filters['period_id']);
-        }
-
-        foreach (['profession', 'directorate', 'unit', 'status', 'tenure'] as $field) {
-            if (! empty($filters[$field])) {
-                $query->where($field, trim((string) $filters[$field]));
-            }
-        }
-
-        if (! empty($filters['nps_category'])) {
-            $query->where('nps_category', trim((string) $filters['nps_category']));
-        }
-
-        if (! empty($filters['search'])) {
-            $search = trim((string) $filters['search']);
-            $query->where(function ($q) use ($search) {
-                $q->where('id', $search)
-                    ->orWhere('like_text', 'like', "%{$search}%")
-                    ->orWhere('improve_text', 'like', "%{$search}%")
-                    ->orWhere('directorate', 'like', "%{$search}%")
-                    ->orWhere('unit', 'like', "%{$search}%")
-                    ->orWhere('profession', 'like', "%{$search}%");
-            });
-        }
-
-        return $query;
+        return $this->dashboardService->buildFilteredQuery($filters, $periodId);
     }
 
     /**
@@ -88,11 +64,11 @@ class ResponseExportService
                     'Profesi' => $r->profession ?: '-',
                     'Status Kepegawaian' => $r->status ?: '-',
                     'Lama Bekerja' => $tenure ?: '-',
-                    'Kepuasan Pegawai (8 Unsur) (%)' => $r->general_score !== null ? (float) number_format((float) $r->general_score, 1, '.', '') : '-',
-                    'Kepuasan Intrinsik (%)' => $r->intrinsic_score !== null ? (float) number_format((float) $r->intrinsic_score, 1, '.', '') : '-',
-                    'Kepuasan Ekstrinsik (%)' => $r->extrinsic_score !== null ? (float) number_format((float) $r->extrinsic_score, 1, '.', '') : '-',
-                    'Faktor Dimensi RS (%)' => $r->hospital_score !== null ? (float) number_format((float) $r->hospital_score, 1, '.', '') : '-',
-                    'Skor Keseluruhan (1-4)' => $r->overall_score !== null ? (int) $r->overall_score : '-',
+                    'Usia' => $r->age ?: '-',
+                    'Jenis Kelamin' => $r->gender ?: '-',
+                    'Pendidikan' => $r->education ?: '-',
+                    'Jumlah Pendapatan' => $r->income ?: '-',
+                    'Indeks Kepuasan Pegawai (%)' => $r->general_score !== null ? (float) number_format((float) $r->general_score, 1, '.', '') : '-',
                     'eNPS (0-10)' => $r->nps_score !== null ? (int) $r->nps_score : '-',
                     'Kategori eNPS' => $r->nps_category ? ucfirst($r->nps_category) : '-',
                     'Hal yang Disukai' => $likeText ?: '-',

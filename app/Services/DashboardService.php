@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Demographic;
 use App\Models\Period;
-use App\Models\Question;
 use App\Models\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -36,9 +35,6 @@ class DashboardService
         $metrics = $periodId ? (clone $baseQuery)->selectRaw('
             COUNT(*) as total,
             COALESCE(ROUND(AVG(general_score), 1), 0) as avg_general,
-            COALESCE(ROUND(AVG(intrinsic_score), 1), 0) as avg_intrinsic,
-            COALESCE(ROUND(AVG(extrinsic_score), 1), 0) as avg_extrinsic,
-            COALESCE(ROUND(AVG(hospital_score), 1), 0) as avg_hospital,
             SUM(CASE WHEN nps_category = "promoter" THEN 1 ELSE 0 END) as promoters,
             SUM(CASE WHEN nps_category = "passive" THEN 1 ELSE 0 END) as passives,
             SUM(CASE WHEN nps_category = "detractor" THEN 1 ELSE 0 END) as detractors
@@ -49,9 +45,7 @@ class DashboardService
         $responseRate = $target > 0 ? round(($totalResponses / $target) * 100, 1) : 0;
 
         $avgGeneral = (float) ($metrics?->avg_general ?? 0);
-        $avgIntrinsic = (float) ($metrics?->avg_intrinsic ?? 0);
-        $avgExtrinsic = (float) ($metrics?->avg_extrinsic ?? 0);
-        $avgHospital = (float) ($metrics?->avg_hospital ?? 0);
+        $avgHospital = $avgGeneral;
 
         $promoters = (int) ($metrics?->promoters ?? 0);
         $passives = (int) ($metrics?->passives ?? 0);
@@ -59,59 +53,58 @@ class DashboardService
         $npsScore = $totalResponses > 0 ? (int) round((($promoters - $detractors) / $totalResponses) * 100) : 0;
 
         // 2. Skor per Unit Kerja
+        $unitToDir = [];
+        foreach (Demographic::DIRECTORATE_UNITS as $dir => $units) {
+            foreach ($units as $u) {
+                $unitToDir[$u] = $dir;
+            }
+        }
+
         $unitScores = $periodId
             ? (clone $baseQuery)
-            ->select('unit', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
-            ->groupBy('unit')
-            ->orderByDesc('avg_score')
-            ->get()
+                ->select('unit', DB::raw('MAX(directorate) as directorate'), DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
+                ->groupBy('unit')
+                ->orderByDesc('avg_score')
+                ->get()
+                ->map(function ($item) use ($unitToDir) {
+                    if (empty($item->directorate) && isset($unitToDir[$item->unit])) {
+                        $item->directorate = $unitToDir[$item->unit];
+                    }
+
+                    return $item;
+                })
             : collect();
 
         // 3. Skor per Kelompok Profesi
         $professionScores = $periodId
             ? (clone $baseQuery)
-            ->select('profession', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
-            ->groupBy('profession')
-            ->orderByDesc('avg_score')
-            ->get()
+                ->select('profession', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
+                ->groupBy('profession')
+                ->orderByDesc('avg_score')
+                ->get()
             : collect();
 
         // 4. Skor per Direktorat
         $directorateScores = $periodId
             ? (clone $baseQuery)
-            ->whereNotNull('directorate')
-            ->where('directorate', '!=', '')
-            ->select('directorate', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
-            ->groupBy('directorate')
-            ->orderByDesc('avg_score')
-            ->get()
+                ->whereNotNull('directorate')
+                ->where('directorate', '!=', '')
+                ->select('directorate', DB::raw('COUNT(*) as total'), DB::raw('ROUND(AVG(general_score), 1) as avg_score'))
+                ->groupBy('directorate')
+                ->orderByDesc('avg_score')
+                ->get()
             : collect();
 
-        // 5. Masukan Kualitatif Terbaru & Total Aspirasi
-        $recentFeedbacks = $periodId
-            ? (clone $baseQuery)
-            ->where(fn($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
-            ->latest('completed_at')
-            ->take(12)
-            ->get()
-            : collect();
-
-        $totalFeedbacksCount = $periodId
-            ? (clone $baseQuery)
-            ->where(fn($q) => $q->whereNotNull('like_text')->orWhereNotNull('improve_text'))
-            ->count()
-            : 0;
-
-        // 6. Agregasi Kategori & 8 Dimensi Rumah Sakit
+        // 5. Agregasi Kategori & 8 Dimensi Rumah Sakit
         $categoryScores = $this->getCategoryScores($baseQuery, $periodId);
-        $hospitalCategoryScores = $categoryScores->where('type', 'hospital');
+        $hospitalCategoryScores = $categoryScores;
 
-        // 7. Actionable Insights: Top 5 Strengths vs Top 5 Priority Areas
+        // 6. Actionable Insights: Top 5 Strengths vs Top 5 Priority Areas
         [$topStrengths, $topImprovements] = $this->getActionableInsights($baseQuery, $periodId, $totalResponses);
 
-        // 8. Opsi demografi & status filter aktif
+        // 7. Opsi demografi & status filter aktif
         $demographics = Demographic::getGroupedOptions();
-        $hasFilters = ! empty($filters['profession']) || ! empty($filters['directorate']) || ! empty($filters['unit']) || ! empty($filters['status']) || ! empty($filters['tenure']);
+        $hasFilters = ! empty($filters['profession']) || ! empty($filters['directorate']) || ! empty($filters['unit']) || ! empty($filters['status']) || ! empty($filters['tenure']) || ! empty($filters['age']) || ! empty($filters['gender']) || ! empty($filters['education']) || ! empty($filters['income']);
 
         return [
             'periods' => $periods,
@@ -123,8 +116,6 @@ class DashboardService
             'target' => $target,
             'responseRate' => $responseRate,
             'avgGeneral' => $avgGeneral,
-            'avgIntrinsic' => $avgIntrinsic,
-            'avgExtrinsic' => $avgExtrinsic,
             'avgHospital' => $avgHospital,
             'promoters' => $promoters,
             'passives' => $passives,
@@ -133,8 +124,6 @@ class DashboardService
             'unitScores' => $unitScores,
             'professionScores' => $professionScores,
             'directorateScores' => $directorateScores,
-            'recentFeedbacks' => $recentFeedbacks,
-            'totalFeedbacksCount' => $totalFeedbacksCount,
             'categoryScores' => $categoryScores,
             'hospitalCategoryScores' => $hospitalCategoryScores,
             'topStrengths' => $topStrengths,
@@ -157,7 +146,7 @@ class DashboardService
             $query->where('period_id', (int) $filters['period_id']);
         }
 
-        foreach (['profession', 'directorate', 'unit', 'status', 'tenure'] as $field) {
+        foreach (['profession', 'directorate', 'unit', 'status', 'tenure', 'age', 'gender', 'education', 'income'] as $field) {
             if (! empty($filters[$field])) {
                 $query->where($field, trim((string) $filters[$field]));
             }
@@ -194,20 +183,19 @@ class DashboardService
         }
 
         return DB::table('categories')
-            ->leftJoin('questions', fn($j) => $j->on('questions.category_id', '=', 'categories.id')->whereNull('questions.deleted_at')->where('questions.is_active', true))
-            ->leftJoin('answers', fn($j) => $j->on('answers.question_id', '=', 'questions.id')->whereIn('answers.response_id', (clone $baseQuery)->select('id')))
+            ->leftJoin('questions', fn ($j) => $j->on('questions.category_id', '=', 'categories.id')->whereNull('questions.deleted_at')->where('questions.is_active', true))
+            ->leftJoin('answers', fn ($j) => $j->on('answers.question_id', '=', 'questions.id')->whereIn('answers.response_id', (clone $baseQuery)->select('id')))
             ->whereNull('categories.deleted_at')
             ->select(
                 'categories.id',
                 'categories.name',
                 'categories.code',
-                'categories.type',
                 'categories.order',
                 DB::raw('COUNT(DISTINCT questions.id) as questions_count'),
                 DB::raw('COALESCE(ROUND((AVG(answers.score) / 4) * 100, 1), 0) as percentage_score'),
                 DB::raw('COALESCE(ROUND(AVG(answers.score), 2), 0) as avg_raw_score')
             )
-            ->groupBy('categories.id', 'categories.name', 'categories.code', 'categories.type', 'categories.order')
+            ->groupBy('categories.id', 'categories.name', 'categories.code', 'categories.order')
             ->orderBy('categories.order')
             ->get();
     }
@@ -235,12 +223,11 @@ class DashboardService
                 'questions.text',
                 'categories.name as category_name',
                 'categories.code as category_code',
-                'categories.type as category_type',
                 DB::raw('ROUND(AVG(answers.score), 2) as avg_score'),
                 DB::raw('ROUND((AVG(answers.score) / 4) * 100, 1) as percentage_score'),
                 DB::raw('COUNT(answers.id) as answers_count')
             )
-            ->groupBy('questions.id', 'questions.code', 'questions.text', 'categories.name', 'categories.code', 'categories.type')
+            ->groupBy('questions.id', 'questions.code', 'questions.text', 'categories.name', 'categories.code')
             ->get();
 
         $topStrengths = $questionScores->sortByDesc('avg_score')->take(5)->values();

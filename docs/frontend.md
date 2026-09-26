@@ -121,7 +121,6 @@ export default (questionsData, submitUrl, csrfToken) => ({
     },
     answers: {},
     overall: {
-        overall_score: null,
         nps_score: null,
         like_text: '',
         improve_text: ''

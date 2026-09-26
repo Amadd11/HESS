@@ -67,10 +67,8 @@ class SentimentDashboardController extends Controller
         $classifiedResponses = $analysisResult['classified_responses'];
         $totalWords = $analysisResult['total_words'];
 
-        // 4. Hitung Metrik Analytics (KPI, Trend, Breakdown)
+        // 4. Hitung Metrik Analytics (KPI Summary)
         $kpis = $this->analyticsService->getKpiSummary($classifiedResponses, $totalWords);
-        $trend = $this->analyticsService->getSentimentTrend();
-        $breakdown = $this->analyticsService->getBreakdown($classifiedResponses);
 
         // 5. Ekstraksi Kata Kunci & Word Cloud
         $topPositive = $this->keywordService->getTopKeywords($analysisResult['positive_frequencies'], 10);
@@ -157,29 +155,7 @@ class SentimentDashboardController extends Controller
         ];
 
         // 10. Opsi Filter Demografi
-        $demographics = [
-            'directorates' => Demographic::active()->where('type', 'directorate')->pluck('name')->all(),
-            'units' => Demographic::active()->where('type', 'unit')->pluck('name')->all(),
-            'professions' => Demographic::active()->where('type', 'profession')->pluck('name')->all(),
-            'statuses' => Demographic::active()->where('type', 'status')->pluck('name')->all(),
-            'tenures' => Demographic::active()->where('type', 'tenure')->pluck('name')->all(),
-        ];
-
-        if (empty($demographics['directorates'])) {
-            $demographics['directorates'] = Response::whereNotNull('directorate')->distinct()->pluck('directorate')->all();
-        }
-        if (empty($demographics['units'])) {
-            $demographics['units'] = Response::whereNotNull('unit')->distinct()->pluck('unit')->all();
-        }
-        if (empty($demographics['professions'])) {
-            $demographics['professions'] = Response::whereNotNull('profession')->distinct()->pluck('profession')->all();
-        }
-        if (empty($demographics['statuses'])) {
-            $demographics['statuses'] = Response::whereNotNull('status')->distinct()->pluck('status')->all();
-        }
-        if (empty($demographics['tenures'])) {
-            $demographics['tenures'] = Response::whereNotNull('tenure')->distinct()->pluck('tenure')->all();
-        }
+        $demographics = Demographic::getGroupedOptions();
 
         return view('admin.sentiment.index', [
             'periods' => $periods,
@@ -187,8 +163,6 @@ class SentimentDashboardController extends Controller
             'demographics' => $demographics,
             'hasActiveFilters' => $request->hasActiveFilters(),
             'kpis' => $kpis,
-            'trend' => $trend,
-            'breakdown' => $breakdown,
             'wordClouds' => $wordClouds,
             'topPositive' => $topPositive,
             'topNegative' => $topNegative,

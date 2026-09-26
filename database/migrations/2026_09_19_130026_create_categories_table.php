@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code', 50);
-            $table->string('type', 20)->default('hospital'); // 'hospital'
             $table->integer('order')->default(0);
             $table->timestamps();
             $table->softDeletes();

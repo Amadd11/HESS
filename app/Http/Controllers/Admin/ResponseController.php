@@ -24,28 +24,10 @@ class ResponseController extends Controller
             $query->where('period_id', $request->integer('period_id'));
         }
 
-        if ($request->filled('directorate')) {
-            $query->where('directorate', $request->string('directorate')->value());
-        }
-
-        if ($request->filled('unit')) {
-            $query->where('unit', $request->string('unit')->value());
-        }
-
-        if ($request->filled('profession')) {
-            $query->where('profession', $request->string('profession')->value());
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->string('status')->value());
-        }
-
-        if ($request->filled('tenure')) {
-            $query->where('tenure', $request->string('tenure')->value());
-        }
-
-        if ($request->filled('nps_category')) {
-            $query->where('nps_category', $request->string('nps_category')->value());
+        foreach (['directorate', 'unit', 'profession', 'status', 'tenure', 'age', 'gender', 'education', 'income', 'nps_category'] as $field) {
+            if ($request->filled($field)) {
+                $query->where($field, $request->string($field)->value());
+            }
         }
 
         if ($request->filled('search')) {
@@ -56,7 +38,9 @@ class ResponseController extends Controller
                     ->orWhere('improve_text', 'like', "%{$search}%")
                     ->orWhere('directorate', 'like', "%{$search}%")
                     ->orWhere('unit', 'like', "%{$search}%")
-                    ->orWhere('profession', 'like', "%{$search}%");
+                    ->orWhere('profession', 'like', "%{$search}%")
+                    ->orWhere('education', 'like', "%{$search}%")
+                    ->orWhere('income', 'like', "%{$search}%");
             });
         }
 

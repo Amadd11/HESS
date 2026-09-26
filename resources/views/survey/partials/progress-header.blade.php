@@ -5,7 +5,7 @@
         <div class="flex items-center gap-2.5 min-w-0">
             <span class="inline-block w-2.5 h-2.5 rounded-full bg-primary-600 animate-pulse shrink-0"></span>
             <span class="text-primary-800 font-extrabold truncate tracking-tight"
-                x-text="step === 'profile' ? 'Langkah 1: Profil Pegawai' : (step === 'overall' ? 'Konfirmasi Pengisian Survei' : (step === 'feedback' ? 'Umpan Balik: ' + currentAspectTitle : currentCategoryName))"></span>
+                x-text="step === 'intro' ? 'Pengantar Survei' : (step === 'profile' ? 'Langkah 1: Profil Pegawai' : (step === 'overall' ? 'Konfirmasi Pengisian Survei' : (step === 'feedback' ? 'Umpan Balik: ' + currentAspectTitle : currentCategoryName)))"></span>
         </div>
 
         <!-- Right: Quick Controls (Question Counter & Auto-Advance Toggle) -->
@@ -23,9 +23,10 @@
 
             <!-- Auto-Advance Toggle -->
             <button type="button" @click="toggleAutoAdvance()"
+                x-show="step === 'questionnaire'"
                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer"
                 :class="autoAdvance ? 'bg-primary-50 text-primary-700 border border-primary-200 shadow-xs' : 'bg-gray-100 text-gray-500 border border-gray-200'"
-                title="Transisi otomatis ke soal berikutnya setelah memilih jawaban skala 1-5">
+                title="Transisi otomatis ke soal berikutnya setelah memilih jawaban">
                 <span class="w-1.5 h-1.5 rounded-full" :class="autoAdvance ? 'bg-primary-600 animate-pulse' : 'bg-gray-400'"></span>
                 <span class="hidden sm:inline">Auto-Lanjut:</span>
                 <span x-text="autoAdvance ? 'ON' : 'OFF'" class="font-bold"></span>

@@ -77,8 +77,8 @@
 
             <!-- Tab 1: Ringkasan & Kualitatif -->
             <div x-show="activeTab === 'summary'" class="space-y-5">
-                <!-- Demographic & Overall Cards -->
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                <!-- Demographic & Overall Cards (3x3 Grid) -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                     <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
                         <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Direktorat</span>
                         <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse && selectedResponse.directorate ? selectedResponse.directorate : '-'"></span>
@@ -99,19 +99,53 @@
                         <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Masa Kerja</span>
                         <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse ? selectedResponse.tenure : '-'"></span>
                     </div>
+                    <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Usia</span>
+                        <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse && selectedResponse.age ? selectedResponse.age : '-'"></span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Jenis Kelamin</span>
+                        <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse && selectedResponse.gender ? selectedResponse.gender : '-'"></span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Pendidikan</span>
+                        <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse && selectedResponse.education ? selectedResponse.education : '-'"></span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-gray-50 border border-gray-200">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block">Jumlah Pendapatan</span>
+                        <span class="font-bold text-gray-900 text-xs mt-1 block" x-text="selectedResponse && selectedResponse.income ? selectedResponse.income : '-'"></span>
+                    </div>
                 </div>
 
                 <!-- Scores Breakdown -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="p-3.5 rounded-xl bg-primary-50/50 border border-primary-100">
-                        <span class="text-[10px] uppercase font-bold text-primary-600 tracking-wider block">Kepuasan Menyeluruh</span>
+                        <span class="text-[10px] uppercase font-bold text-primary-600 tracking-wider block">Indeks Kepuasan Pegawai</span>
                         <div class="flex items-baseline gap-1 mt-1">
-                            <span class="text-2xl font-black text-primary-900" x-text="selectedResponse ? selectedResponse.overall_score : 0"></span>
-                            <span class="text-xs text-primary-600 font-bold">/ 4</span>
+                            <span class="text-2xl font-black text-primary-900" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '0%'"></span>
+                        </div>
+                        <span class="text-[10px] text-primary-500 font-semibold mt-1 block">Skala 0–100%</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-blue-50/50 border border-blue-100">
+                        <span class="text-[10px] uppercase font-bold text-blue-600 tracking-wider block">Rata-rata Skor</span>
+                        <div class="flex items-baseline gap-1 mt-1">
+                            <span class="text-2xl font-black text-blue-900" x-text="selectedResponse ? (((selectedResponse.general_score / 100) * 4).toFixed(2)) : '0.00'"></span>
+                            <span class="text-xs text-blue-600 font-bold">/ 4.0</span>
+                        </div>
+                        <span class="text-[10px] text-blue-500 font-semibold mt-1 block">Skala 1–4 Forced Choice</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl border flex flex-col justify-between" :class="satisfactionPredicate.class">
+                        <span class="text-[10px] uppercase font-bold tracking-wider block opacity-80">Predikat Kepuasan</span>
+                        <div class="mt-1">
+                            <span class="text-xs sm:text-sm font-black block leading-snug" x-text="satisfactionPredicate.label"></span>
+                        </div>
+                        <div class="text-[10px] font-semibold mt-1 flex items-center justify-between opacity-80">
+                            <span>Status:</span>
+                            <span class="font-bold font-mono" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '-'"></span>
                         </div>
                     </div>
                     <div class="p-3.5 rounded-xl bg-emerald-50/50 border border-emerald-100">
-                        <span class="text-[10px] uppercase font-bold text-emerald-600 tracking-wider block">Net Promoter Score (NPS)</span>
+                        <span class="text-[10px] uppercase font-bold text-emerald-600 tracking-wider block">eNPS Rekomendasi</span>
                         <div class="flex items-baseline gap-1 mt-1">
                             <span class="text-2xl font-black text-emerald-900" x-text="selectedResponse ? selectedResponse.nps_score : 0"></span>
                             <span class="text-xs text-emerald-600 font-bold">/ 10</span>
@@ -124,26 +158,6 @@
                               }"
                               x-text="selectedResponse ? selectedResponse.nps_category : ''">
                         </span>
-                    </div>
-                    <div class="p-3.5 rounded-xl bg-purple-50/50 border border-purple-100">
-                        <span class="text-[10px] uppercase font-bold text-purple-600 tracking-wider block">Indeks Kepuasan Pegawai</span>
-                        <div class="flex items-baseline gap-1 mt-1">
-                            <span class="text-2xl font-black text-purple-900" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '0%'"></span>
-                        </div>
-                        <div class="text-[11px] text-purple-600 font-semibold mt-0.5 flex items-center justify-between">
-                            <span>Rata-rata:</span>
-                            <span class="font-bold font-mono" x-text="selectedResponse ? (((selectedResponse.general_score / 100) * 4).toFixed(2) + ' / 4.0') : '-'"></span>
-                        </div>
-                    </div>
-                    <div class="p-3.5 rounded-xl border flex flex-col justify-between" :class="satisfactionPredicate.class">
-                        <span class="text-[10px] uppercase font-bold tracking-wider block opacity-80">Predikat Kepuasan</span>
-                        <div class="mt-1">
-                            <span class="text-xs sm:text-sm font-black block leading-snug" x-text="satisfactionPredicate.label"></span>
-                        </div>
-                        <div class="text-[10px] font-semibold mt-1 flex items-center justify-between opacity-80">
-                            <span>Skor Rata-rata:</span>
-                            <span class="font-bold font-mono" x-text="selectedResponse ? Number(selectedResponse.general_score).toFixed(1) + '%' : '-'"></span>
-                        </div>
                     </div>
                 </div>
 

@@ -34,8 +34,9 @@ erDiagram
 
     DEMOGRAPHICS {
         bigint id PK
-        string type "profession / unit / status / tenure"
-        string name "Nama unit / profesi / status / masa kerja"
+        string type "directorate / unit / profession / status / tenure / age / gender / education / income"
+        string name "Nama opsi demografi"
+        string parent_name "Direktorat induk (khusus type=unit)"
         int order "Urutan tampilan dropdown"
         boolean is_active "Status aktif"
         timestamps timestamps
@@ -57,7 +58,6 @@ erDiagram
         bigint id PK
         string name "Lingkungan Kerja, Hubungan dengan Atasan, dll."
         string code "LK, HA, PP, dll."
-        string type "hospital"
         int order "Urutan tampilan kategori"
         timestamps timestamps
         softDeletes deleted_at
@@ -68,7 +68,6 @@ erDiagram
         bigint category_id FK
         string code "H1..H24"
         text text "Pernyataan survei"
-        string scale "agreement / satisfaction"
         int order "Urutan pertanyaan"
         boolean is_active
         timestamps timestamps
@@ -78,18 +77,20 @@ erDiagram
     RESPONSES {
         bigint id PK "ID Respon Auto Increment"
         bigint period_id FK
+        string directorate "Direktorat"
         string profession "Kelompok Tenaga"
         string unit "Unit Kerja"
         string status "Status Kepegawaian"
         string tenure "Lama Bekerja"
-        tinyint overall_score "Kepuasan Umum (1-4)"
+        string age "Rentang Usia"
+        string gender "Jenis Kelamin"
+        string education "Latar Belakang Pendidikan"
+        string income "Jumlah Pendapatan"
         tinyint nps_score "eNPS (0-10)"
         text like_text "Alasan Penilaian (Feedback Kualitatif)"
         text improve_text "Saran Perbaikan (Feedback Kualitatif)"
-        decimal intrinsic_score "Skor Faktor Internal/Kerja (0.00 - 100.00)"
-        decimal extrinsic_score "Skor Faktor Eksternal/Atasan (0.00 - 100.00)"
-        decimal general_score "Skor Kepuasan Rata-rata (0.00 - 100.00)"
-        decimal hospital_score "Skor Indikator Kepuasan Pegawai (0.00 - 100.00)"
+        json feedback_data "Rincian alasan & saran terstruktur 8 unsur"
+        decimal general_score "Indeks Kepuasan Pegawai (0.00 - 100.00)"
         string nps_category "promoter / passive / detractor"
         datetime completed_at
         timestamps timestamps
@@ -99,7 +100,7 @@ erDiagram
         bigint id PK
         bigint response_id FK
         bigint question_id FK
-        tinyint score "Nilai pilihan 1-5"
+        tinyint score "Nilai pilihan 1-4"
         timestamps timestamps
     }
 ```
@@ -141,30 +142,28 @@ Menyimpan siklus periode pelaksanaan survei kepuasan pegawai.
 ---
 
 ### 3.3. `categories`
-Menyimpan kelompok instrumen soal kuesioner.
+Menyimpan kelompok 8 unsur instrumen kepuasan pegawai.
 
 | Kolom | Tipe Data | Atribut | Keterangan |
 | :--- | :--- | :--- | :--- |
 | `id` | BIGINT UNSIGNED | PK, Auto Increment | ID kategori |
 | `name` | VARCHAR(255) | NOT NULL | Misal: *"Lingkungan Kerja"*, *"Hubungan dengan Atasan"* |
 | `code` | VARCHAR(50) | NOT NULL | Kode pengenal singkat: `LK`, `HA`, `PP`, dll. |
-| `type` | VARCHAR(20) | NOT NULL | Nilai: `hospital` |
-| `order` | INT | DEFAULT 0 | Urutan pengelompokan |
+| `order` | INT | DEFAULT 0 | Urutan pengelompokan (1 s/d 8) |
 | `timestamps` | TIMESTAMP | NOT NULL | `created_at` & `updated_at` |
 | `deleted_at` | TIMESTAMP | NULLABLE | Soft delete |
 
 ---
 
 ### 3.4. `questions`
-Menyimpan butir pertanyaan instrumen HESS.
+Menyimpan 24 butir pertanyaan tertutup instrumen HESS (skala 1-4 Forced Choice).
 
 | Kolom | Tipe Data | Atribut | Keterangan |
 | :--- | :--- | :--- | :--- |
 | `id` | BIGINT UNSIGNED | PK, Auto Increment | ID pertanyaan |
 | `category_id` | BIGINT UNSIGNED | FK -> `categories.id` | Kategori induk pertanyaan |
-| `code` | VARCHAR(20) | NOT NULL | Kode item: `H1`..`H24` |
+| `code` | VARCHAR(20) | NOT NULL | Kode item: `H01`..`H24` |
 | `text` | TEXT | NOT NULL | Bunyi butir pernyataan |
-| `scale` | VARCHAR(20) | NOT NULL | Nilai: `satisfaction` (Puas) / `agreement` (Setuju) |
 | `order` | INT | DEFAULT 0 | Urutan tampil dalam survei |
 | `is_active` | BOOLEAN | DEFAULT TRUE | Status aktif pertanyaan |
 | `timestamps` | TIMESTAMP | NOT NULL | `created_at` & `updated_at` |
@@ -173,32 +172,35 @@ Menyimpan butir pertanyaan instrumen HESS.
 ---
 
 ### 3.5. `responses`
-Tabel transaksi utama untuk **satu sesi pengisian kuesioner oleh responden anonim**. Mengonsolidasikan profil, masukan terbuka, dan skor terhitung.
+Tabel transaksi utama untuk **satu sesi pengisian kuesioner oleh responden anonim**. Mengonsolidasikan profil, masukan kualitatif terstruktur, eNPS, dan Indeks Kepuasan Pegawai.
 
 | Kolom | Tipe Data | Atribut | Keterangan |
 | :--- | :--- | :--- | :--- |
 | `id` | BIGINT UNSIGNED | PK, Auto Increment | ID unik respon |
 | `period_id` | BIGINT UNSIGNED | FK -> `periods.id` | Periode survei yang diikuti |
 | **Profil Demografi** | | | |
-| `profession` | VARCHAR(100) | NOT NULL | Kelompok tenaga (Dokter, Perawat, dll.) |
-| `unit` | VARCHAR(100) | NOT NULL | Unit kerja (IGD, ICU, Rawat Inap, dll.) |
-| `status` | VARCHAR(50) | NOT NULL | Status kepegawaian (Tetap, Kontrak, dll.) |
+| `directorate` | VARCHAR(150) | NULLABLE | Direktorat induk |
+| `unit` | VARCHAR(100) | NOT NULL | Instalasi / Unit kerja |
+| `profession` | VARCHAR(100) | NOT NULL | Kelompok profesi (Dokter, Perawat, dll.) |
+| `status` | VARCHAR(50) | NOT NULL | Status kepegawaian (PNS, PPPK, BLU) |
 | `tenure` | VARCHAR(50) | NOT NULL | Lama bekerja (< 1 th, 1-3 th, dll.) |
-| **Penilaian Keseluruhan** | | | |
-| `overall_score` | TINYINT UNSIGNED| NOT NULL | Penilaian kepuasan global (skala 1–4) |
+| `age` | VARCHAR(50) | NULLABLE | Rentang usia pegawai (< 25 th, 25-35 th, dll.) |
+| `gender` | VARCHAR(30) | NULLABLE | Jenis kelamin (Laki-laki / Perempuan) |
+| `education` | VARCHAR(100) | NULLABLE | Latar belakang pendidikan terakhir |
+| `income` | VARCHAR(80) | NULLABLE | Jumlah pendapatan bulanan |
+| **Penilaian & Kualitatif** | | | |
 | `nps_score` | TINYINT UNSIGNED| NOT NULL | Nilai eNPS rekomendasi tempat kerja (0–10) |
-| `like_text` | TEXT | NULLABLE | Masukan: alasan penilaian per unsur |
-| `improve_text` | TEXT | NULLABLE | Masukan: saran perbaikan per unsur |
-| **Skor Analitik (Auto)** | | | |
-| `intrinsic_score`| DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor faktor kerja/internal |
-| `extrinsic_score`| DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor faktor atasan/eksternal |
-| `general_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor rata-rata instrumen |
-| `hospital_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Persentase skor indikator kepuasan pegawai |
+| `like_text` | TEXT | NULLABLE | Rangkuman teks: alasan penilaian |
+| `improve_text` | TEXT | NULLABLE | Rangkuman teks: saran perbaikan |
+| `feedback_data` | JSON | NULLABLE | Rincian alasan & saran terstruktur per 8 unsur |
+| **Indeks & Analitik** | | | |
+| `general_score` | DECIMAL(5,2) | NOT NULL, DEFAULT 0 | Indeks Kepuasan Pegawai: `(Total Skor / (24 × 4)) × 100` (0.00–100.00) |
 | `nps_category` | VARCHAR(20) | NOT NULL | `promoter` (9-10), `passive` (7-8), `detractor` (0-6) |
 | `completed_at` | DATETIME | NOT NULL | Waktu submit survei |
 | `timestamps` | TIMESTAMP | NOT NULL | `created_at` & `updated_at` |
 
 > **Indeks Optimasi untuk Dashboard:**  
+> `INDEX (period_id, directorate)`  
 > `INDEX (period_id, unit)`  
 > `INDEX (period_id, profession)`  
 > `INDEX (period_id, nps_category)`
@@ -276,12 +278,9 @@ public function question(): BelongsTo
 
 1. **Dashboard KPI Super Cepat**:
    ```php
-   // Total responden & rata-rata kepuasan periode aktif:
+   // Total responden & rata-rata indeks kepuasan periode aktif:
    $totalResponden = Response::where('period_id', $activePeriodId)->count();
    $avgGeneral     = Response::where('period_id', $activePeriodId)->avg('general_score');
-   $avgIntrinsic   = Response::where('period_id', $activePeriodId)->avg('intrinsic_score');
-   $avgExtrinsic   = Response::where('period_id', $activePeriodId)->avg('extrinsic_score');
-   $avgHospital    = Response::where('period_id', $activePeriodId)->avg('hospital_score');
    ```
 2. **Kalkulasi eNPS Tanpa Join**:
    ```php

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Category;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,19 +17,9 @@ class UpdateCategoryRequest extends FormRequest
     }
 
     /**
-     * Persiapkan input sebelum validasi.
-     */
-    protected function prepareForValidation(): void
-    {
-        if (! $this->filled('type')) {
-            $this->merge(['type' => 'hospital']);
-        }
-    }
-
-    /**
      * Aturan validasi untuk perbarui data kategori.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -38,7 +29,6 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:50', Rule::unique('categories', 'code')->ignore($categoryId)],
-            'type' => ['required', 'string', 'max:20'],
             'order' => ['nullable', 'integer', 'min:0'],
         ];
     }
@@ -54,8 +44,6 @@ class UpdateCategoryRequest extends FormRequest
             'name.required' => 'Nama kategori wajib diisi.',
             'code.required' => 'Kode kategori wajib diisi.',
             'code.unique' => 'Kode kategori sudah digunakan.',
-            'type.required' => 'Kelompok instrumen kategori wajib dipilih.',
-            'type.in' => 'Tipe instrumen kategori tidak valid.',
         ];
     }
 }

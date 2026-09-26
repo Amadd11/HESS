@@ -16,8 +16,9 @@ class DemographicController extends Controller
      */
     public function index(Request $request): View
     {
+        $allowedTypes = ['directorate', 'unit', 'profession', 'status', 'tenure', 'age', 'gender', 'education', 'income'];
         $currentType = $request->query('type', 'unit');
-        if (! in_array($currentType, ['directorate', 'unit', 'profession', 'status', 'tenure', 'all'], true)) {
+        if (! in_array($currentType, [...$allowedTypes, 'all'], true)) {
             $currentType = 'unit';
         }
 
@@ -45,6 +46,10 @@ class DemographicController extends Controller
             'profession' => Demographic::type('profession')->count(),
             'status' => Demographic::type('status')->count(),
             'tenure' => Demographic::type('tenure')->count(),
+            'age' => Demographic::type('age')->count(),
+            'gender' => Demographic::type('gender')->count(),
+            'education' => Demographic::type('education')->count(),
+            'income' => Demographic::type('income')->count(),
         ];
 
         return view('admin.demographics.index', [
@@ -60,7 +65,7 @@ class DemographicController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'type' => ['required', 'string', Rule::in(['directorate', 'unit', 'profession', 'status', 'tenure'])],
+            'type' => ['required', 'string', Rule::in(['directorate', 'unit', 'profession', 'status', 'tenure', 'age', 'gender', 'education', 'income'])],
             'name' => [
                 'required',
                 'string',

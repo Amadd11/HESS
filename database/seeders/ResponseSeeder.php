@@ -31,6 +31,10 @@ class ResponseSeeder extends Seeder
         $units = $demographics['units'];
         $statuses = $demographics['statuses'];
         $tenures = $demographics['tenures'];
+        $ages = $demographics['ages'];
+        $genders = $demographics['genders'];
+        $educations = $demographics['educations'];
+        $incomes = $demographics['incomes'];
 
         $aspectNames = [
             'Lingkungan Kerja',
@@ -129,12 +133,22 @@ class ResponseSeeder extends Seeder
         $totalResponden = 500;
 
         for ($i = 1; $i <= $totalResponden; $i++) {
+            $selectedDir = $directorates[array_rand($directorates)];
+            $availableUnits = (! empty($demographics['directorate_units'][$selectedDir]))
+                ? $demographics['directorate_units'][$selectedDir]
+                : $units;
+            $selectedUnit = $availableUnits[array_rand($availableUnits)];
+
             $profile = [
                 'profession' => $professions[array_rand($professions)],
-                'directorate' => $directorates[array_rand($directorates)],
-                'unit' => $units[array_rand($units)],
+                'directorate' => $selectedDir,
+                'unit' => $selectedUnit,
                 'status' => $statuses[array_rand($statuses)],
                 'tenure' => $tenures[array_rand($tenures)],
+                'age' => $ages[array_rand($ages)],
+                'gender' => $genders[array_rand($genders)],
+                'education' => $educations[array_rand($educations)],
+                'income' => $incomes[array_rand($incomes)],
             ];
 
             // 1. Tentukan profil kepuasan umum responden secara realistis (30% sangat puas, 40% puas, 20% moderat, 10% kritis)
@@ -186,14 +200,7 @@ class ResponseSeeder extends Seeder
                 $answers[$q->id] = ! empty($weightedPool) ? fake()->randomElement($weightedPool) : rand(1, 4);
             }
 
-            // 3. Skor Keseluruhan (1-4) & eNPS (0-10)
-            $overallScore = match ($persona) {
-                'promoter_high' => fake()->randomElement([4, 4, 4]),
-                'satisfied' => fake()->randomElement([3, 4, 4, 3]),
-                'moderate' => fake()->randomElement([3, 3, 2]),
-                'critical' => fake()->randomElement([1, 2, 2]),
-            };
-
+            // 3. eNPS (0-10)
             $npsScore = match ($persona) {
                 'promoter_high' => fake()->randomElement([9, 10, 10, 10, 9]),
                 'satisfied' => fake()->randomElement([8, 9, 8, 9, 7]),
@@ -211,7 +218,6 @@ class ResponseSeeder extends Seeder
             }
 
             $overall = [
-                'overall_score' => $overallScore,
                 'nps_score' => $npsScore,
                 'like_text' => null,
                 'improve_text' => null,

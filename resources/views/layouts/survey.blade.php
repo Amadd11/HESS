@@ -25,8 +25,8 @@
     <!-- Header Brand HESS -->
     <header class="bg-gradient-to-r from-primary-900 via-primary-800 to-primary-700 text-white pt-6 pb-10 md:pt-7 md:pb-12 px-4 md:px-8 shadow-sm">
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo PT. MRSTC Indonesia" class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white p-1.5 object-contain shadow-md shrink-0 border border-white/30">
+            <div class="flex items-center gap-3 md:gap-3.5">
+                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo PT. MRSTC Indonesia" class="w-11 h-11 md:w-13 md:h-13 rounded-2xl bg-white p-1.5 object-contain shadow-md shrink-0 border border-white/30">
                 <div>
                     <div class="flex items-center gap-2 text-xs text-primary-200 font-bold uppercase tracking-wider">
                         <span>HESS</span>
@@ -34,7 +34,7 @@
                         <span>PT. MRSTC INDONESIA</span>
                     </div>
                     <h1 class="font-extrabold text-base md:text-xl text-white tracking-tight leading-tight mt-0.5">
-                        Survei Kepuasan Kerja Karyawan
+                        Survei Kepuasan Kerja Pegawai
                     </h1>
                     <div class="text-xs text-primary-100/90 font-medium mt-0.5">
                         RSUP Dr. Sardjito Yogyakarta

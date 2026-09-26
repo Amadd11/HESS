@@ -16,49 +16,41 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Lingkungan Kerja',
                 'code' => 'LK',
-                'type' => 'hospital',
                 'order' => 1,
             ],
             [
                 'name' => 'Hubungan dengan Atasan',
                 'code' => 'HA',
-                'type' => 'hospital',
                 'order' => 2,
             ],
             [
                 'name' => 'Penghargaan dan Pengukuran Kerja',
                 'code' => 'PP',
-                'type' => 'hospital',
                 'order' => 3,
             ],
             [
                 'name' => 'Kesempatan Pengembangan Karir',
                 'code' => 'KPK',
-                'type' => 'hospital',
                 'order' => 4,
             ],
             [
                 'name' => 'Gaji dan Kompensasi',
                 'code' => 'GK',
-                'type' => 'hospital',
                 'order' => 5,
             ],
             [
                 'name' => 'Keseimbangan Kerja dan Kehidupan / Work Life Balance',
                 'code' => 'WLB',
-                'type' => 'hospital',
                 'order' => 6,
             ],
             [
                 'name' => 'Komunikasi dalam Rumah Sakit',
                 'code' => 'KRS',
-                'type' => 'hospital',
                 'order' => 7,
             ],
             [
                 'name' => 'Budaya Rumah Sakit',
                 'code' => 'BRS',
-                'type' => 'hospital',
                 'order' => 8,
             ],
         ];

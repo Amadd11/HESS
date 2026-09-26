@@ -33,12 +33,6 @@
             :required="true"
         />
 
-        <div>
-            <x-select label="Tipe Skala Pilihan" name="scale" :required="true">
-                <option value="agreement" selected>Setuju (1: Sangat Tidak Setuju - 4: Sangat Setuju)</option>
-                <option value="satisfaction">Puas (1: Sangat Tidak Puas - 4: Sangat Puas)</option>
-            </x-select>
-        </div>
 
         <div class="flex items-center gap-2 pt-1">
             <input type="checkbox" name="is_active" value="1" checked id="create_active" class="w-4 h-4 rounded text-primary-600 border-gray-300 focus:ring-primary-500 cursor-pointer">

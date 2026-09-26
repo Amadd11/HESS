@@ -109,35 +109,36 @@
                 <p class="text-xs text-gray-400">Pegawai memilih skala 1 sampai 4. Bagaimana cara sistem menghitung persentase indeksnya?</p>
             </div>
 
-            <!-- Rumus Visual Kotak -->
+            <!-- Rumus Visual Kotak (Dinamis K Pertanyaan) -->
             <div class="bg-slate-900 text-white p-5 rounded-2xl text-center space-y-3 shadow-inner">
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Rumus Persentase Skor Skala 4 Poin:</span>
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Rumus Utama HESS (Indeks Kepuasan Pegawai):</span>
                 <div class="text-base md:text-xl font-mono font-extrabold flex items-center justify-center gap-3">
-                    <span>Persentase (%)</span>
+                    <span>Indeks Kepuasan Pegawai</span>
                     <span>=</span>
                     <span class="inline-flex flex-col items-center">
-                        <span class="border-b border-white/60 pb-1">Total Skor yang Diberikan</span>
-                        <span class="pt-1">Jumlah Pertanyaan × 4</span>
+                        <span class="border-b border-white/60 pb-1">Total Seluruh Skor Responden</span>
+                        <span class="pt-1">Jumlah Responden (N) × Jumlah Pertanyaan Aktif (K) × 4</span>
                     </span>
-                    <span>× 100%</span>
+                    <span>× 100</span>
                 </div>
                 <p class="text-xs text-slate-300">
-                    Atau lebih ringkasnya: <code>(Rata-Rata Skor Jawaban ÷ 4) × 100%</code>
+                    Hasil akhir berada pada skala <strong>0 – 100</strong>. Perhitungan bersifat <strong>sepenuhnya dinamis</strong> mengikuti jumlah butir pertanyaan tertutup ($K$) yang aktif pada Master Soal, tanpa dipengaruhi interpretasi teks jawaban terbuka.
                 </p>
             </div>
 
             <!-- Contoh Studi Kasus Riil -->
             <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-2">
-                <div class="font-extrabold text-amber-900 text-xs uppercase tracking-wider">Contoh Perhitungan Riil:</div>
+                <div class="font-extrabold text-amber-900 text-xs uppercase tracking-wider">Contoh Perhitungan Riil (Dinamis Sesuai Master Soal):</div>
                 <p class="text-xs text-amber-950 leading-relaxed">
-                    Seorang pegawai menjawab 3 pertanyaan pada unsur <strong>Lingkungan Kerja</strong> dengan skor: 4, 3, dan 4 (total skor = 11).<br>
-                    Maka perhitungan di sistem adalah:
+                    Misalnya terdapat <strong>500 pegawai yang mengisi survei</strong> ($N = 500$) dan terdapat <strong>24 butir pertanyaan aktif</strong> ($K = 24$, standar 8 unsur × 3 soal).<br>
+                    Skor maksimum survei = <strong>500 responden × 24 pertanyaan × 4 = 48.000</strong>.<br>
+                    Jika total seluruh skor jawaban yang terkumpul adalah <strong>39.600</strong>, maka:
                 </p>
                 <div class="bg-white/80 border border-amber-300 rounded-xl p-3 font-mono text-xs text-amber-900 font-bold">
-                    Persentase = (11 ÷ (3 × 4)) × 100% = (11 ÷ 12) × 100% = 91.7%
+                    Indeks Kepuasan Pegawai = (39.600 ÷ 48.000) × 100 = 82,50
                 </div>
                 <p class="text-[11px] text-amber-800">
-                    Nilai <strong>91.7%</strong> ini dikategorikan ke predikat <strong>Sangat Setuju / Optimal</strong> pada Dashboard Analitik!
+                    💡 <em>Catatan Fleksibilitas</em>: Apabila Admin menambah atau menonaktifkan butir pertanyaan di menu <strong>Master Pertanyaan</strong> (misal menjadi $K = 20$ atau $K = 28$), sistem secara otomatis menyesuaikan nilai pengali $K$, sehingga indeks tetap adil dan akurat pada skala 0–100.
                 </p>
             </div>
 

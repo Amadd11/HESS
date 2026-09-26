@@ -114,6 +114,11 @@
         <div class="flex items-center gap-2 overflow-x-auto pb-1 border-b border-gray-100 scrollbar-none text-xs">
             <span class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Kelompok:</span>
 
+            <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'directorate'])) }}"
+               class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'directorate' ? 'bg-indigo-700 text-white shadow-xs' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100' }}">
+                Direktorat ({{ $stats['directorate'] }})
+            </a>
+
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'unit'])) }}"
                class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'unit' ? 'bg-primary-700 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}">
                 Satuan Kerja ({{ $stats['unit'] }})
@@ -121,17 +126,37 @@
 
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'profession'])) }}"
                class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'profession' ? 'bg-blue-700 text-white shadow-xs' : 'bg-blue-50 text-blue-700 hover:bg-blue-100' }}">
-                Profesi Pegawai ({{ $stats['profession'] }})
+                Profesi ({{ $stats['profession'] }})
             </a>
 
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'status'])) }}"
                class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'status' ? 'bg-amber-700 text-white shadow-xs' : 'bg-amber-50 text-amber-700 hover:bg-amber-100' }}">
-                Status Kepegawaian ({{ $stats['status'] }})
+                Status ({{ $stats['status'] }})
             </a>
 
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'tenure'])) }}"
                class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'tenure' ? 'bg-purple-700 text-white shadow-xs' : 'bg-purple-50 text-purple-700 hover:bg-purple-100' }}">
                 Masa Kerja ({{ $stats['tenure'] }})
+            </a>
+
+            <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'age'])) }}"
+               class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'age' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }}">
+                Usia ({{ $stats['age'] }})
+            </a>
+
+            <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'gender'])) }}"
+               class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'gender' ? 'bg-rose-700 text-white shadow-xs' : 'bg-rose-50 text-rose-700 hover:bg-rose-100' }}">
+                Jenis Kelamin ({{ $stats['gender'] }})
+            </a>
+
+            <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'education'])) }}"
+               class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'education' ? 'bg-cyan-700 text-white shadow-xs' : 'bg-cyan-50 text-cyan-700 hover:bg-cyan-100' }}">
+                Pendidikan ({{ $stats['education'] }})
+            </a>
+
+            <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'income'])) }}"
+               class="px-3.5 py-1.5 rounded-xl font-bold transition shrink-0 {{ $currentType === 'income' ? 'bg-teal-700 text-white shadow-xs' : 'bg-teal-50 text-teal-700 hover:bg-teal-100' }}">
+                Pendapatan ({{ $stats['income'] }})
             </a>
 
             <a href="{{ route('admin.demographics.index', array_merge(request()->except('type'), ['type' => 'all'])) }}"
@@ -223,7 +248,11 @@
 
                         <!-- Kelompok -->
                         <td class="py-4 px-4">
-                            @if($demo->type === 'unit')
+                            @if($demo->type === 'directorate')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                                    Direktorat
+                                </span>
+                            @elseif($demo->type === 'unit')
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-primary-50 text-primary-700 border border-primary-200/80">
                                     Unit Kerja
                                 </span>
@@ -235,9 +264,29 @@
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80">
                                     Status
                                 </span>
-                            @else
+                            @elseif($demo->type === 'tenure')
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200/80">
                                     Masa Kerja
+                                </span>
+                            @elseif($demo->type === 'age')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                                    Usia
+                                </span>
+                            @elseif($demo->type === 'gender')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/80">
+                                    Jenis Kelamin
+                                </span>
+                            @elseif($demo->type === 'education')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-50 text-cyan-700 border border-cyan-200/80">
+                                    Pendidikan
+                                </span>
+                            @elseif($demo->type === 'income')
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-50 text-teal-700 border border-teal-200/80">
+                                    Pendapatan
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-700 border border-gray-200/80">
+                                    {{ ucfirst($demo->type) }}
                                 </span>
                             @endif
                         </td>
