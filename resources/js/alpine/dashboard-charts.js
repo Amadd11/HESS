@@ -28,6 +28,15 @@ export default (config = {}) => {
             this.renderRadarChart();
             this.renderBarChart();
         });
+
+        // Listener resize responsif: otomatis sesuaikan grafik saat orientasi atau ukuran layar berubah
+        window.addEventListener('resize', () => {
+            clearTimeout(this._resizeTimer);
+            this._resizeTimer = setTimeout(() => {
+                this.renderRadarChart();
+                this.renderBarChart();
+            }, 200);
+        });
     },
 
     renderRadarChart() {
@@ -38,9 +47,10 @@ export default (config = {}) => {
 
         if (this.radarChart) {
             this.radarChart.destroy();
+            this.radarChart = null;
         }
 
-        // Label ringkas & jelas untuk sumbu horizontal bawah
+        // Label ringkas & jelas untuk sumbu indikator
         const labelMap = {
             'Leadership & Supervision': 'Kepemimpinan',
             'Workload & Staffing': 'Beban Kerja',
@@ -62,28 +72,36 @@ export default (config = {}) => {
 
         const categories = this.rawRadarCategories.map(name => labelMap[name] || name);
         const seriesData = (this.rawRadarSeries || []).map(v => Number(v) || 0);
+        const isMobile = window.innerWidth < 640;
 
         const barOptions = {
             chart: {
                 type: 'bar',
-                height: 350,
+                height: isMobile ? Math.max(340, categories.length * 40) : 350,
                 toolbar: { show: false },
-                fontFamily: 'Inter, sans-serif'
+                fontFamily: 'Inter, sans-serif',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 350
+                }
             },
             plotOptions: {
                 bar: {
-                    borderRadius: 6,
-                    horizontal: false, // Vertikal ke atas
+                    borderRadius: isMobile ? 4 : 6,
+                    horizontal: isMobile, // Horizontal di HP agar teks kategori tidak berdesakan, vertikal di desktop
                     columnWidth: '48%',
+                    barHeight: '62%',
                     dataLabels: { position: 'top' }
                 }
             },
             dataLabels: {
                 enabled: true,
                 formatter: (val) => `${val}%`,
-                offsetY: -18,
+                offsetX: isMobile ? 22 : 0,
+                offsetY: isMobile ? 0 : -18,
                 style: {
-                    fontSize: '10.5px',
+                    fontSize: isMobile ? '10px' : '10.5px',
                     fontWeight: 700,
                     colors: ['#374151']
                 }
@@ -94,10 +112,14 @@ export default (config = {}) => {
             }],
             xaxis: {
                 categories: categories,
+                min: 0,
+                max: 100,
+                tickAmount: isMobile ? 4 : 5,
                 labels: {
-                    rotate: -35,
+                    rotate: isMobile ? 0 : -35,
                     rotateAlways: false,
-                    style: { fontSize: '11px', fontWeight: 600, colors: '#4b5563' }
+                    style: { fontSize: isMobile ? '10px' : '11px', fontWeight: 600, colors: '#4b5563' },
+                    formatter: isMobile ? (val) => `${val}%` : undefined
                 },
                 axisBorder: { show: false },
                 axisTicks: { show: false }
@@ -107,8 +129,9 @@ export default (config = {}) => {
                 max: 100,
                 tickAmount: 5,
                 labels: {
-                    style: { fontSize: '10px', fontWeight: 600, colors: '#9ca3af' },
-                    formatter: (val) => `${val}%`
+                    maxWidth: isMobile ? 120 : undefined,
+                    style: { fontSize: isMobile ? '10.5px' : '10px', fontWeight: 600, colors: isMobile ? '#1f2937' : '#9ca3af' },
+                    formatter: isMobile ? undefined : (val) => `${val}%`
                 }
             },
             colors: ['#0284c7'],
@@ -136,6 +159,9 @@ export default (config = {}) => {
             return;
         }
 
+        const isMobile = window.innerWidth < 640;
+        const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+
         let rawLabels = this.directorateLabels;
         let rawData = this.directorateData;
         let barColor = '#0284c7';
@@ -159,7 +185,7 @@ export default (config = {}) => {
                 rawLabels = filtered.map(item => item.label);
                 rawData = filtered.map(item => item.score);
                 barColor = '#7c3aed';
-                const itemHeight = rawLabels.length > 15 ? 28 : 34;
+                const itemHeight = rawLabels.length > 15 ? (isMobile ? 26 : 28) : (isMobile ? 30 : 34);
                 chartHeight = Math.max(260, (rawLabels.length || 1) * itemHeight);
             } else {
                 // Overview: tampilkan semua direktorat
@@ -167,14 +193,14 @@ export default (config = {}) => {
                 rawData = this.directorateData;
                 barColor = '#0284c7';
                 barHeight = '65%';
-                chartHeight = Math.max(280, (rawLabels.length || 1) * 44);
+                chartHeight = Math.max(260, (rawLabels.length || 1) * (isMobile ? 38 : 44));
             }
         } else if (this.chartTab === 'profession') {
             rawLabels = this.profLabels;
             rawData = this.profData;
             barColor = '#0d9488';
             barHeight = '60%';
-            chartHeight = Math.max(220, (rawLabels.length || 1) * 48);
+            chartHeight = Math.max(220, (rawLabels.length || 1) * (isMobile ? 42 : 48));
         }
 
         const labels = rawLabels.length ? rawLabels : ['Belum Ada Data'];
@@ -209,9 +235,9 @@ export default (config = {}) => {
             dataLabels: {
                 enabled: true,
                 formatter: (val) => `${val}%`,
-                offsetX: 30,
+                offsetX: isMobile ? 18 : 28,
                 style: {
-                    fontSize: '11px',
+                    fontSize: isMobile ? '10px' : '11px',
                     fontWeight: 700,
                     colors: ['#374151']
                 }
@@ -224,16 +250,16 @@ export default (config = {}) => {
                 categories: labels,
                 min: 0,
                 max: 100,
-                tickAmount: 5,
+                tickAmount: isMobile ? 4 : 5,
                 labels: {
-                    style: { fontSize: '11px', fontWeight: 600, colors: '#6b7280' },
+                    style: { fontSize: isMobile ? '10px' : '11px', fontWeight: 600, colors: '#6b7280' },
                     formatter: (val) => `${val}%`
                 }
             },
             yaxis: {
                 labels: {
-                    style: { fontSize: '11px', fontWeight: 600, colors: '#1f2937' },
-                    maxWidth: 240
+                    style: { fontSize: isMobile ? '10px' : '11px', fontWeight: 600, colors: '#1f2937' },
+                    maxWidth: isMobile ? 120 : (isTablet ? 170 : 240)
                 }
             },
             colors: [barColor],

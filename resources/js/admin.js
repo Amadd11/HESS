@@ -6,10 +6,12 @@ import categoriesManager from './alpine/categories-manager';
 import periodsManager from './alpine/periods-manager';
 import questionsManager from './alpine/questions-manager';
 import responsesManager from './alpine/responses-manager';
+import responsesFilter from './alpine/responses-filter';
 import demographicsManager from './alpine/demographics-manager';
 import sentimentDashboard from './alpine/sentiment-dashboard';
 
 window.ApexCharts = ApexCharts;
+window.responsesFilter = responsesFilter;
 
 Alpine.plugin(persist);
 
@@ -20,6 +22,7 @@ Alpine.data('categoriesManager', categoriesManager);
 Alpine.data('periodsManager', periodsManager);
 Alpine.data('questionsManager', questionsManager);
 Alpine.data('responsesManager', responsesManager);
+Alpine.data('responsesFilter', responsesFilter);
 Alpine.data('demographicsManager', demographicsManager);
 
 window.Alpine = Alpine;

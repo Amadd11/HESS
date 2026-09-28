@@ -1,9 +1,12 @@
 {{-- Header & Multi-Dimensional Filters --}}
 <div class="space-y-4">
     <!-- Top Header Banner & Export -->
-    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xs border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-primary-600/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-10 -top-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xs border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-20">
+        <!-- Decorative blurred background lights (isolated overflow-hidden) -->
+        <div class="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-primary-600/15 rounded-full blur-3xl"></div>
+            <div class="absolute -left-10 -top-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl"></div>
+        </div>
 
         <div class="relative z-10 space-y-1.5">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-400 text-xs font-semibold tracking-wide backdrop-blur-xs border border-white/10">
@@ -19,21 +22,57 @@
         </div>
 
         <div class="relative z-10 flex flex-wrap items-center gap-2.5 shrink-0 self-start md:self-auto">
-            <a href="{{ route('admin.sentiment.report', request()->query()) }}" target="_blank"
-               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold shadow-xs hover:shadow-md transition active:scale-95 border border-white/20 backdrop-blur-xs">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                <span>Cetak Laporan Eksekutif</span>
-            </a>
+            <!-- Dropdown Unduh Laporan (2 Pilihan: PDF & Excel) -->
+            <div x-data="{ open: false }" @click.outside="open = false" class="relative">
+                <button @click="open = !open" type="button"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold shadow-xs hover:shadow-md transition active:scale-95 border border-white/20 backdrop-blur-xs cursor-pointer">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span>Unduh Laporan</span>
+                    <svg class="w-3.5 h-3.5 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
 
-            <a href="{{ route('admin.sentiment.export', request()->query()) }}"
-               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs hover:shadow-md transition active:scale-95 border border-emerald-500/50">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>Ekspor Excel (.xlsx)</span>
-            </a>
+                <!-- Dropdown Menu -->
+                <div x-show="open" x-cloak
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-1.5 z-50 text-gray-800">
+                    <div class="px-3.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-gray-400 border-b border-gray-100">
+                        Pilihan Format Unduh
+                    </div>
+
+                    <!-- 1. Pilihan PDF -->
+                    <a href="{{ route('admin.sentiment.report', request()->query()) }}" target="_blank" @click="open = false"
+                       class="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold text-gray-700 hover:bg-primary-50 hover:text-primary-700 transition">
+                        <span class="w-7 h-7 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0 font-black text-[10px] border border-red-100">
+                            PDF
+                        </span>
+                        <div>
+                            <div class="font-bold text-gray-900 leading-tight">Laporan Eksekutif (PDF)</div>
+                            <div class="text-[10px] text-gray-400">Format siap cetak A4 / PDF</div>
+                        </div>
+                    </a>
+
+                    <!-- 2. Pilihan Excel -->
+                    <a href="{{ route('admin.sentiment.export', request()->query()) }}" @click="open = false"
+                       class="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-semibold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition">
+                        <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 font-black text-[10px] border border-emerald-100">
+                            XLS
+                        </span>
+                        <div>
+                            <div class="font-bold text-gray-900 leading-tight">Data Sentimen (Excel)</div>
+                            <div class="text-[10px] text-gray-400">File spreadsheet .xlsx</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 

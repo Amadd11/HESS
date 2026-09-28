@@ -38,3 +38,65 @@
     scrollbar-width: none;
 }
 
+/* Styling Khusus Cetak / Print Laporan */
+@media print {
+    /* 1. Sembunyikan seluruh menu navigasi, sidebar, header, tombol aksi, dan modal */
+    aside,
+    header,
+    nav,
+    .no-print,
+    .print-hidden,
+    [x-show="logoutModalOpen"],
+    [x-show="deleteModal.open"] {
+        display: none !important;
+    }
+
+    /* 2. Tata letak cetak dokumen bersih satu halaman penuh */
+    html, body {
+        background: #ffffff !important;
+        color: #111827 !important;
+        height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 11pt;
+    }
+
+    /* 3. Kontainer utama mencakup lebar penuh */
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        height: auto !important;
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* 4. Cetak background warna dan grafik dengan akurat */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* 5. Hilangkan efek bayangan layar berlebih */
+    .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+        box-shadow: none !important;
+    }
+
+    /* 6. Mencegah pemotongan elemen di tengah halaman */
+    .print-break-inside-avoid,
+    .group,
+    [id="radar-section"],
+    [id="hospital-dimensions"] {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 1cm;
+    }
+}
+

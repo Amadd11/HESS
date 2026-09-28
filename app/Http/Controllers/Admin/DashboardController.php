@@ -33,4 +33,15 @@ class DashboardController extends Controller
     {
         return $this->exportService->exportExcel($request->all());
     }
+
+    /**
+     * Tampilkan Laporan Eksekutif Hasil Analitik Dashboard (Print / PDF View).
+     */
+    public function report(Request $request): View
+    {
+        $data = $this->dashboardService->getDashboardData($request->all());
+        $data['generatedAt'] = now()->translatedFormat('d F Y, H:i');
+
+        return view('admin.dashboard.report', $data);
+    }
 }

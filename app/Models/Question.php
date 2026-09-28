@@ -60,11 +60,11 @@ class Question extends Model
     }
 
     /**
-     * Nama dimensi kategori instrumen.
+     * Nama unsur kategori instrumen.
      */
     public function getCategoryNameAttribute(): string
     {
-        return $this->category?->name ?? 'Dimensi Kuesioner';
+        return $this->category?->name ?? 'Unsur Kuesioner';
     }
 
     /**

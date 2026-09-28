@@ -4,11 +4,11 @@
         <!-- Header Info Unsur -->
         <div class="border-b border-gray-100 pb-4">
             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-primary-100 text-primary-700 tracking-wide uppercase mb-2"
-                x-text="'UNSUR ' + (currentAspectIndex + 1) + ' DARI 8'"></span>
+                x-text="'UNSUR ' + (currentAspectIndex + 1) + ' DARI ' + aspectList.length"></span>
             <h2 class="text-xl md:text-2xl font-black text-gray-900 tracking-tight"
                 x-text="currentAspectTitle"></h2>
             <p class="text-xs md:text-sm text-gray-500 mt-1 leading-relaxed">
-                Setelah memberikan penilaian pada 3 pertanyaan unsur ini, mohon berikan alasan dan saran perbaikan konstruktif Anda.
+                Setelah memberikan penilaian pada butir pertanyaan unsur ini, mohon berikan alasan dan saran perbaikan konstruktif Anda.
             </p>
         </div>
 

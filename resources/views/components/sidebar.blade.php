@@ -1,9 +1,9 @@
 <!-- Mobile Sidebar Backdrop -->
 <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
-    class="fixed inset-0 z-40 bg-gray-900/50 lg:hidden transition-opacity"></div>
+    class="fixed inset-0 z-40 bg-gray-900/50 lg:hidden transition-opacity print:hidden"></div>
 
 <!-- Sidebar Navigation -->
-<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-200 lg:static lg:translate-x-0 h-full no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+<aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-200 lg:static lg:translate-x-0 h-full no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden print:hidden"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
     <!-- Logo & Brand -->

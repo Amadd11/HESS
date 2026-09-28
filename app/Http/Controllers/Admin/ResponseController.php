@@ -79,10 +79,7 @@ class ResponseController extends Controller
         ]);
 
         $sortedAnswers = $response->answers->sortBy(function ($a) {
-            $code = (string) ($a->question?->code ?? '');
-            preg_match('/\d+/', $code, $matches);
-
-            return isset($matches[0]) ? (int) $matches[0] : 999;
+            return (int) ($a->question?->order ?? 999);
         })->values();
 
         return response()->json([

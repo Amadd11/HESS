@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SurveyController::class, 'index'])->name('survey.index');
 Route::get('/survey', [SurveyController::class, 'index']);
 Route::post('/survey/submit', [SurveyController::class, 'submit'])
-    ->middleware('throttle:6,1')
+    ->middleware('throttle:60,1')
     ->name('survey.submit');
 Route::get('/survey/finish', [SurveyController::class, 'finish'])->name('survey.finish');
 
@@ -37,9 +37,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-        // Dashboard Analitik & Export Excel
+        // Dashboard Analitik & Export Excel & Cetak Laporan
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
+        Route::get('/dashboard/report', [DashboardController::class, 'report'])->name('dashboard.report');
 
         // Dashboard Analisis Sentimen (Clean Architecture)
         Route::get('/sentiment', [SentimentDashboardController::class, 'index'])->name('sentiment.index');

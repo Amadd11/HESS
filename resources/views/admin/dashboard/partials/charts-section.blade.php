@@ -33,7 +33,7 @@
     </div>
 
     <!-- Skor Indikator Survei Kepuasan Pegawai (Full Width) -->
-    <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
+    <div class="bg-white p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
         <div>
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
                 <div class="flex items-center gap-2.5">
@@ -50,9 +50,9 @@
                 <x-badge color="blue" size="xs">Skala 0–100%</x-badge>
             </div>
 
-            <div class="relative min-h-[350px] flex items-center justify-center">
+            <div class="relative min-h-[320px] sm:min-h-[350px] flex items-center justify-center">
                 @if($hospitalCategoryScores->count() > 0 && $totalResponses > 0)
-                <div id="hospitalRadarChart" class="w-full"></div>
+                <div id="hospitalRadarChart" class="w-full min-w-0"></div>
                 @else
                 <div class="text-center py-12 text-gray-400">
                     <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,9 +64,9 @@
             </div>
         </div>
 
-        <div class="pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+        <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[11px] text-gray-500">
             <span>Menampilkan 8 faktor lingkungan & budaya kerja RS</span>
-            <a href="#hospital-dimensions" class="text-primary-700 hover:underline font-bold flex items-center gap-1">
+            <a href="#hospital-dimensions" class="text-primary-700 hover:underline font-bold flex items-center gap-1 print:hidden">
                 <span>Lihat Rincian 8 Dimensi</span>
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Baris 2: Komparasi Peringkat Kepuasan Pegawai (Full Width & Spacious) -->
-    <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
+    <div class="bg-white p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
         <div>
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-gray-100 pb-3 mb-4">
                 <div class="flex items-center gap-2.5">
@@ -92,7 +92,7 @@
                 </div>
 
                 <!-- Controls: Filter Scope / Drilldown & Tab Kategori -->
-                <div class="flex flex-wrap items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-between sm:justify-start lg:justify-end print:hidden">
                     <!-- Satker Drill-down (muncul di tab Direktorat saat memilih direktorat) -->
                     <div x-show="chartTab === 'directorate' && selectedDirectorate" x-cloak class="flex flex-wrap items-center gap-2">
                         <div class="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 bg-purple-100/70 px-2.5 py-1 rounded-xl border border-purple-200/60">
@@ -106,7 +106,7 @@
                         @if($directorateScores->count() > 1)
                         <button type="button" @click="setChartTab('directorate')"
                             :class="chartTab === 'directorate' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-900'"
-                            class="px-3 py-1 rounded-lg transition cursor-pointer flex items-center gap-1.5">
+                            class="px-2.5 sm:px-3 py-1 rounded-lg transition cursor-pointer flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
@@ -115,7 +115,7 @@
                         @endif
                         <button type="button" @click="setChartTab('profession')"
                             :class="chartTab === 'profession' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-900'"
-                            class="px-3 py-1 rounded-lg transition cursor-pointer flex items-center gap-1.5">
+                            class="px-2.5 sm:px-3 py-1 rounded-lg transition cursor-pointer flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
@@ -145,10 +145,10 @@
                 </div>
             </div>
 
-            <div class="relative min-h-[300px] flex items-center justify-center">
+            <div class="relative min-h-[260px] sm:min-h-[300px] flex items-center justify-center">
                 @if(($unitScores->count() > 0 || $professionScores->count() > 0 || $directorateScores->count() > 0) && $totalResponses > 0)
-                <div class="w-full transition-all" :class="chartTab === 'directorate' && selectedDirectorate ? 'max-h-[460px] overflow-y-auto pr-2' : ''">
-                    <div id="comparisonBarChart" class="w-full"></div>
+                <div class="w-full min-w-0 transition-all overflow-x-hidden" :class="chartTab === 'directorate' && selectedDirectorate ? 'max-h-[460px] overflow-y-auto pr-2' : ''">
+                    <div id="comparisonBarChart" class="w-full min-w-0"></div>
                 </div>
                 @else
                 <div class="text-center py-12 text-gray-400">
@@ -162,47 +162,45 @@
         </div>
 
         <!-- Bar Footer with Quick Highlights -->
-        <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-gray-500">
-            <div class="flex items-center gap-4">
+        <div class="pt-3 border-t border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-2 text-[11px] text-gray-500">
+            <div class="flex flex-col sm:flex-row sm:items-center flex-wrap gap-2 sm:gap-3">
                 {{-- Highlight Direktorat (overview mode, tanpa drill-down) --}}
-                <div x-show="chartTab === 'directorate' && !selectedDirectorate" class="flex items-center gap-3">
+                <div x-show="chartTab === 'directorate' && !selectedDirectorate" class="flex flex-col sm:flex-row sm:items-center flex-wrap gap-1.5 sm:gap-3">
                     @if($directorateScores->count() > 0)
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-sky-600 font-bold">🏆 Direktorat Tertinggi:</span>
-                        <strong class="text-gray-800">{{ $directorateScores->first()?->directorate }} ({{ $directorateScores->first()?->avg_score }}%)</strong>
-                    </span>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-sky-600 font-bold shrink-0">🏆 Tertinggi:</span>
+                        <strong class="text-gray-800 truncate max-w-[240px] sm:max-w-none">{{ $directorateScores->first()?->directorate }} ({{ $directorateScores->first()?->avg_score }}%)</strong>
+                    </div>
                     <span class="text-gray-300 hidden sm:inline">|</span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-amber-600 font-bold">⚠️ Perhatian:</span>
-                        <strong class="text-gray-800">{{ $directorateScores->last()?->directorate }} ({{ $directorateScores->last()?->avg_score }}%)</strong>
-                    </span>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-amber-600 font-bold shrink-0">⚠️ Perhatian:</span>
+                        <strong class="text-gray-800 truncate max-w-[240px] sm:max-w-none">{{ $directorateScores->last()?->directorate }} ({{ $directorateScores->last()?->avg_score }}%)</strong>
+                    </div>
                     @endif
                 </div>
 
                 {{-- Highlight Satker (drill-down mode di tab Direktorat) --}}
-                <div x-show="chartTab === 'directorate' && selectedDirectorate" x-cloak class="flex items-center gap-3">
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-purple-600 font-bold">📋 Drill-down Satuan Kerja:</span>
-                        <strong class="text-gray-800" x-text="selectedDirectorate"></strong>
-                    </span>
+                <div x-show="chartTab === 'directorate' && selectedDirectorate" x-cloak class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-purple-600 font-bold shrink-0">📋 Drill-down:</span>
+                    <strong class="text-gray-800 break-words" x-text="selectedDirectorate"></strong>
                 </div>
 
                 {{-- Highlight Profesi --}}
-                <div x-show="chartTab === 'profession'" x-cloak class="flex items-center gap-3">
+                <div x-show="chartTab === 'profession'" x-cloak class="flex flex-col sm:flex-row sm:items-center flex-wrap gap-1.5 sm:gap-3">
                     @if($professionScores->count() > 0)
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-teal-600 font-bold">🏆 Profesi Tertinggi:</span>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-teal-600 font-bold shrink-0">🏆 Tertinggi:</span>
                         <strong class="text-gray-800">{{ $professionScores->first()?->profession }} ({{ $professionScores->first()?->avg_score }}%)</strong>
-                    </span>
+                    </div>
                     <span class="text-gray-300 hidden sm:inline">|</span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="text-amber-600 font-bold">⚠️ Perhatian:</span>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-amber-600 font-bold shrink-0">⚠️ Perhatian:</span>
                         <strong class="text-gray-800">{{ $professionScores->last()?->profession }} ({{ $professionScores->last()?->avg_score }}%)</strong>
-                    </span>
+                    </div>
                     @endif
                 </div>
             </div>
-            <span class="font-bold text-gray-700">Total Basis: {{ number_format($totalResponses) }} Jawaban Terkumpul</span>
+            <span class="font-bold text-gray-700 shrink-0">Total Basis: {{ number_format($totalResponses) }} Jawaban Terkumpul</span>
         </div>
     </div>
 

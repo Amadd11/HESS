@@ -33,7 +33,7 @@ class QuestionSeeder extends Seeder
             ['PP', 'H9', 'Proses penilaian kinerja pegawai sudah dilaksanakan sesuai dengan kinerja.'],
 
             // Kesempatan Pengembangan Karir (KPK)
-            ['KPK', 'H10', 'RS Dr. Sardjito berkomitmen untuk pengembangan kompetensi sesuai dengan kebutuhan peta karir.'],
+            ['KPK', 'H10', 'RS Dr. Sardjito telah mengembangkan kompetensi sesuai dengan kebutuhan peta karir.'],
             ['KPK', 'H11', 'RS Dr. Sardjito memberi kesempatan saya untuk mengembangkan karir melalui pendidikan formal (contoh: sekolah lanjutan) RS Dr. Sardjito.'],
             ['KPK', 'H12', 'RS Dr. Sardjito memberi kesempatan saya untuk mengembangkan karir melalui pendidikan non formal baik di dalam maupun di luar RS Dr. Sardjito.'],
 
@@ -50,12 +50,13 @@ class QuestionSeeder extends Seeder
             // Komunikasi dalam Rumah Sakit (KRS)
             ['KRS', 'H19', 'Saya merasa mendapatkan informasi yang dibutuhkan untuk menjalankan pekerjaan dengan baik.'],
             ['KRS', 'H20', 'Menurut saya, komunikasi antar pegawai di RS Dr. Sardjito sudah berjalan dengan lancar.'],
-            ['KRS', 'H21', 'Terdapat fasilitas saluran komunikasi melalui hotline kepegawaian, e-prens, saluran komplain, FGD, EFS, sambung rasa untuk menyampaikan ide, gagasan, permasalahan.'],
+            ['KRS', 'H21', 'Terdapat fasilitas saluran komunikasi (contoh: hotline kepegawaian, e-prens, saluran komplain, FGD, EFS, sambung rasa) untuk menyampaikan ide, gagasan, permasalahan.'],
+            ['KRS', 'H22', 'Komunikasi antar Satuan Kerja (Satker) di RSUP Dr. Sardjito sudah berjalan dengan baik.'],
 
             // Budaya Rumah Sakit (BRS)
-            ['BRS', 'H22', 'Saya mampu menerapkan budaya kerja BerAKHLAK dan budaya 5R (Ringkas, Rapi, Resik, Rawat, Rajin).'],
-            ['BRS', 'H23', 'Saya merasa bahwa budaya kerja di RS Dr. Sardjito mempengaruhi kinerja dan produktivitas saya.'],
-            ['BRS', 'H24', 'Saya memahami bahwa RS Dr. Sardjito merupakan RS Pendidikan yang mengedepankan Pendidikan Bermartabat.'],
+            ['BRS', 'H23', 'Saya mampu menerapkan budaya kerja BerAKHLAK dan budaya 5R (Ringkas, Rapi, Resik, Rawat, Rajin).'],
+            ['BRS', 'H24', 'Saya merasa bahwa budaya kerja di RS Dr. Sardjito mempengaruhi kinerja dan produktivitas saya.'],
+            ['BRS', 'H25', 'Saya memahami bahwa RS Dr. Sardjito merupakan RS Pendidikan yang mengedepankan Pendidikan Bermartabat.'],
         ];
 
         $activeCodes = array_column($hospitalFactors, 1);

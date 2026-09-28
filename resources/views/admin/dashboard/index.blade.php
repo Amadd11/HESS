@@ -3,7 +3,7 @@
 @section('header-title', 'Ringkasan & Analitik Kepuasan Pegawai')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
 
     {{-- 1. Periode Active & Executive Action Banner --}}
     @include('admin.dashboard.partials.banner-header')

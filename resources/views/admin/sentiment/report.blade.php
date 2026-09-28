@@ -45,10 +45,18 @@
             </div>
 
             <div class="flex items-center gap-2.5">
+                <a href="{{ route('admin.sentiment.export', request()->query()) }}"
+                    class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Unduh Excel</span>
+                </a>
+
                 <button type="button" onclick="window.print()"
                         class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-700 hover:bg-primary-800 text-white font-bold text-xs shadow-xs transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    <span>Cetak / Simpan PDF</span>
+                    <span>Cetak / Unduh PDF</span>
                 </button>
             </div>
         </div>
@@ -262,7 +270,7 @@
             </div>
         </section>
 
-        <!-- 6. KESIMPULAN STRATEGIS & REKOMENDASI -->
+        <!-- 6. KESIMPULAN STRATEGIS & REKOMENDASI
         <section class="mb-8 print-break-inside-avoid p-4 rounded-2xl bg-purple-50/50 border border-purple-200">
             <h2 class="text-xs font-black uppercase tracking-wider text-purple-900 mb-2">5. Rekomendasi Tindak Lanjut Manajemen (SDM & Operasional)</h2>
             <ul class="text-xs text-gray-800 space-y-1.5 list-disc list-inside">
@@ -270,9 +278,9 @@
                 <li><strong>Penataan Beban Kerja & Rotasi Shift:</strong> Istilah beban kerja dan kelelahan shift menjadi pendorong keluhan utama; rekomendasikan evaluasi rasio beban kerja perawat di instalasi rawat inap dan IGD.</li>
                 <li><strong>Optimalisasi Sarana & Sistem RS:</strong> Mempercepat pemeliharaan sarana kerja medis dan mempermudah alur administrasi/prosedur yang berbelit agar operasional klinis staf lebih lancar.</li>
             </ul>
-        </section>
+        </section> -->
 
-        <!-- 7. LEMBAR TANDA TANGAN / PENGESAHAN -->
+        <!-- 7. LEMBAR TANDA TANGAN / PENGESAHAN
         <footer class="pt-6 border-t border-gray-200 print-break-inside-avoid">
             <div class="grid grid-cols-2 gap-8 text-center text-xs">
                 <div>
@@ -286,7 +294,7 @@
                     <div class="text-gray-500 text-[11px]">Hospital Employee Satisfaction Survey</div>
                 </div>
             </div>
-        </footer>
+        </footer> -->
 
     </main>
 

@@ -17,6 +17,18 @@ class UpdateQuestionRequest extends FormRequest
     }
 
     /**
+     * Sanitasi input sebelum validasi.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('code')) {
+            $this->merge([
+                'code' => strtoupper(trim((string) $this->code)),
+            ]);
+        }
+    }
+
+    /**
      * Aturan validasi perbaruan data butir pertanyaan kuesioner.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -30,10 +42,11 @@ class UpdateQuestionRequest extends FormRequest
             'category_id' => ['required', 'exists:categories,id'],
             'code' => ['required', 'string', 'max:20', Rule::unique('questions', 'code')->ignore($questionId)],
             'text' => ['required', 'string', 'max:1000'],
-            'order' => ['nullable', 'integer', 'min:0'],
+            'order' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['nullable', 'boolean'],
         ];
     }
+
 
     /**
      * Nama atribut untuk pesan error yang lebih ramah.

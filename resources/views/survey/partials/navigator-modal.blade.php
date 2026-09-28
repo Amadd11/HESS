@@ -61,19 +61,20 @@
                     <div class="p-2.5 rounded-xl border border-gray-200 bg-gray-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div class="text-xs font-bold text-gray-800 truncate" x-text="(aIdx + 1) + '. ' + aspect"></div>
                         <div class="flex items-center gap-1.5 shrink-0">
-                            <!-- 3 Soal Tertutup -->
-                            <template x-for="qOffset in [0, 1, 2]" :key="qOffset">
+                            <!-- Soal Tertutup per Dimensi -->
+                            <template x-for="qItem in getQuestionsForAspect(aIdx)" :key="qItem.id">
                                 <button type="button"
-                                    @click="jumpToQuestion((aIdx * 3) + qOffset)"
+                                    @click="jumpToQuestion(qItem.originalIndex)"
                                     class="w-8 h-8 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer"
-                                    :class="currentIndex === ((aIdx * 3) + qOffset) && step === 'questionnaire'
+                                    :class="currentIndex === qItem.originalIndex && step === 'questionnaire'
                                         ? 'bg-primary-700 text-white ring-2 ring-primary-400 shadow-xs'
-                                        : (isQuestionAnswered((aIdx * 3) + qOffset)
+                                        : (isQuestionAnswered(qItem.originalIndex)
                                             ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
                                             : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100')">
-                                    <span x-text="(aIdx * 3) + qOffset + 1"></span>
+                                    <span x-text="qItem.originalIndex + 1"></span>
                                 </button>
                             </template>
+
                             <!-- Tombol Umpan Balik Aspek -->
                             <button type="button"
                                 @click="jumpToFeedback(aIdx)"

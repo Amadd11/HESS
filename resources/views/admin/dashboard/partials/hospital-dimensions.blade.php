@@ -1,4 +1,4 @@
-<div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs space-y-4" id="hospital-dimensions">
+<div class="bg-white p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs space-y-4" id="hospital-dimensions">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
         <div>
             <div class="flex items-center gap-2">
@@ -13,7 +13,7 @@
             <p class="text-[11px] text-gray-400 mt-1">Analisis skor rata-rata kepuasan pegawai per indikator survei.</p>
         </div>
         <a href="{{ route('admin.categories.index') }}"
-           class="inline-flex items-center gap-1.5 text-xs font-bold text-primary-700 hover:text-primary-800 transition">
+           class="inline-flex items-center gap-1.5 text-xs font-bold text-primary-700 hover:text-primary-800 transition print:hidden">
             <span>Kelola Master Kategori</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -21,9 +21,9 @@
         </a>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         @forelse($hospitalCategoryScores as $cat)
-            <div class="p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-primary-200 hover:shadow-md transition-all duration-200 space-y-3 flex flex-col justify-between group">
+            <div class="p-3.5 sm:p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-primary-200 hover:shadow-md transition-all duration-200 space-y-3 flex flex-col justify-between group">
                 <div class="space-y-2">
                     <div class="flex items-start justify-between gap-2">
                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary-100 text-primary-700 font-black text-xs group-hover:bg-primary-600 group-hover:text-white transition">
@@ -40,7 +40,7 @@
 
                 <div class="space-y-2 pt-2 border-t border-gray-100">
                     <div class="flex items-baseline justify-between">
-                        <span class="text-2xl font-black text-gray-900">{{ $cat->percentage_score ?? 0 }}%</span>
+                        <span class="text-xl sm:text-2xl font-black text-gray-900">{{ $cat->percentage_score ?? 0 }}%</span>
                         <span class="text-[11px] font-bold text-gray-400">{{ $cat->avg_raw_score ?? 0 }} / 4.0</span>
                     </div>
                     <div class="h-2 w-full bg-gray-200/80 rounded-full overflow-hidden">
@@ -50,7 +50,7 @@
                     <div class="flex items-center justify-between text-[10px] text-gray-400 pt-1">
                         <span>{{ $cat->questions_count }} Butir Soal</span>
                         <a href="{{ route('admin.questions.index', ['category_id' => $cat->id]) }}"
-                           class="text-primary-600 hover:text-primary-800 font-bold flex items-center gap-0.5">
+                           class="text-primary-600 hover:text-primary-800 font-bold flex items-center gap-0.5 print:hidden">
                             <span>Detail Soal</span>
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

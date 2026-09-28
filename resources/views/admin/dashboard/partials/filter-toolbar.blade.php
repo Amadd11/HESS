@@ -2,59 +2,68 @@
     $hasFilters = request()->anyFilled(['profession', 'directorate', 'unit', 'status', 'tenure', 'age', 'gender', 'education', 'income']);
 @endphp
 
-<div class="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-xs space-y-3.5">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
-        <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center font-bold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+<div x-data="{ mobileFiltersOpen: {{ $hasFilters ? 'true' : 'false' }} }" class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-xs space-y-3.5 print:hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-gray-100 pb-3">
+        <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center font-bold shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-gray-900">Segmentasi Analitik & Filter Data</h3>
+                    <p class="text-[11px] text-gray-400 hidden sm:block">Saring metrik berdasarkan unit kerja RS maupun demografi pegawai (usia, gender, pendidikan, pendapatan).</p>
+                </div>
             </div>
-            <div>
-                <h3 class="text-xs font-bold text-gray-900">Segmentasi Analitik & Filter Data</h3>
-                <p class="text-[11px] text-gray-400">Saring metrik berdasarkan unit kerja RS maupun demografi pegawai (usia, gender, pendidikan, pendapatan).</p>
-            </div>
+
+            <!-- Mobile Toggle Button -->
+            <button type="button" @click="mobileFiltersOpen = !mobileFiltersOpen"
+                    class="sm:hidden flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold bg-primary-50 text-primary-700 border border-primary-200 transition cursor-pointer shrink-0">
+                <span x-text="mobileFiltersOpen ? 'Tutup' : 'Filter (10)'"></span>
+                <svg class="w-3.5 h-3.5 transition-transform" :class="mobileFiltersOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
         </div>
 
         <!-- Active Filters Reset -->
         @if($hasFilters)
             <div class="flex flex-wrap items-center gap-1.5">
-                <span class="text-[11px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                    Filter Aktif:
+                <span class="text-[10px] sm:text-[11px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200 shrink-0">
+                    Filter:
                 </span>
 
                 @if(request('directorate'))
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-primary-50 text-primary-800 font-semibold text-[11px] border border-primary-200">
-                    <span>Direktorat: <strong>{{ request('directorate') }}</strong></span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-primary-50 text-primary-800 font-semibold text-[10px] sm:text-[11px] border border-primary-200 max-w-[200px] truncate">
+                    <span class="truncate">Dir: <strong>{{ request('directorate') }}</strong></span>
                     <a href="{{ route('admin.dashboard', array_merge(request()->except(['directorate', 'unit']), ['period_id' => $selectedPeriod?->id])) }}" class="text-primary-500 hover:text-red-500 font-bold ml-0.5" title="Hapus filter direktorat">✕</a>
                 </span>
                 @endif
 
                 @if(request('unit'))
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 font-semibold text-[11px] border border-gray-200">
-                    <span>Satker: <strong>{{ request('unit') }}</strong></span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 font-semibold text-[10px] sm:text-[11px] border border-gray-200 max-w-[200px] truncate">
+                    <span class="truncate">Satker: <strong>{{ request('unit') }}</strong></span>
                     <a href="{{ route('admin.dashboard', array_merge(request()->except('unit'), ['period_id' => $selectedPeriod?->id])) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5" title="Hapus filter satuan kerja">✕</a>
                 </span>
                 @endif
 
                 @if(request('profession'))
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 font-semibold text-[11px] border border-gray-200">
-                    <span>Profesi: <strong>{{ request('profession') }}</strong></span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 font-semibold text-[10px] sm:text-[11px] border border-gray-200 max-w-[200px] truncate">
+                    <span class="truncate">Profesi: <strong>{{ request('profession') }}</strong></span>
                     <a href="{{ route('admin.dashboard', array_merge(request()->except('profession'), ['period_id' => $selectedPeriod?->id])) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5" title="Hapus filter profesi">✕</a>
                 </span>
                 @endif
 
                 <a href="{{ route('admin.dashboard', ['period_id' => $selectedPeriod?->id]) }}"
-                   class="text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded transition" title="Bersihkan seluruh filter">
+                   class="text-[10px] sm:text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded transition shrink-0" title="Bersihkan seluruh filter">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    <span>Reset Filter</span>
+                    <span>Reset</span>
                 </a>
             </div>
         @endif
     </div>
 
     <!-- Filter Controls Form -->
-    <form method="GET" action="{{ route('admin.dashboard') }}" class="space-y-3">
+    <form method="GET" action="{{ route('admin.dashboard') }}" :class="mobileFiltersOpen ? 'block' : 'hidden sm:block'" class="space-y-3">
         <!-- Row 1: Organisasi & Kepegawaian RS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-center">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 items-center">
             <!-- 1. Periode -->
             <div>
                 <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Periode Survei</label>
@@ -146,7 +155,7 @@
         </div>
 
         <!-- Row 2: Profil Demografi Individu Responden -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-center pt-2 border-t border-gray-100">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 items-center pt-2 border-t border-gray-100">
             <!-- 7. Usia -->
             <div>
                 <label class="block text-[10px] font-extrabold uppercase tracking-wider text-gray-500 mb-1">Rentang Usia</label>

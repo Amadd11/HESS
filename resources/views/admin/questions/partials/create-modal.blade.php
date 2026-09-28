@@ -6,32 +6,53 @@
         <x-select label="Indikator Instrumen" name="category_id" :required="true">
             <option value="">Pilih Indikator</option>
             @foreach($categories as $cat)
-                <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
+            <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
             @endforeach
         </x-select>
 
         <div class="grid grid-cols-2 gap-3">
-            <x-input
-                label="Kode Soal"
-                name="code"
-                placeholder="Contoh: H25"
-                :required="true"
-            />
-            <x-input
-                label="Nomor Urutan"
-                name="order"
-                type="number"
-                :value="$nextOrder ?? 1"
-            />
+            <div>
+                <x-input
+                    label="Kode Soal (Otomatis)"
+                    name="code"
+                    id="create_code_input"
+                    :value="$nextCode ?? 'H1'"
+                    readonly
+                    class="bg-gray-50 text-gray-700 font-mono font-bold cursor-not-allowed select-none border-gray-200"
+                    :required="true" />
+                <p class="text-[10px] text-gray-400 mt-1">Kode identitas permanen otomatis dari sistem.</p>
+            </div>
+            <div>
+                <x-input
+                    label="Nomor Urutan Tampil"
+                    name="order"
+                    id="create_order_input"
+                    type="number"
+                    min="1"
+                    :value="$nextOrder ?? 1" />
+                <p class="text-[10px] text-gray-400 mt-1">Mengatur posisi nomor butir di kuesioner.</p>
+            </div>
         </div>
+
+
+        <!-- Banner Info Auto-Shift Urutan -->
+        <div class="p-3 rounded-xl bg-blue-50/80 border border-blue-200/70 text-[11px] text-blue-800 flex items-start gap-2.5">
+            <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div class="leading-relaxed">
+                <span class="font-bold text-blue-900">Pergeseran Urutan Tampil Otomatis:</span>
+                Jika nomor urutan tampil yang dipilih sudah terpakai (misal nomor <strong>21</strong>), sistem otomatis memundurkan urutan butir-butir setelahnya (+1). Kode internal masing-masing butir tetap aman dan tidak berubah.
+            </div>
+        </div>
+
 
         <x-textarea
             label="Teks Pernyataan"
             name="text"
             rows="3"
             placeholder="Tuliskan butir pernyataan kuesioner..."
-            :required="true"
-        />
+            :required="true" />
 
 
         <div class="flex items-center gap-2 pt-1">

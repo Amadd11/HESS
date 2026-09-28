@@ -180,7 +180,7 @@
                 <!-- Jumlah Pendapatan -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">
-                        Jumlah Pendapatan Bulanan <span class="text-red-500">*</span>
+                        Jumlah Total Pendapatan Bulanan <span class="text-red-500">*</span>
                     </label>
                     <select x-model="profile.income"
                         class="w-full h-11 px-3.5 rounded-xl border border-gray-300 bg-white text-xs md:text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-600 transition">
@@ -216,50 +216,50 @@
 </section>
 
 <script>
-window.surveyUnitSelector = function(directorateUnits) {
-    return {
-        directorateUnits: directorateUnits || {},
-        updateUnits() {
-            const select = this.$refs.surveyUnitSelect;
-            if (!select) return;
-            const currentVal = this.profile ? this.profile.unit : '';
-            select.innerHTML = '';
+    window.surveyUnitSelector = function(directorateUnits) {
+        return {
+            directorateUnits: directorateUnits || {},
+            updateUnits() {
+                const select = this.$refs.surveyUnitSelect;
+                if (!select) return;
+                const currentVal = this.profile ? this.profile.unit : '';
+                select.innerHTML = '';
 
-            const defaultOpt = document.createElement('option');
-            defaultOpt.value = '';
-            defaultOpt.textContent = 'Pilih Instalasi / Satuan Kerja...';
-            select.appendChild(defaultOpt);
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = 'Pilih Instalasi / Satuan Kerja...';
+                select.appendChild(defaultOpt);
 
-            if (this.profile && this.profile.directorate && this.directorateUnits[this.profile.directorate]) {
-                this.directorateUnits[this.profile.directorate].forEach(u => {
-                    const opt = document.createElement('option');
-                    opt.value = u;
-                    opt.textContent = u;
-                    if (u === currentVal) opt.selected = true;
-                    select.appendChild(opt);
-                });
-            } else {
-                Object.entries(this.directorateUnits).forEach(([dir, units]) => {
-                    const grp = document.createElement('optgroup');
-                    grp.label = dir;
-                    units.forEach(u => {
+                if (this.profile && this.profile.directorate && this.directorateUnits[this.profile.directorate]) {
+                    this.directorateUnits[this.profile.directorate].forEach(u => {
                         const opt = document.createElement('option');
                         opt.value = u;
                         opt.textContent = u;
                         if (u === currentVal) opt.selected = true;
-                        grp.appendChild(opt);
+                        select.appendChild(opt);
                     });
-                    select.appendChild(grp);
+                } else {
+                    Object.entries(this.directorateUnits).forEach(([dir, units]) => {
+                        const grp = document.createElement('optgroup');
+                        grp.label = dir;
+                        units.forEach(u => {
+                            const opt = document.createElement('option');
+                            opt.value = u;
+                            opt.textContent = u;
+                            if (u === currentVal) opt.selected = true;
+                            grp.appendChild(opt);
+                        });
+                        select.appendChild(grp);
+                    });
+                }
+            },
+            init() {
+                this.$watch('profile.directorate', () => {
+                    if (this.profile) this.profile.unit = '';
+                    this.updateUnits();
                 });
+                this.$nextTick(() => this.updateUnits());
             }
-        },
-        init() {
-            this.$watch('profile.directorate', () => {
-                if (this.profile) this.profile.unit = '';
-                this.updateUnits();
-            });
-            this.$nextTick(() => this.updateUnits());
-        }
+        };
     };
-};
 </script>

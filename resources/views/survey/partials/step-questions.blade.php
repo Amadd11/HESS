@@ -4,7 +4,7 @@
     <div class="bg-primary-50/60 border border-primary-100 rounded-xl p-3 text-xs text-primary-950 flex items-start gap-2.5">
         <span class="text-base shrink-0 mt-0.5">💡</span>
         <div class="leading-relaxed">
-            <b>Petunjuk:</b> Pilih salah satu pilihan jawaban yang paling sesuai (1: Sangat Tidak Setuju s/d 4: Sangat Setuju). Setelah 3 pertanyaan pada unsur ini selesai, Anda akan diminta mengisi alasan dan saran perbaikan.
+            <b>Petunjuk:</b> Pilih salah satu pilihan jawaban yang paling sesuai (1: Sangat Tidak Setuju s/d 4: Sangat Setuju). Setelah seluruh pertanyaan pada unsur ini selesai, Anda akan diminta mengisi alasan dan saran perbaikan.
         </div>
     </div>
 
@@ -13,7 +13,8 @@
             <!-- Meta Info Butir Soal -->
             <div class="flex items-center justify-between">
                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-primary-100 text-primary-700 tracking-wide uppercase"
-                    x-text="currentQuestion.code + ' • ' + currentCategoryName"></span>
+                    x-text="'No. ' + (currentIndex + 1) + ' • ' + currentCategoryName"></span>
+
                 <button type="button" @click="questionListModalOpen = true"
                     class="text-xs font-bold text-gray-500 hover:text-primary-700 transition flex items-center gap-1 cursor-pointer">
                     <span x-text="'Soal ' + (currentIndex + 1) + ' dari ' + questions.length"></span>

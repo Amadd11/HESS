@@ -1,33 +1,33 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
 
     <!-- Kolom 1: 5 Aspek Kepuasan Tertinggi (Kekuatan Utama RS) -->
-    <div class="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
         <div>
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold border border-emerald-100">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3 mb-4">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold border border-emerald-100 shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
-                    <div>
-                        <h3 class="text-xs font-black text-gray-900">5 Aspek Kepuasan Tertinggi (Kekuatan Utama RS)</h3>
-                        <p class="text-[11px] text-gray-400">Butir indikator dengan kepuasan tertinggi — pertahankan dan jadikan budaya unggul</p>
+                    <div class="min-w-0">
+                        <h3 class="text-xs font-black text-gray-900 truncate">5 Aspek Kepuasan Tertinggi (Kekuatan Utama RS)</h3>
+                        <p class="text-[11px] text-gray-400 hidden sm:block">Butir indikator dengan kepuasan tertinggi — pertahankan dan jadikan budaya unggul</p>
                     </div>
                 </div>
                 <x-badge color="emerald" size="xs">Kekuatan Utama</x-badge>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-2.5 sm:space-y-3">
                 @forelse($topStrengths as $index => $item)
-                    <div class="p-3.5 rounded-xl border border-emerald-100/80 bg-emerald-50/30 hover:bg-emerald-50/70 transition flex items-start gap-3 group">
+                    <div class="p-3 sm:p-3.5 rounded-xl border border-emerald-100/80 bg-emerald-50/30 hover:bg-emerald-50/70 transition flex items-start gap-2.5 sm:gap-3 group">
                         <div class="shrink-0 w-6 h-6 rounded-lg bg-emerald-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
                             #{{ $index + 1 }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100/70 px-1.5 py-0.5 rounded">
+                            <div class="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100/70 px-1.5 py-0.5 rounded shrink-0">
                                     {{ $item->question_code ?? $item->code }}
                                 </span>
-                                <span class="text-[11px] font-bold text-gray-600 truncate max-w-[220px]">
+                                <span class="text-[11px] font-bold text-gray-600 truncate max-w-[180px] sm:max-w-[220px]">
                                     {{ $item->category_name }}
                                 </span>
                             </div>
@@ -48,40 +48,40 @@
             </div>
         </div>
 
-        <div class="pt-3 mt-4 border-t border-gray-100 text-[11px] text-gray-400 flex items-center justify-between">
+        <div class="pt-3 mt-4 border-t border-gray-100 text-[11px] text-gray-400 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <span>Dianalisis dari seluruh 24 butir indikator survei aktif</span>
             <span class="font-semibold text-emerald-600">Pertahankan & Berikan Apresiasi</span>
         </div>
     </div>
 
     <!-- Kolom 2: 5 Aspek Prioritas Perbaikan (Fokus RTL) -->
-    <div class="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
         <div>
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center font-bold border border-rose-100">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3 mb-4">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center font-bold border border-rose-100 shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                     </div>
-                    <div>
-                        <h3 class="text-xs font-black text-gray-900">5 Aspek Prioritas Perbaikan (Fokus RTL)</h3>
-                        <p class="text-[11px] text-gray-400">Butir indikator dengan kepuasan terendah — prioritas penyusunan Rencana Tindak Lanjut</p>
+                    <div class="min-w-0">
+                        <h3 class="text-xs font-black text-gray-900 truncate">5 Aspek Prioritas Perbaikan (Fokus RTL)</h3>
+                        <p class="text-[11px] text-gray-400 hidden sm:block">Butir indikator dengan kepuasan terendah — prioritas penyusunan Rencana Tindak Lanjut</p>
                     </div>
                 </div>
                 <x-badge color="rose" size="xs">Prioritas RTL</x-badge>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-2.5 sm:space-y-3">
                 @forelse($topImprovements as $index => $item)
-                    <div class="p-3.5 rounded-xl border border-rose-100/80 bg-rose-50/30 hover:bg-rose-50/70 transition flex items-start gap-3 group">
+                    <div class="p-3 sm:p-3.5 rounded-xl border border-rose-100/80 bg-rose-50/30 hover:bg-rose-50/70 transition flex items-start gap-2.5 sm:gap-3 group">
                         <div class="shrink-0 w-6 h-6 rounded-lg bg-rose-600 text-white font-black text-xs flex items-center justify-center shadow-xs">
                             !{{ $index + 1 }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                <span class="text-[10px] font-bold text-rose-800 bg-rose-100/70 px-1.5 py-0.5 rounded">
+                            <div class="flex items-center gap-1.5 sm:gap-2 mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold text-rose-800 bg-rose-100/70 px-1.5 py-0.5 rounded shrink-0">
                                     {{ $item->question_code ?? $item->code }}
                                 </span>
-                                <span class="text-[11px] font-bold text-gray-600 truncate max-w-[220px]">
+                                <span class="text-[11px] font-bold text-gray-600 truncate max-w-[180px] sm:max-w-[220px]">
                                     {{ $item->category_name }}
                                 </span>
                             </div>
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <div class="pt-3 mt-4 border-t border-gray-100 text-[11px] text-gray-400 flex items-center justify-between">
+        <div class="pt-3 mt-4 border-t border-gray-100 text-[11px] text-gray-400 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <span>Bahan dasar penyusunan Rencana Tindak Lanjut (RTL) RS</span>
             <span class="font-semibold text-rose-600">Segera Rumuskan Intervensi</span>
         </div>

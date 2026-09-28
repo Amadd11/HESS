@@ -15,16 +15,16 @@
                 <span>Ringkasan Instrumen HESS RSUP Dr. Sardjito:</span>
             </div>
             <div class="pl-6 space-y-1 text-gray-700 text-xs">
-                <div>• 8 unsur × 3 pertanyaan penilaian = <strong>24 pertanyaan tertutup</strong> (skala 1–4)</div>
-                <div>• 8 unsur × 2 pertanyaan terbuka = <strong>16 isian kualitatif</strong> (alasan & saran)</div>
-                <div class="font-bold text-primary-900 pt-1">• Total = 40 isian per responden.</div>
+                <div>• <span x-text="`${aspectList.length} unsur evaluasi`"></span> = <strong x-text="`${questions.length} butir pertanyaan penilaian`"></strong> (skala 1–4)</div>
+                <div>• <span x-text="`${aspectList.length} unsur evaluasi`"></span> × 2 umpan balik = <strong x-text="`${aspectList.length * 2} isian kualitatif`"></strong> (alasan & saran)</div>
+                <div class="font-bold text-primary-900 pt-1">• Total = <span x-text="`${questions.length + (aspectList.length * 2)} isian instrumen`"></span> per responden.</div>
             </div>
         </div>
 
-        <!-- Status Pengisian 8 Unsur -->
+        <!-- Status Pengisian Unsur & Umpan Balik -->
         <div class="space-y-3">
             <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider">
-                Status Kelengkapan 8 Unsur & Umpan Balik:
+                Status Kelengkapan Unsur & Umpan Balik:
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <template x-for="(aspect, aIdx) in aspectList" :key="aIdx">
@@ -33,7 +33,7 @@
                             <div class="font-bold text-gray-900 truncate" x-text="(aIdx + 1) + '. ' + aspect"></div>
                             <div class="text-[11px] text-gray-500 flex items-center gap-2">
                                 <span :class="isAspectAnswered(aIdx) ? 'text-emerald-700 font-semibold' : 'text-amber-600'">
-                                    <span x-text="getAspectScoreCount(aIdx) + '/3 soal'"></span>
+                                    <span x-text="`${getAspectScoreCount(aIdx)}/${getQuestionsForAspect(aIdx).length} soal`"></span>
                                 </span>
                                 <span>•</span>
                                 <span :class="isFeedbackFilled(aspect) ? 'text-emerald-700 font-semibold' : 'text-amber-600'"

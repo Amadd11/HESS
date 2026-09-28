@@ -24,7 +24,8 @@ class SurveySubmissionTest extends TestCase
         $period = Period::active()->first() ?? Period::factory()->create(['is_active' => true]);
         $questions = Question::active()->get();
 
-        $this->assertCount(24, $questions);
+        $this->assertCount(25, $questions);
+
 
         $answers = [];
         foreach ($questions as $q) {

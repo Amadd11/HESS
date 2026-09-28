@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             PeriodSeeder::class,
             AdminSeeder::class,
             DemographicSeeder::class,
-            ResponseSeeder::class,
+            // ResponseSeeder::class, // Dinonaktifkan: data survei menggunakan respon real
             SentimentWordSeeder::class,
         ]);
     }

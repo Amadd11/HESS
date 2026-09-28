@@ -6,7 +6,7 @@
 
         <x-select label="Indikator Instrumen" name="category_id" x-model="editQuestion.category_id" :required="true">
             @foreach($categories as $cat)
-                <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
+            <option value="{{ $cat->id }}">{{ $cat->name }} ({{ $cat->code }})</option>
             @endforeach
         </x-select>
 
@@ -15,14 +15,12 @@
                 label="Kode Soal"
                 name="code"
                 x-model="editQuestion.code"
-                :required="true"
-            />
+                :required="true" />
             <x-input
                 label="Nomor Urutan"
                 name="order"
                 type="number"
-                x-model="editQuestion.order"
-            />
+                x-model="editQuestion.order" />
         </div>
 
         <x-textarea
@@ -30,8 +28,7 @@
             name="text"
             rows="3"
             x-model="editQuestion.text"
-            :required="true"
-        />
+            :required="true" />
 
 
         <div class="flex items-center gap-2 pt-1">

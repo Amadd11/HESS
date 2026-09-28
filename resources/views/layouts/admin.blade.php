@@ -21,7 +21,7 @@
     </style>
 </head>
 
-<body class="h-full font-sans antialiased text-gray-800 flex" x-data="{
+<body class="h-full font-sans antialiased text-gray-800 flex print:block print:bg-white print:h-auto print:overflow-visible" x-data="{
     sidebarOpen: false,
     logoutModalOpen: false,
     deleteModal: {
@@ -54,24 +54,34 @@
     <x-sidebar />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
+    <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden print:h-auto print:overflow-visible print:block">
         <!-- Top Navbar -->
-        <header class="h-16 bg-white border-b border-gray-200 px-4 md:px-8 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <button @click="sidebarOpen = true" class="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+        <header class="h-16 bg-white border-b border-gray-200 px-3.5 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 z-30 print:hidden">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <button @click="sidebarOpen = true" class="lg:hidden p-2 -ml-1 text-gray-600 hover:bg-gray-100 rounded-xl transition cursor-pointer" aria-label="Buka Menu Navigasi">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo" class="w-9 h-9 rounded-xl object-contain bg-white border border-gray-200/90 p-1 lg:hidden shrink-0 shadow-xs">
-                <h1 class="text-base md:text-lg font-bold text-gray-900 truncate">
+                <img src="{{ asset('images/logo-icon.png') }}" alt="Logo" class="w-8 h-8 rounded-lg object-contain bg-white border border-gray-200/90 p-0.5 lg:hidden shrink-0 shadow-2xs">
+                <h1 class="text-sm sm:text-base md:text-lg font-bold text-gray-900 truncate">
                     @yield('header-title', 'Dashboard')
                 </h1>
+            </div>
+
+            <!-- Topbar Quick Access / Profile Info -->
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition" title="Profil Administrator">
+                    <div class="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs shrink-0">
+                        {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
+                    </div>
+                    <span class="text-xs font-bold hidden sm:inline text-gray-700 truncate max-w-[120px]">{{ auth()->user()->name ?? 'Admin' }}</span>
+                </a>
             </div>
         </header>
 
         <!-- Main Body -->
-        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+        <main class="flex-1 overflow-y-auto p-3.5 sm:p-6 lg:p-8 print:p-0 print:m-0 print:overflow-visible print:block print:w-full">
             <!-- Flash Message Alerts -->
             @if(session('success'))
             <x-alert type="success" :message="session('success')" />
