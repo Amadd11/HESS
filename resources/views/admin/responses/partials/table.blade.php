@@ -125,7 +125,8 @@
                             </svg>
                         </button>
 
-                        <!-- Delete Button -->
+                        @hasrole('super-admin')
+                        <!-- Delete Button (Khusus Super Admin) -->
                         <form action="{{ route('admin.responses.destroy', $resp->id) }}" method="POST" class="inline"
                             data-title="Hapus Respon #{{ $resp->id }}?"
                             data-confirm="Apakah Anda yakin ingin menghapus respon #{{ $resp->id }} ini? Tindakan ini bersifat permanen.">
@@ -139,6 +140,7 @@
                                 </svg>
                             </button>
                         </form>
+                        @endhasrole
                     </div>
                 </td>
             </tr>

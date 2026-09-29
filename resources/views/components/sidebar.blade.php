@@ -7,6 +7,8 @@
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
     <!-- Logo & Brand -->
+    <!-- Logo & Brand -->
+    <!-- Logo & Brand -->
     <div class="py-4 px-5 border-b border-gray-100 flex items-center justify-between">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 min-w-0">
             <div class="w-12 h-12 rounded-xl bg-white border border-gray-200/90 p-1 flex items-center justify-center shadow-xs shrink-0">
@@ -15,7 +17,9 @@
             <div class="min-w-0">
                 <div class="flex items-center gap-1.5">
                     <span class="font-black text-lg tracking-tight text-gray-900 leading-tight">HESS</span>
-                    <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-primary-50 text-primary-700 border border-primary-100">RS</span>
+                    <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold {{ auth()->user()?->hasRole('admin-rs') ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-primary-50 text-primary-700 border border-primary-100' }}">
+                        {{ auth()->user()?->hasRole('admin-rs') ? 'ADMIN RS' : 'SUPER ADMIN' }}
+                    </span>
                 </div>
                 <span class="block text-xs font-bold text-gray-700 truncate mt-0.5">PT. MRSTC Indonesia</span>
             </div>
@@ -29,6 +33,7 @@
 
     <!-- Navigation Links -->
     <nav class="p-4 space-y-1.5 flex-1 overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <!-- 1. Dashboard Analytics (Akses Super Admin & Admin RS) -->
         <a href="{{ route('admin.dashboard') }}"
             class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition {{ request()->routeIs('admin.dashboard') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.dashboard') ? 'text-primary-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,6 +42,16 @@
             <span>Dashboard Analytics</span>
         </a>
 
+        <!-- 2. Data Respon (Akses Super Admin & Admin RS) -->
+        <a href="{{ route('admin.responses.index') }}"
+            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition {{ request()->routeIs('admin.responses.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+            <svg class="w-5 h-5 {{ request()->routeIs('admin.responses.*') ? 'text-primary-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Data Respon</span>
+        </a>
+
+        @hasrole('super-admin')
         <a href="{{ route('admin.sentiment.index') }}"
             class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition {{ request()->routeIs('admin.sentiment.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
             <svg class="w-5 h-5 {{ request()->routeIs('admin.sentiment.*') ? 'text-primary-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,14 +66,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
             <span>Metodologi & Rumus</span>
-        </a>
-
-        <a href="{{ route('admin.responses.index') }}"
-            class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition {{ request()->routeIs('admin.responses.*') ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-            <svg class="w-5 h-5 {{ request()->routeIs('admin.responses.*') ? 'text-primary-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span>Data Respon</span>
         </a>
 
         <a href="{{ route('admin.periods.index') }}"
@@ -104,6 +111,7 @@
             </svg>
             <span>Kosakata Sentimen</span>
         </a>
+        @endhasrole
 
         <div class="pt-3 pb-1">
             <span class="px-3.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Akses Cepat</span>
@@ -123,29 +131,23 @@
         </a>
     </nav>
 
-    <!-- User Profile & Logout -->
+    <!-- User Profile & Logout (Menu Profile Ditiadakan) -->
     <div class="p-3.5 border-t border-gray-100 bg-gray-50/50">
         <div class="flex items-center justify-between">
-            <a href="{{ route('admin.profile.edit') }}"
-                class="flex items-center gap-2.5 truncate p-1 rounded-xl hover:bg-white transition group flex-1 mr-1"
-                title="Buka Pengaturan Akun">
-                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs shrink-0 group-hover:ring-2 group-hover:ring-primary-400 transition">
+            <div class="flex items-center gap-2.5 truncate p-1 flex-1 mr-1">
+                <div class="w-8 h-8 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs shrink-0 shadow-2xs">
                     {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                 </div>
                 <div class="truncate">
-                    <div class="text-xs font-bold text-gray-900 truncate group-hover:text-primary-700 transition">{{ auth()->user()->name ?? 'Admin HESS' }}</div>
-                    <div class="text-[10px] text-gray-500 truncate">{{ auth()->user()->email ?? '' }}</div>
+                    <div class="text-xs font-bold text-gray-900 truncate">{{ auth()->user()->name ?? 'Admin HESS' }}</div>
+                    <div class="text-[10px] text-gray-500 truncate flex items-center gap-1.5 mt-0.5">
+                        <span class="font-bold {{ auth()->user()?->hasRole('admin-rs') ? 'text-amber-700' : 'text-primary-700' }}">
+                            {{ auth()->user()?->hasRole('admin-rs') ? 'Admin RS' : 'Super Administrator' }}
+                        </span>
+                    </div>
                 </div>
-            </a>
+            </div>
             <div class="flex items-center shrink-0">
-                <a href="{{ route('admin.profile.edit') }}"
-                    class="p-1.5 text-gray-400 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition"
-                    title="Pengaturan Akun">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </a>
                 <button type="button" @click="$dispatch('open-logout-modal')" title="Keluar / Logout"
                     class="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

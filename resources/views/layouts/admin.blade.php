@@ -69,14 +69,14 @@
                 </h1>
             </div>
 
-            <!-- Topbar Quick Access / Profile Info -->
+            <!-- Topbar Quick Access / User Info (Menu Profile Ditiadakan) -->
             <div class="flex items-center gap-2 shrink-0">
-                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition" title="Profil Administrator">
-                    <div class="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs shrink-0">
+                <div class="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1.5 rounded-xl text-gray-600 select-none">
+                    <div class="w-7 h-7 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center text-xs shrink-0 shadow-2xs">
                         {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
                     </div>
-                    <span class="text-xs font-bold hidden sm:inline text-gray-700 truncate max-w-[120px]">{{ auth()->user()->name ?? 'Admin' }}</span>
-                </a>
+                    <span class="text-xs font-bold hidden sm:inline text-gray-700 truncate max-w-[140px]">{{ auth()->user()->name ?? 'Admin' }}</span>
+                </div>
             </div>
         </header>
 
