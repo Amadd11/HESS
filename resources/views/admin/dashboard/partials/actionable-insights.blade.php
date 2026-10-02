@@ -49,7 +49,7 @@
         </div>
 
         <div class="pt-3 mt-4 border-t border-gray-100 text-[11px] text-gray-400 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-            <span>Dianalisis dari seluruh 24 butir indikator survei aktif</span>
+            <span>Dianalisis dari seluruh {{ $hospitalCategoryScores->sum('questions_count') ?: 25 }} butir indikator survei aktif</span>
             <span class="font-semibold text-emerald-600">Pertahankan & Berikan Apresiasi</span>
         </div>
     </div>

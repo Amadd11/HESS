@@ -75,8 +75,8 @@ class SentimentExportService
                         'negative' => 'Negatif',
                         default => 'Netral',
                     },
-                    'Hal yang Disukai' => $response->like_text ?? '-',
-                    'Saran Perbaikan' => $response->improve_text ?? '-',
+                    'Hal yang Disukai' => $this->sanitizeForExcel($response->like_text),
+                    'Saran Perbaikan' => $this->sanitizeForExcel($response->improve_text),
                     'Direktorat' => $response->directorate ?? '-',
                     'Unit Kerja' => $response->unit ?? '-',
                     'Profesi' => $response->profession ?? '-',
@@ -88,5 +88,22 @@ class SentimentExportService
         };
 
         return (new FastExcel($rowsGenerator()))->download($filename);
+    }
+
+    /**
+     * Sanitasi teks masukan kualitatif untuk mencegah Formula Injection (CSV / Excel Injection - CWE-1236).
+     */
+    protected function sanitizeForExcel(?string $text): string
+    {
+        $text = trim((string) $text);
+        if ($text === '' || $text === '-') {
+            return '-';
+        }
+
+        if (in_array($text[0], ['=', '+', '-', '@', "\t", "\r"])) {
+            return "'".$text;
+        }
+
+        return $text;
     }
 }

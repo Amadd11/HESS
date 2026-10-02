@@ -77,7 +77,7 @@ export default (config = {}) => {
         const barOptions = {
             chart: {
                 type: 'bar',
-                height: isMobile ? Math.max(340, categories.length * 40) : 350,
+                height: isMobile ? Math.max(280, categories.length * 34) : 275,
                 toolbar: { show: false },
                 fontFamily: 'Inter, sans-serif',
                 animations: {
@@ -88,10 +88,10 @@ export default (config = {}) => {
             },
             plotOptions: {
                 bar: {
-                    borderRadius: isMobile ? 4 : 6,
+                    borderRadius: isMobile ? 3 : 5,
                     horizontal: isMobile, // Horizontal di HP agar teks kategori tidak berdesakan, vertikal di desktop
-                    columnWidth: '48%',
-                    barHeight: '62%',
+                    columnWidth: '58%', // Sangat proporsional & rapat di kolom ~70% layout
+                    barHeight: '76%',   // Mode horizontal di mobile dibuat lebih padat & rapat (sebelumnya 62%)
                     dataLabels: { position: 'top' }
                 }
             },
@@ -99,7 +99,7 @@ export default (config = {}) => {
                 enabled: true,
                 formatter: (val) => `${val}%`,
                 offsetX: isMobile ? 22 : 0,
-                offsetY: isMobile ? 0 : -18,
+                offsetY: isMobile ? 0 : -16,
                 style: {
                     fontSize: isMobile ? '10px' : '10.5px',
                     fontWeight: 700,
@@ -116,7 +116,7 @@ export default (config = {}) => {
                 max: 100,
                 tickAmount: isMobile ? 4 : 5,
                 labels: {
-                    rotate: isMobile ? 0 : -35,
+                    rotate: isMobile ? 0 : -20,
                     rotateAlways: false,
                     style: { fontSize: isMobile ? '10px' : '11px', fontWeight: 600, colors: '#4b5563' },
                     formatter: isMobile ? (val) => `${val}%` : undefined
@@ -127,17 +127,23 @@ export default (config = {}) => {
             yaxis: {
                 min: 0,
                 max: 100,
-                tickAmount: 5,
+                tickAmount: 4,
                 labels: {
                     maxWidth: isMobile ? 120 : undefined,
-                    style: { fontSize: isMobile ? '10.5px' : '10px', fontWeight: 600, colors: isMobile ? '#1f2937' : '#9ca3af' },
+                    style: { fontSize: isMobile ? '10px' : '10px', fontWeight: 600, colors: isMobile ? '#1f2937' : '#9ca3af' },
                     formatter: isMobile ? undefined : (val) => `${val}%`
                 }
             },
             colors: ['#0284c7'],
             grid: {
                 borderColor: '#f3f4f6',
-                strokeDashArray: 3
+                strokeDashArray: 3,
+                padding: {
+                    top: -12,
+                    right: 8,
+                    bottom: -4,
+                    left: 8
+                }
             },
             tooltip: {
                 y: {

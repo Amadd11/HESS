@@ -40,24 +40,26 @@ class StoreSurveyRequest extends FormRequest
             'profile.profession' => 'required|string|max:100',
             'profile.directorate' => 'required|string|max:100',
             'profile.unit' => 'required|string|max:100',
-            'profile.status' => 'required|string|max:100',
-            'profile.tenure' => 'required|string|max:100',
-            'profile.age' => 'required|string|max:100',
-            'profile.gender' => 'required|string|max:100',
+            'profile.status' => 'required|string|max:50',
+            'profile.tenure' => 'required|string|max:50',
+            'profile.age' => 'required|string|max:50',
+            'profile.gender' => 'required|string|max:50',
             'profile.education' => 'required|string|max:100',
             'profile.income' => 'required|string|max:100',
         ];
     }
 
     /**
-     * Aturan validasi butir jawaban kuesioner (dinamis sesuai jumlah soal aktif, skala 1-4).
+     * Aturan validasi butir jawaban kuesioner (harus dijawab lengkap sesuai jumlah butir aktif).
      *
      * @return array<string, array<int, mixed>|string>
      */
     protected function answerRules(): array
     {
+        $activeQuestionsCount = \App\Models\Question::where('is_active', true)->count();
+
         return [
-            'answers' => ['required', 'array', 'min:1'],
+            'answers' => ['required', 'array', 'size:' . max(1, $activeQuestionsCount)],
             'answers.*' => 'required|integer|between:1,4',
         ];
     }

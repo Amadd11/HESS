@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
+    public function __construct(
+        protected ?DemographicAnalysisService $demographicAnalysisService = null
+    ) {}
+
+    protected function demographicService(): DemographicAnalysisService
+    {
+        return $this->demographicAnalysisService ??= app(DemographicAnalysisService::class);
+    }
+
     /**
      * Ambil seluruh dataset analitik yang diperlukan oleh dashboard admin.
      *
@@ -106,6 +115,12 @@ class DashboardService
         $demographics = Demographic::getGroupedOptions();
         $hasFilters = ! empty($filters['profession']) || ! empty($filters['directorate']) || ! empty($filters['unit']) || ! empty($filters['status']) || ! empty($filters['tenure']) || ! empty($filters['age']) || ! empty($filters['gender']) || ! empty($filters['education']) || ! empty($filters['income']);
 
+        // 8. Agregasi Distribusi Demografi Responden (Usia, Jenis Kelamin, Pendapatan, Status, Pendidikan)
+        $filterParams = array_intersect_key($filters, array_flip([
+            'directorate', 'unit', 'profession', 'status', 'tenure', 'age', 'gender', 'education', 'income',
+        ]));
+        $demographicData = $this->getDemographicDistributions($baseQuery, $totalResponses, $demographics, $filterParams, $periodId);
+
         return [
             'periods' => $periods,
             'selectedPeriod' => $selectedPeriod,
@@ -128,7 +143,19 @@ class DashboardService
             'hospitalCategoryScores' => $hospitalCategoryScores,
             'topStrengths' => $topStrengths,
             'topImprovements' => $topImprovements,
+            'demographicData' => $demographicData,
         ];
+    }
+
+    /**
+     * Ambil dataset khusus yang diperlukan oleh halaman Analisis Demografi Responden.
+     *
+     * @param  array<string, mixed>  $filters
+     * @return array<string, mixed>
+     */
+    public function getDemographicPageData(array $filters = []): array
+    {
+        return $this->demographicService()->getDemographicPageData($filters);
     }
 
     /**
@@ -197,7 +224,14 @@ class DashboardService
             )
             ->groupBy('categories.id', 'categories.name', 'categories.code', 'categories.order')
             ->orderBy('categories.order')
-            ->get();
+            ->get()
+            ->map(function ($cat) {
+                $score = (float) ($cat->percentage_score ?? 0);
+                $cat->predicate = $score >= 81 ? 'Optimal' : ($score >= 61 ? 'Baik' : ($score >= 41 ? 'Perhatian' : 'Prioritas RTL'));
+                $cat->badge_color = $score >= 81 ? 'emerald' : ($score >= 61 ? 'primary' : ($score >= 41 ? 'amber' : 'rose'));
+
+                return $cat;
+            });
     }
 
     /**
@@ -234,5 +268,47 @@ class DashboardService
         $topImprovements = $questionScores->sortBy('avg_score')->take(5)->values();
 
         return [$topStrengths, $topImprovements];
+    }
+
+    /**
+     * Agregasi data distribusi demografi responden (Jumlah, Persentase, dan Chart Data).
+     *
+     * @param  array<string, array<int, string>>  $demographicsOptions
+     * @return array<string, array{
+     *     title: string,
+     *     items: array<int, array{label: string, count: int, percentage: float}>,
+     *     labels: array<int, string>,
+     *     counts: array<int, int>,
+     *     percentages: array<int, float>,
+     *     total: int
+     * }>
+     */
+    /**
+     * Agregasi sebaran data demografi responden (Usia, Jenis Kelamin, Pendapatan, Status, Pendidikan)
+     * beserta kalkulasi segmen dominan, rasio gender, palet warna, dan URL drill-down siap pakai.
+     *
+     * @param  array<string, array<int, string>>  $demographicsOptions
+     * @param  array<string, mixed>  $currentFilters
+     * @return array<string, array{
+     *     title: string,
+     *     subtitle: string,
+     *     theme: string,
+     *     theme_classes: array<string, string>,
+     *     icon: string,
+     *     chart_id: string,
+     *     items: array<int, array{label: string, count: int, percentage: float, color: string, drill_url: ?string, row_bg: string, badge_style: string}>,
+     *     labels: array<int, string>,
+     *     counts: array<int, int>,
+     *     percentages: array<int, float>,
+     *     total: int,
+     *     has_data: bool,
+     *     dominant: ?array{label: string, count: int, percentage: float, color: string, drill_url: ?string},
+     *     gender_ratio: ?string,
+     *     colors: array<int, string>
+     * }>
+     */
+    public function getDemographicDistributions(Builder $baseQuery, int $totalResponses, array $demographicsOptions = [], array $currentFilters = [], ?int $periodId = null): array
+    {
+        return $this->demographicService()->getDemographicDistributions($baseQuery, $totalResponses, $demographicsOptions, $currentFilters, $periodId);
     }
 }

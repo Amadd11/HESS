@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DemographicAnalysisController;
 use App\Http\Controllers\Admin\DemographicController;
 use App\Http\Controllers\Admin\MethodologyController;
 use App\Http\Controllers\Admin\PeriodController;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SurveyController::class, 'index'])->name('survey.index');
 Route::get('/survey', [SurveyController::class, 'index']);
 Route::post('/survey/submit', [SurveyController::class, 'submit'])
-    ->middleware('throttle:60,1')
+    ->middleware('throttle:120,1')
     ->name('survey.submit');
 Route::get('/survey/finish', [SurveyController::class, 'finish'])->name('survey.finish');
 
@@ -49,7 +50,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard/export', [DashboardController::class, 'export'])->name('dashboard.export');
         Route::get('/dashboard/report', [DashboardController::class, 'report'])->name('dashboard.report');
 
-        // 2. Data Respon Survei Responden (Akses Super Admin & Admin RS)
+        // 2. Analisis Demografi Responden (Akses Super Admin & Admin RS)
+        Route::get('/demographic-analysis', [DemographicAnalysisController::class, 'index'])->name('demographic-analysis.index');
+
+        // 3. Data Respon Survei Responden (Akses Super Admin & Admin RS)
         Route::get('/responses', [ResponseController::class, 'index'])->name('responses.index');
         Route::get('/responses/{response}', [ResponseController::class, 'show'])->name('responses.show');
 

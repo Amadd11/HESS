@@ -32,10 +32,17 @@
         </div>
     </div>
 
-    <!-- Skor Indikator Survei Kepuasan Pegawai (Full Width) -->
-    <div class="bg-white p-4 sm:p-5 md:p-6 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
+    @php
+    $sortedCats = $hospitalCategoryScores->sortByDesc('percentage_score')->values();
+    $highestCat = $sortedCats->first();
+    $lowestCat = $sortedCats->last();
+    $avgCatScore = $hospitalCategoryScores->count() > 0 ? round($hospitalCategoryScores->avg('percentage_score'), 1) : 0;
+    @endphp
+
+    <!-- Skor Indikator Survei Kepuasan Pegawai (2-Kolom Layout Proporsional) -->
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-xs flex flex-col justify-between">
         <div>
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-2.5 mb-3">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,31 +54,108 @@
                         <p class="text-[11px] text-gray-400">Peringkat kepuasan per indikator lingkungan & budaya kerja pegawai</p>
                     </div>
                 </div>
-                <x-badge color="blue" size="xs">Skala 0–100%</x-badge>
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-semibold text-gray-400 hidden sm:inline">{{ $hospitalCategoryScores->count() }} Indikator</span>
+                    <x-badge color="blue" size="xs">Skala 0–100%</x-badge>
+                </div>
             </div>
 
-            <div class="relative min-h-[320px] sm:min-h-[350px] flex items-center justify-center">
-                @if($hospitalCategoryScores->count() > 0 && $totalResponses > 0)
-                <div id="hospitalRadarChart" class="w-full min-w-0"></div>
-                @else
-                <div class="text-center py-12 text-gray-400">
-                    <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <p class="text-xs font-semibold">Belum cukup data respon untuk memetakan dimensi.</p>
+            <!-- Konten 2-Kolom di Layar Lebar: Grafik di Kiri, Ringkasan di Kanan -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch">
+                <!-- Kolom Kiri: Visual Grafik Bar (~70% lebar) -->
+                <div class="lg:col-span-8 xl:col-span-9 min-w-0 flex flex-col justify-center">
+                    <div class="relative min-h-[260px] sm:min-h-[275px] flex items-center justify-center">
+                        @if($hospitalCategoryScores->count() > 0 && $totalResponses > 0)
+                        <div id="hospitalRadarChart" class="w-full min-w-0"></div>
+                        @else
+                        <div class="text-center py-10 text-gray-400">
+                            <svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                            <p class="text-xs font-semibold">Belum cukup data respon untuk memetakan dimensi.</p>
+                        </div>
+                        @endif
+                    </div>
                 </div>
-                @endif
+
+                <!-- Kolom Kanan: Panel Ringkasan Eksekutif (~30% lebar) -->
+                <div class="lg:col-span-4 xl:col-span-3 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-gray-100 pt-3.5 lg:pt-0 lg:pl-5 space-y-3">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Ringkasan Dimensi</span>
+                            <span class="text-[10px] font-semibold text-primary-700 bg-primary-50 px-2 py-0.5 rounded-md">8 Dimensi RS</span>
+                        </div>
+
+                        <!-- Mini Card: Rata-Rata Indikator -->
+                        <div class="p-3 rounded-xl bg-gray-50/80 border border-gray-100 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] font-medium text-gray-500">Rata-rata Indikator</p>
+                                <p class="text-base font-black text-gray-900 leading-tight">{{ $avgCatScore }}%</p>
+                            </div>
+                            <x-badge :color="$avgCatScore >= 81 ? 'emerald' : ($avgCatScore >= 61 ? 'primary' : 'amber')" size="xs">
+                                {{ $avgCatScore >= 81 ? 'Optimal' : ($avgCatScore >= 61 ? 'Baik' : 'Perhatian') }}
+                            </x-badge>
+                        </div>
+
+                        @if($highestCat)
+                        <!-- Mini Card: Indikator Tertinggi -->
+                        <div class="p-3 rounded-xl bg-emerald-50/40 border border-emerald-100/70 hover:bg-emerald-50/70 transition space-y-1">
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="font-bold text-emerald-800 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Indikator Tertinggi
+                                </span>
+                                <span class="font-black text-emerald-700">{{ $highestCat->percentage_score }}%</span>
+                            </div>
+                            <p class="text-xs font-bold text-gray-900 truncate" title="{{ $highestCat->name }}">
+                                {{ $highestCat->name }}
+                            </p>
+                            <p class="text-[10px] text-gray-500 flex items-center justify-between pt-0.5">
+                                <span>Kode: <strong class="text-gray-700">{{ $highestCat->code }}</strong></span>
+                                <span>{{ $highestCat->avg_raw_score }} / 4.0</span>
+                            </p>
+                        </div>
+                        @endif
+
+                        @if($lowestCat && $lowestCat->id !== ($highestCat->id ?? null))
+                        <!-- Mini Card: Indikator Terendah (Fokus RTL) -->
+                        <div class="p-3 rounded-xl bg-amber-50/40 border border-amber-100/70 hover:bg-amber-50/70 transition space-y-1">
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="font-bold text-amber-800 flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    Fokus Perbaikan (RTL)
+                                </span>
+                                <span class="font-black text-amber-700">{{ $lowestCat->percentage_score }}%</span>
+                            </div>
+                            <p class="text-xs font-bold text-gray-900 truncate" title="{{ $lowestCat->name }}">
+                                {{ $lowestCat->name }}
+                            </p>
+                            <p class="text-[10px] text-gray-500 flex items-center justify-between pt-0.5">
+                                <span>Kode: <strong class="text-gray-700">{{ $lowestCat->code }}</strong></span>
+                                <span>{{ $lowestCat->avg_raw_score }} / 4.0</span>
+                            </p>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- Shortcut ke Detail Dimensi -->
+                    <a href="#hospital-dimensions" class="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3 rounded-xl bg-gray-50 hover:bg-primary-50 text-gray-700 hover:text-primary-700 text-xs font-bold border border-gray-200/80 hover:border-primary-200 transition text-center print:hidden">
+                        <span>Lihat Rincian 8 Dimensi</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[11px] text-gray-500">
-            <span>Menampilkan 8 faktor lingkungan & budaya kerja RS</span>
-            <a href="#hospital-dimensions" class="text-primary-700 hover:underline font-bold flex items-center gap-1 print:hidden">
-                <span>Lihat Rincian 8 Dimensi</span>
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </a>
+        <div class="pt-2.5 mt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-[11px] text-gray-500">
+            <span>Menampilkan 8 faktor lingkungan & budaya kerja RS terstandarisasi</span>
+            <span class="text-gray-400">Skor teragregasi dari skala likert forced-choice (1–4)</span>
         </div>
     </div>
 
@@ -96,7 +180,9 @@
                     <!-- Satker Drill-down (muncul di tab Direktorat saat memilih direktorat) -->
                     <div x-show="chartTab === 'directorate' && selectedDirectorate" x-cloak class="flex flex-wrap items-center gap-2">
                         <div class="inline-flex items-center gap-1 text-[11px] font-bold text-purple-700 bg-purple-100/70 px-2.5 py-1 rounded-xl border border-purple-200/60">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
                             <span x-text="currentFilteredCount + ' Satker'"></span>
                         </div>
                     </div>

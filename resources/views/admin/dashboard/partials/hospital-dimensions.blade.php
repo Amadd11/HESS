@@ -29,8 +29,8 @@
                         <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary-100 text-primary-700 font-black text-xs group-hover:bg-primary-600 group-hover:text-white transition">
                             {{ $cat->code }}
                         </span>
-                        <x-badge :color="($cat->percentage_score ?? 0) >= 81 ? 'emerald' : (($cat->percentage_score ?? 0) >= 61 ? 'primary' : 'amber')">
-                            {{ ($cat->percentage_score ?? 0) >= 81 ? 'Optimal' : (($cat->percentage_score ?? 0) >= 61 ? 'Baik' : 'Perhatian') }}
+                        <x-badge :color="$cat->badge_color ?? 'primary'">
+                            {{ $cat->predicate ?? 'Baik' }}
                         </x-badge>
                     </div>
                     <h4 class="font-bold text-xs text-gray-900 group-hover:text-primary-700 transition line-clamp-2 min-h-[32px]">

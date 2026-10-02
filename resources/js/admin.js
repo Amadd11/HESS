@@ -9,6 +9,7 @@ import responsesManager from './alpine/responses-manager';
 import responsesFilter from './alpine/responses-filter';
 import demographicsManager from './alpine/demographics-manager';
 import sentimentDashboard from './alpine/sentiment-dashboard';
+import demographicAnalysis from './alpine/demographic-analysis';
 
 window.ApexCharts = ApexCharts;
 window.responsesFilter = responsesFilter;
@@ -18,6 +19,7 @@ Alpine.plugin(persist);
 // Register Alpine Data Modules for Admin Dashboard
 Alpine.data('dashboardCharts', dashboardCharts);
 Alpine.data('sentimentDashboard', sentimentDashboard);
+Alpine.data('demographicAnalysis', demographicAnalysis);
 Alpine.data('categoriesManager', categoriesManager);
 Alpine.data('periodsManager', periodsManager);
 Alpine.data('questionsManager', questionsManager);

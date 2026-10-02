@@ -69,7 +69,7 @@
                 </div>
                 <div>
                     <div class="text-xs font-bold text-gray-900">Estimasi Waktu ±5 Menit</div>
-                    <div class="text-[11px] text-gray-500 leading-snug mt-0.5">24 butir evaluasi terstruktur, cepat & nyaman di smartphone maupun desktop.</div>
+                    <div class="text-[11px] text-gray-500 leading-snug mt-0.5">{{ $questions->count() ?? 25 }} butir evaluasi terstruktur, cepat & nyaman di smartphone maupun desktop.</div>
                 </div>
             </div>
 

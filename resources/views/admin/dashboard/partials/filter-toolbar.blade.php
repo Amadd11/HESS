@@ -1,5 +1,6 @@
 @php
     $hasFilters = request()->anyFilled(['profession', 'directorate', 'unit', 'status', 'tenure', 'age', 'gender', 'education', 'income']);
+    $actionUrl = $actionUrl ?? request()->url();
 @endphp
 
 <div x-data="{ mobileFiltersOpen: {{ $hasFilters ? 'true' : 'false' }} }" class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-xs space-y-3.5 print:hidden">
@@ -33,25 +34,25 @@
                 @if(request('directorate'))
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-primary-50 text-primary-800 font-semibold text-[10px] sm:text-[11px] border border-primary-200 max-w-[200px] truncate">
                     <span class="truncate">Dir: <strong>{{ request('directorate') }}</strong></span>
-                    <a href="{{ route('admin.dashboard', array_merge(request()->except(['directorate', 'unit']), ['period_id' => $selectedPeriod?->id])) }}" class="text-primary-500 hover:text-red-500 font-bold ml-0.5" title="Hapus filter direktorat">✕</a>
+                    <a href="{{ $actionUrl . '?' . http_build_query(array_merge(request()->except(['directorate', 'unit']), ['period_id' => $selectedPeriod?->id])) }}" class="text-primary-500 hover:text-red-500 font-bold ml-0.5" title="Hapus filter direktorat">✕</a>
                 </span>
                 @endif
 
                 @if(request('unit'))
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 font-semibold text-[10px] sm:text-[11px] border border-gray-200 max-w-[200px] truncate">
                     <span class="truncate">Satker: <strong>{{ request('unit') }}</strong></span>
-                    <a href="{{ route('admin.dashboard', array_merge(request()->except('unit'), ['period_id' => $selectedPeriod?->id])) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5" title="Hapus filter satuan kerja">✕</a>
+                    <a href="{{ $actionUrl . '?' . http_build_query(array_merge(request()->except('unit'), ['period_id' => $selectedPeriod?->id])) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5" title="Hapus filter satuan kerja">✕</a>
                 </span>
                 @endif
 
                 @if(request('profession'))
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-gray-100 text-gray-700 font-semibold text-[10px] sm:text-[11px] border border-gray-200 max-w-[200px] truncate">
                     <span class="truncate">Profesi: <strong>{{ request('profession') }}</strong></span>
-                    <a href="{{ route('admin.dashboard', array_merge(request()->except('profession'), ['period_id' => $selectedPeriod?->id])) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5" title="Hapus filter profesi">✕</a>
+                    <a href="{{ $actionUrl . '?' . http_build_query(array_merge(request()->except('profession'), ['period_id' => $selectedPeriod?->id])) }}" class="text-gray-400 hover:text-red-500 font-bold ml-0.5" title="Hapus filter profesi">✕</a>
                 </span>
                 @endif
 
-                <a href="{{ route('admin.dashboard', ['period_id' => $selectedPeriod?->id]) }}"
+                <a href="{{ $actionUrl . '?' . http_build_query(['period_id' => $selectedPeriod?->id]) }}"
                    class="text-[10px] sm:text-[11px] font-bold text-red-600 hover:text-red-700 flex items-center gap-1 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded transition shrink-0" title="Bersihkan seluruh filter">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     <span>Reset</span>
@@ -61,7 +62,7 @@
     </div>
 
     <!-- Filter Controls Form -->
-    <form method="GET" action="{{ route('admin.dashboard') }}" :class="mobileFiltersOpen ? 'block' : 'hidden sm:block'" class="space-y-3">
+    <form method="GET" action="{{ $actionUrl }}" :class="mobileFiltersOpen ? 'block' : 'hidden sm:block'" class="space-y-3">
         <!-- Row 1: Organisasi & Kepegawaian RS -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 items-center">
             <!-- 1. Periode -->

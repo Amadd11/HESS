@@ -71,12 +71,30 @@ class ResponseExportService
                     'Indeks Kepuasan Pegawai (%)' => $r->general_score !== null ? (float) number_format((float) $r->general_score, 1, '.', '') : '-',
                     'eNPS (0-10)' => $r->nps_score !== null ? (int) $r->nps_score : '-',
                     'Kategori eNPS' => $r->nps_category ? ucfirst($r->nps_category) : '-',
-                    'Hal yang Disukai' => $likeText ?: '-',
-                    'Hal yang Perlu Diperbaiki' => $improveText ?: '-',
+                    'Hal yang Disukai' => $this->sanitizeForExcel($likeText),
+                    'Hal yang Perlu Diperbaiki' => $this->sanitizeForExcel($improveText),
                 ];
             }
         };
 
         return (new FastExcel($rowsGenerator()))->download($filename);
+    }
+
+    /**
+     * Sanitasi teks input responden untuk mencegah Formula Injection (CSV / Excel Injection - CWE-1236).
+     */
+    protected function sanitizeForExcel(?string $text): string
+    {
+        $text = trim((string) $text);
+        if ($text === '' || $text === '-') {
+            return '-';
+        }
+
+        // Jika karakter awal adalah tanda formula Excel, tambahkan tanda kutip satu di depannya
+        if (in_array($text[0], ['=', '+', '-', '@', "\t", "\r"])) {
+            return "'".$text;
+        }
+
+        return $text;
     }
 }

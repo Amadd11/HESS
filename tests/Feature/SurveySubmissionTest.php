@@ -90,6 +90,6 @@ class SurveySubmissionTest extends TestCase
         $this->assertNotNull($savedResponse->feedback_data);
         $this->assertStringContainsString('Lingkungan Kerja', $savedResponse->like_text);
         $this->assertStringContainsString('Pertahankan', $savedResponse->improve_text);
-        $this->assertCount(24, $savedResponse->answers);
+        $this->assertCount(count($questions), $savedResponse->answers);
     }
 }

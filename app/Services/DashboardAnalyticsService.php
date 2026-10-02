@@ -123,37 +123,6 @@ class DashboardAnalyticsService
      */
     public function getBreakdown(Collection $classifiedResponses): array
     {
-        // 1. Breakdown by Unit Kerja (Top 6 Unit)
-        $byUnit = $classifiedResponses->groupBy('unit');
-        $unitCategories = [];
-        $unitPos = [];
-        $unitNeu = [];
-        $unitNeg = [];
-
-        foreach ($byUnit->take(6) as $unitName => $items) {
-            $name = $unitName ?: 'Lainnya';
-            $unitCategories[] = mb_strimwidth($name, 0, 16, '...');
-            $unitPos[] = $items->where('sentiment', 'positive')->count();
-            $unitNeu[] = $items->where('sentiment', 'neutral')->count();
-            $unitNeg[] = $items->where('sentiment', 'negative')->count();
-        }
-
-        // 2. Breakdown by Profesi
-        $byProf = $classifiedResponses->groupBy('profession');
-        $profCategories = [];
-        $profPos = [];
-        $profNeu = [];
-        $profNeg = [];
-
-        foreach ($byProf->take(6) as $profName => $items) {
-            $name = $profName ?: 'Lainnya';
-            $profCategories[] = mb_strimwidth($name, 0, 16, '...');
-            $profPos[] = $items->where('sentiment', 'positive')->count();
-            $profNeu[] = $items->where('sentiment', 'neutral')->count();
-            $profNeg[] = $items->where('sentiment', 'negative')->count();
-        }
-
-        // 3. Breakdown by Status Pegawai
         $byStatus = $classifiedResponses->groupBy('status');
         $statusLabels = [];
         $statusSeries = [];
@@ -162,48 +131,49 @@ class DashboardAnalyticsService
             $statusSeries[] = $items->count();
         }
 
-        // 4. Breakdown by Masa Kerja (Tenure)
-        $byTenure = $classifiedResponses->groupBy('tenure');
-        $tenureCategories = [];
-        $tenurePos = [];
-        $tenureNeu = [];
-        $tenureNeg = [];
-
-        foreach ($byTenure as $tenureName => $items) {
-            $tenureCategories[] = $tenureName ?: 'Lainnya';
-            $tenurePos[] = $items->where('sentiment', 'positive')->count();
-            $tenureNeu[] = $items->where('sentiment', 'neutral')->count();
-            $tenureNeg[] = $items->where('sentiment', 'negative')->count();
-        }
-
         return [
-            'unit' => [
-                'categories' => $unitCategories,
-                'series' => [
-                    ['name' => 'Positif', 'data' => $unitPos, 'color' => '#16A34A'],
-                    ['name' => 'Netral', 'data' => $unitNeu, 'color' => '#EAB308'],
-                    ['name' => 'Negatif', 'data' => $unitNeg, 'color' => '#DC2626'],
-                ],
-            ],
-            'profession' => [
-                'categories' => $profCategories,
-                'series' => [
-                    ['name' => 'Positif', 'data' => $profPos, 'color' => '#16A34A'],
-                    ['name' => 'Netral', 'data' => $profNeu, 'color' => '#EAB308'],
-                    ['name' => 'Negatif', 'data' => $profNeg, 'color' => '#DC2626'],
-                ],
-            ],
+            'unit' => $this->buildSentimentSeries($classifiedResponses, 'unit', 6, 16),
+            'profession' => $this->buildSentimentSeries($classifiedResponses, 'profession', 6, 16),
             'status' => [
                 'labels' => $statusLabels,
                 'series' => $statusSeries,
             ],
-            'tenure' => [
-                'categories' => $tenureCategories,
-                'series' => [
-                    ['name' => 'Positif', 'data' => $tenurePos, 'color' => '#16A34A'],
-                    ['name' => 'Netral', 'data' => $tenureNeu, 'color' => '#EAB308'],
-                    ['name' => 'Negatif', 'data' => $tenureNeg, 'color' => '#DC2626'],
-                ],
+            'tenure' => $this->buildSentimentSeries($classifiedResponses, 'tenure'),
+        ];
+    }
+
+    /**
+     * Helper untuk menghitung breakdown sentimen per dimensi kelompok.
+     *
+     * @param  Collection<int, array>  $classifiedResponses
+     * @return array{categories: array<string>, series: array<int, array{name: string, data: array<int>, color: string}>}
+     */
+    protected function buildSentimentSeries(Collection $classifiedResponses, string $groupByField, ?int $limit = null, int $maxWidth = 0): array
+    {
+        $grouped = $classifiedResponses->groupBy($groupByField);
+        if ($limit !== null) {
+            $grouped = $grouped->take($limit);
+        }
+
+        $categories = [];
+        $pos = [];
+        $neu = [];
+        $neg = [];
+
+        foreach ($grouped as $groupName => $items) {
+            $name = $groupName ?: 'Lainnya';
+            $categories[] = $maxWidth > 0 ? mb_strimwidth($name, 0, $maxWidth, '...') : $name;
+            $pos[] = $items->where('sentiment', 'positive')->count();
+            $neu[] = $items->where('sentiment', 'neutral')->count();
+            $neg[] = $items->where('sentiment', 'negative')->count();
+        }
+
+        return [
+            'categories' => $categories,
+            'series' => [
+                ['name' => 'Positif', 'data' => $pos, 'color' => '#16A34A'],
+                ['name' => 'Netral', 'data' => $neu, 'color' => '#EAB308'],
+                ['name' => 'Negatif', 'data' => $neg, 'color' => '#DC2626'],
             ],
         ];
     }

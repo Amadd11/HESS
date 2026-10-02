@@ -126,19 +126,19 @@
                 </p>
             </div>
 
-            <!-- Contoh Studi Kasus Riil -->
+            <!-- Contoh Studi Kasus Riil (Dinamis Sesuai Master Soal Aktif) -->
             <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-2">
-                <div class="font-extrabold text-amber-900 text-xs uppercase tracking-wider">Contoh Perhitungan Riil (Dinamis Sesuai Master Soal):</div>
+                <div class="font-extrabold text-amber-900 text-xs uppercase tracking-wider">Contoh Perhitungan Riil (Sesuai Master Soal Aktif: K = {{ $questionsCount }} Butir):</div>
                 <p class="text-xs text-amber-950 leading-relaxed">
-                    Misalnya terdapat <strong>500 pegawai yang mengisi survei</strong> ($N = 500$) dan terdapat <strong>24 butir pertanyaan aktif</strong> ($K = 24$, standar 8 unsur × 3 soal).<br>
-                    Skor maksimum survei = <strong>500 responden × 24 pertanyaan × 4 = 48.000</strong>.<br>
-                    Jika total seluruh skor jawaban yang terkumpul adalah <strong>39.600</strong>, maka:
+                    Misalnya terdapat <strong>500 pegawai yang mengisi survei</strong> ($N = 500$) dan terdapat <strong>{{ $questionsCount }} butir pertanyaan aktif</strong> ($K = {{ $questionsCount }}$).<br>
+                    Skor maksimum survei = <strong>500 responden × {{ $questionsCount }} pertanyaan × 4 = {{ number_format(500 * $questionsCount * 4, 0, ',', '.') }}</strong>.<br>
+                    Jika total seluruh skor jawaban yang terkumpul adalah <strong>{{ number_format((int) (500 * $questionsCount * 4 * 0.825), 0, ',', '.') }}</strong>, maka:
                 </p>
                 <div class="bg-white/80 border border-amber-300 rounded-xl p-3 font-mono text-xs text-amber-900 font-bold">
-                    Indeks Kepuasan Pegawai = (39.600 ÷ 48.000) × 100 = 82,50
+                    Indeks Kepuasan Pegawai = ({{ number_format((int) (500 * $questionsCount * 4 * 0.825), 0, ',', '.') }} ÷ {{ number_format(500 * $questionsCount * 4, 0, ',', '.') }}) × 100 = 82,50%
                 </div>
                 <p class="text-[11px] text-amber-800">
-                    💡 <em>Catatan Fleksibilitas</em>: Apabila Admin menambah atau menonaktifkan butir pertanyaan di menu <strong>Master Pertanyaan</strong> (misal menjadi $K = 20$ atau $K = 28$), sistem secara otomatis menyesuaikan nilai pengali $K$, sehingga indeks tetap adil dan akurat pada skala 0–100.
+                    💡 <em>Catatan Fleksibilitas</em>: Sistem HESS bekerja secara <strong>100% dinamis</strong>. Apabila Admin menambah atau menonaktifkan butir pertanyaan di menu <strong>Master Pertanyaan</strong> (saat ini aktif: <strong>{{ $questionsCount }} butir</strong>), rumus pembagi otomatis menyesuaikan pengali $K$, sehingga indeks selalu konsisten, adil, dan akurat pada skala 0–100%.
                 </p>
             </div>
 

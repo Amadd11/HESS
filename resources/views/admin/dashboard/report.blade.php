@@ -208,9 +208,89 @@
             </div>
         </section>
 
+        <!-- 3. DISTRIBUSI KARAKTERISTIK DEMOGRAFI RESPONDEN -->
+        @if(!empty($demographicData) && $totalResponses > 0)
+        <section class="mb-6 print-break-inside-avoid">
+            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">3. Karakteristik & Demografi Responden</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                <!-- Usia -->
+                <div class="overflow-hidden rounded-2xl border border-gray-200">
+                    <div class="bg-gray-50 px-3 py-2 border-b border-gray-200 font-bold text-xs text-gray-800">
+                        Distribusi Rentang Usia
+                    </div>
+                    <table class="w-full text-left text-xs border-collapse">
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($demographicData['age']['items'] ?? [] as $item)
+                            <tr>
+                                <td class="py-1.5 px-3 font-medium text-gray-800">{{ $item['label'] }}</td>
+                                <td class="py-1.5 px-3 text-right font-mono font-bold text-gray-900">{{ number_format($item['count']) }} orang</td>
+                                <td class="py-1.5 px-3 text-right text-gray-500 font-semibold w-20">{{ number_format($item['percentage'], 1) }}%</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Jenis Kelamin -->
+                <div class="overflow-hidden rounded-2xl border border-gray-200">
+                    <div class="bg-gray-50 px-3 py-2 border-b border-gray-200 font-bold text-xs text-gray-800">
+                        Distribusi Jenis Kelamin
+                    </div>
+                    <table class="w-full text-left text-xs border-collapse">
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($demographicData['gender']['items'] ?? [] as $item)
+                            <tr>
+                                <td class="py-1.5 px-3 font-medium text-gray-800">{{ $item['label'] }}</td>
+                                <td class="py-1.5 px-3 text-right font-mono font-bold text-gray-900">{{ number_format($item['count']) }} orang</td>
+                                <td class="py-1.5 px-3 text-right text-gray-500 font-semibold w-20">{{ number_format($item['percentage'], 1) }}%</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tingkat Pendapatan -->
+                <div class="overflow-hidden rounded-2xl border border-gray-200">
+                    <div class="bg-gray-50 px-3 py-2 border-b border-gray-200 font-bold text-xs text-gray-800">
+                        Distribusi Pendapatan Bulanan
+                    </div>
+                    <table class="w-full text-left text-xs border-collapse">
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($demographicData['income']['items'] ?? [] as $item)
+                            <tr>
+                                <td class="py-1.5 px-3 font-medium text-gray-800">{{ $item['label'] }}</td>
+                                <td class="py-1.5 px-3 text-right font-mono font-bold text-gray-900">{{ number_format($item['count']) }} orang</td>
+                                <td class="py-1.5 px-3 text-right text-gray-500 font-semibold w-20">{{ number_format($item['percentage'], 1) }}%</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Status Kepegawaian -->
+                <div class="overflow-hidden rounded-2xl border border-gray-200">
+                    <div class="bg-gray-50 px-3 py-2 border-b border-gray-200 font-bold text-xs text-gray-800">
+                        Distribusi Status Kepegawaian
+                    </div>
+                    <table class="w-full text-left text-xs border-collapse">
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($demographicData['status']['items'] ?? [] as $item)
+                            <tr>
+                                <td class="py-1.5 px-3 font-medium text-gray-800 truncate max-w-[160px]">{{ $item['label'] }}</td>
+                                <td class="py-1.5 px-3 text-right font-mono font-bold text-gray-900">{{ number_format($item['count']) }} orang</td>
+                                <td class="py-1.5 px-3 text-right text-gray-500 font-semibold w-20">{{ number_format($item['percentage'], 1) }}%</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        @endif
+
         <!-- 4. DETAIL 8 UNSUR DIMENSI RUMAH SAKIT -->
         <section class="mb-6 print-break-inside-avoid">
-            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">3. Evaluasi Capaian Berdasarkan 8 Dimensi Kepuasan Kerja RS</h2>
+            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">4. Evaluasi Capaian Berdasarkan 8 Dimensi Kepuasan Kerja RS</h2>
             <div class="overflow-hidden rounded-2xl border border-gray-200">
                 <table class="w-full text-left text-xs border-collapse">
                     <thead>
@@ -228,8 +308,13 @@
                         @php
                         $score = (float) ($cat->percentage_score ?? 0);
                         $raw = (float) ($cat->avg_raw_score ?? 0);
-                        $predicate = $score >= 81 ? 'Optimal' : ($score >= 61 ? 'Baik' : ($score >= 41 ? 'Perhatian' : 'Prioritas RTL'));
-                        $badgeClass = $score >= 81 ? 'bg-emerald-100 text-emerald-800' : ($score >= 61 ? 'bg-primary-100 text-primary-800' : ($score >= 41 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'));
+                        $badgeClasses = [
+                            'emerald' => 'bg-emerald-100 text-emerald-800',
+                            'primary' => 'bg-primary-100 text-primary-800',
+                            'amber' => 'bg-amber-100 text-amber-800',
+                            'rose' => 'bg-rose-100 text-rose-800',
+                        ];
+                        $badgeClass = $badgeClasses[$cat->badge_color ?? 'primary'] ?? 'bg-gray-100 text-gray-800';
                         @endphp
                         <tr class="hover:bg-gray-50/50">
                             <td class="py-2.5 px-3 font-mono font-bold text-gray-700">{{ $cat->code }}</td>
@@ -239,7 +324,7 @@
                             <td class="py-2.5 px-3 text-center font-mono font-bold text-primary-700">{{ number_format($score, 1) }}%</td>
                             <td class="py-2.5 px-3 text-center">
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $badgeClass }}">
-                                    {{ $predicate }}
+                                    {{ $cat->predicate ?? 'Baik' }}
                                 </span>
                             </td>
                         </tr>
@@ -255,7 +340,7 @@
 
         <!-- 5. TOP 5 KEKUATAN VS TOP 5 AREA PRIORITAS RTL -->
         <section class="mb-6 print-break-inside-avoid">
-            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">4. Analisis Butir Indikator: Kekuatan Utama vs Prioritas RTL</h2>
+            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">5. Analisis Butir Indikator: Kekuatan Utama vs Prioritas RTL</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Kekuatan Utama (Top 5) -->
                 <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/30">
@@ -306,7 +391,7 @@
         <!-- 6. RINGKASAN SEGMENTASI DIREKTORAT -->
         @if($directorateScores->isNotEmpty())
         <section class="mb-6 print-break-inside-avoid">
-            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">5. Capaian Indeks Kepuasan Berdasarkan Direktorat RS</h2>
+            <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">6. Capaian Indeks Kepuasan Berdasarkan Direktorat RS</h2>
             <div class="overflow-hidden rounded-2xl border border-gray-200">
                 <table class="w-full text-left text-xs border-collapse">
                     <thead>
